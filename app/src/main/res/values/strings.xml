@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ShoppingApp2</string>
+    <string name="shopping_app_title">Shopping App</string>
+    <string name="action_settings">Settings</string>
+    <string name="scan">Scan</string>
+    <string name="error_ok_button_text">Oops! Sorry!</string>
+    <string name="network_unavailable_message">Network is unavailable</string>
+    <string name="product_name_label">Product Name:</string>
+    <string name="price_label">Price:</string>
+    <string name="quantity_label">Quantity:</string>
+    <string name="plus_button_label">+</string>
+    <string name="minus_button_label">-</string>
+    <string name="store_new_item_label">START</string>
+    <string name="shopping_cart">shoppingcart</string>
+    <string name="title_activity_store">StoreActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="store_button_label">Store</string>
+    <string name="display_list_button_label">View List</string>
+    <string name="quantity_label_2">Qty.</string>
+    <string name="product_name_label2">Product Name</string>
+    <string name="unit_price_label">Unit Price</string>
+    <string name="category_label">Category</string>
+    <string name="subtotal_label">SubTotal</string>
+    <string name="item_count_label">Item Count</string>
+    <string name="total_price_label">Total Price</string>
+    <string name="sales_tax_label">Sales Tax</string>
+    <string name="final_price_label">Final Price</string>
+    <string name="return_main_button_label">Return to the Main Screen</string>
+    <string name="title_activity_display_shopping_list">DisplayShoppingList</string>
+    <string name="no_shopping_items_prompt">There are no shopping items to display!</string>
+    <string name="delete_selected_items_button">Delete Checked Items</string>
+    <string name="update_selected_items_button">Update Checked Items</string>
+    <string name="SHOPPING_LIST">SHOPPING_LIST</string>
+    <string name="ROW_NUMBER">ROW_NUMBER</string>
+    <string name="ITEM_COUNT">ITEM_COUNT</string>
+    <string name="TOTAL_PRICE">TOTAL_PRICE</string>
+    <string name="SALES_TAX">SALES_TAX</string>
+    <string name="FINAL_PRICE">FINAL_PRICE</string>
+
+</resources>
+
+

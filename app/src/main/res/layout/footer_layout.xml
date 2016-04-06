@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/totalRelativeLayout">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mainLayout">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout1">
+
+            <TextView
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:text="@string/item_count_label"
+                android:id="@+id/itemCountLabel"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_purple"/>
+
+            <TextView
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:text="@string/total_price_label"
+                android:id="@+id/totalPriceLabel"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_orange_dark"/>
+
+            <TextView
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sales_tax_label"
+                android:id="@+id/salesTaxLabel"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_purple"/>
+
+            <TextView
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:text="@string/final_price_label"
+                android:id="@+id/finalPriceLabel"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_orange_dark"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout2">
+
+            <EditText
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/itemCountEditText"
+                android:gravity="center_horizontal"/>
+
+            <EditText
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/totalPriceEditText"
+                android:gravity="center_horizontal"/>
+
+            <EditText
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/salesTaxEditText"
+                android:gravity="center_horizontal"/>
+
+            <EditText
+                android:layout_width="132dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/finalPriceEditText"
+                android:gravity="center_horizontal"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="528dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout3">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete_selected_items_button"
+                android:id="@+id/deleteSelectedItemsBtn"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/update_selected_items_button"
+                android:id="@+id/updateSelectedItemsBtn"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/return_main_button_label"
+                android:id="@+id/returnToMainBtn"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>
