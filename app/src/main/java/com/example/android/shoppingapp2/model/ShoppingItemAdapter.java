@@ -31,13 +31,26 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
     }
 
     @Override
+    public int getCount() {
+        return list.size();
+    }
+
+    @Override
+    public ShoppingItem getItem(int position) {
+        return list.get(position);
+    }
+
+    @Override
     public long getItemId(int position) {
         return 0;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
         final ViewHolder holder;
+
+        ShoppingItem shoppingItem = list.get(position);
 
         if(convertView==null){
             //brand new
@@ -53,18 +66,6 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
             holder.categoryEditText = (EditText) convertView.findViewById(R.id.categoryEditText);
             holder.subtotalEditText = (EditText) convertView.findViewById(R.id.subtotalEditText);
 
-            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    ShoppingItem element = (ShoppingItem) holder.checkBox.getTag();
-
-                    element.setSelected(buttonView.isChecked());
-
-                }
-            });
-
-            holder.checkBox.setTag(list.get(position));
             convertView.setTag(holder);
 
         }
@@ -78,19 +79,16 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
         DecimalFormat df = new DecimalFormat("$0.00");
 
-        ShoppingItem shoppingItem =list.get(position);
-
-
-        holder.quantity = shoppingItem.getQuantity();
-
-        holder.itemPrice = shoppingItem.getItemPrice();
-
-        holder.subtotal = shoppingItem.getSubtotal();
+        holder.quantity = this.getItem(position).getQuantity();
+        holder.productName = this.getItem(position).getProductName();
+        holder.itemPrice = this.getItem(position).getItemPrice();
+        holder.category = this.getItem(position).getCategory();
+        holder.subtotal = this.getItem(position).getSubtotal();
 
         holder.quantityEditText.setText(holder.quantity + "");
-        holder.productNameEditText.setText(shoppingItem.getProductName());
+        holder.productNameEditText.setText(holder.productName);
         holder.unitPriceEditText.setText(df.format(holder.itemPrice));
-        holder.categoryEditText.setText(shoppingItem.getCategory());
+        holder.categoryEditText.setText(holder.category);
         holder.subtotalEditText.setText(df.format(holder.subtotal));
 
         holder.decrementButton.setOnClickListener(new View.OnClickListener() {
@@ -154,13 +152,28 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
             }
         });
 
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                ShoppingItem element = (ShoppingItem) holder.checkBox.getTag();
+
+                element.setSelected(buttonView.isChecked());
+
+            }
+        });
+
+        holder.checkBox.setTag(list.get(position));
+
         return convertView;
     }
 
     private static class ViewHolder{
 
         int quantity;
+        String productName;
         double itemPrice;
+        String category;
         double subtotal;
 
         CheckBox checkBox;
