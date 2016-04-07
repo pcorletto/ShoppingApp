@@ -59,27 +59,26 @@
             android:layout_height="wrap_content"
             android:id="@+id/layout2">
 
-            <EditText
+            <TextView
                 android:layout_width="132dp"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:ems="10"
                 android:id="@+id/itemCountEditText"
                 android:gravity="center_horizontal"/>
 
-            <EditText
+            <TextView
                 android:layout_width="132dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/totalPriceEditText"
                 android:gravity="center_horizontal"/>
 
-            <EditText
+            <TextView
                 android:layout_width="132dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/salesTaxEditText"
                 android:gravity="center_horizontal"/>
 
-            <EditText
+            <TextView
                 android:layout_width="132dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/finalPriceEditText"

@@ -85,8 +85,9 @@ public class ShoppingItem implements Parcelable {
         return mSubtotal;
     }
 
-    public void setSubtotal() {
-        mSubtotal = this.getQuantity()*this.getItemPrice();
+    public void setSubtotal(double subtotal) {
+
+        mSubtotal = subtotal;
     }
 
     public boolean isSelected() {

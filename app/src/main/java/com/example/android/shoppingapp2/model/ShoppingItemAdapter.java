@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.android.shoppingapp2.R;
 
@@ -60,11 +60,11 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.checkBox);
             holder.decrementButton = (Button) convertView.findViewById(R.id.decrementButton);
             holder.incrementButton = (Button) convertView.findViewById(R.id.incrementButton);
-            holder.quantityEditText = (EditText) convertView.findViewById(R.id.quantityEditText);
-            holder.productNameEditText = (EditText) convertView.findViewById(R.id.productNameEditText);
-            holder.unitPriceEditText = (EditText) convertView.findViewById(R.id.unitPriceEditText);
-            holder.categoryEditText = (EditText) convertView.findViewById(R.id.categoryEditText);
-            holder.subtotalEditText = (EditText) convertView.findViewById(R.id.subtotalEditText);
+            holder.quantityEditText = (TextView) convertView.findViewById(R.id.quantityEditText);
+            holder.productNameEditText = (TextView) convertView.findViewById(R.id.productNameEditText);
+            holder.unitPriceEditText = (TextView) convertView.findViewById(R.id.unitPriceEditText);
+            holder.categoryEditText = (TextView) convertView.findViewById(R.id.categoryEditText);
+            holder.subtotalEditText = (TextView) convertView.findViewById(R.id.subtotalEditText);
 
             convertView.setTag(holder);
 
@@ -73,6 +73,7 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
         else{
             // We have these views set up.
             holder = (ViewHolder) convertView.getTag();
+
         }
 
         // Now, set the data:
@@ -98,10 +99,12 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
                 holder.quantity--;
 
                 // Only accept positive values for the quantity
-                if(holder.quantity > 0)
+                if (holder.quantity > 0)
 
                 {
                     holder.quantityEditText.setText(holder.quantity + "");
+
+                    list.get(position).setQuantity(holder.quantity);
 
                     // Some more logic here to refresh subtotal
 
@@ -111,9 +114,10 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                     holder.subtotalEditText.setText(df.format(holder.subtotal));
 
-                }
+                    list.get(position).setSubtotal(holder.subtotal);
 
-                else{
+
+                } else {
 
                     // Put the quantity back to where it was.
                     holder.quantity++;
@@ -133,6 +137,8 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                     holder.quantityEditText.setText(holder.quantity + "");
 
+                    list.get(position).setQuantity(holder.quantity);
+
                     // Some more logic here to refresh subtotal
 
                     DecimalFormat df = new DecimalFormat("$0.00");
@@ -140,6 +146,8 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
                     holder.subtotal = holder.quantity * holder.itemPrice;
 
                     holder.subtotalEditText.setText(df.format(holder.subtotal));
+
+                    list.get(position).setSubtotal(holder.subtotal);
 
                 }
 
@@ -151,6 +159,10 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
             }
         });
+
+
+        // Pass the list to the footer view in DisplayShoppingList.java
+
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -179,11 +191,11 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
         CheckBox checkBox;
         Button decrementButton;
         Button incrementButton;
-        EditText quantityEditText;
-        EditText productNameEditText;
-        EditText unitPriceEditText;
-        EditText categoryEditText;
-        EditText subtotalEditText;
+        TextView quantityEditText;
+        TextView productNameEditText;
+        TextView unitPriceEditText;
+        TextView categoryEditText;
+        TextView subtotalEditText;
 
     }
 

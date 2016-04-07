@@ -9,8 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.shoppingapp2.R;
@@ -28,7 +28,6 @@ public class DisplayShoppingList extends ListActivity {
     private ListView listview;
     private ShoppingItem[] mShoppingItems;
     private List<ShoppingItem> list = new ArrayList<>();
-
     private List<ShoppingItem> newList = new ArrayList<>();
 
     ShoppingDbHelper shoppingDbHelper;
@@ -52,10 +51,10 @@ public class DisplayShoppingList extends ListActivity {
 
         ViewHolder holder = new ViewHolder();
 
-        holder.itemCountEditText = (EditText) totalFooterView.findViewById(R.id.itemCountEditText);
-        holder.totalPriceEditText = (EditText) totalFooterView.findViewById(R.id.totalPriceEditText);
-        holder.salesTaxEditText = (EditText) totalFooterView.findViewById(R.id.salesTaxEditText);
-        holder.finalPriceEditText = (EditText) totalFooterView.findViewById(R.id.finalPriceEditText);
+        holder.itemCountEditText = (TextView) totalFooterView.findViewById(R.id.itemCountEditText);
+        holder.totalPriceEditText = (TextView) totalFooterView.findViewById(R.id.totalPriceEditText);
+        holder.salesTaxEditText = (TextView) totalFooterView.findViewById(R.id.salesTaxEditText);
+        holder.finalPriceEditText = (TextView) totalFooterView.findViewById(R.id.finalPriceEditText);
         holder.deleteSelectedItemsBtn = (Button) totalFooterView.findViewById(R.id.deleteSelectedItemsBtn);
         holder.returnToMainBtn = (Button) totalFooterView.findViewById(R.id.returnToMainBtn);
 
@@ -72,12 +71,10 @@ public class DisplayShoppingList extends ListActivity {
 
         DecimalFormat df = new DecimalFormat("$0.00");
 
-        holder.itemCountEditText.setText(mItemCount+"");
-        holder.totalPriceEditText.setText(df.format(mTotalPrice));
-        holder.salesTaxEditText.setText(df.format(mSalesTax));
-        holder.finalPriceEditText.setText(df.format(mFinalPrice));
-
-        listview.addFooterView(totalFooterView);
+        //holder.itemCountEditText.setText(mItemCount+"");
+        //holder.totalPriceEditText.setText(df.format(mTotalPrice));
+        //holder.salesTaxEditText.setText(df.format(mSalesTax));
+        //holder.finalPriceEditText.setText(df.format(mFinalPrice));
 
         Parcelable[] parcelables = intent.getParcelableArrayExtra(getString(R.string.SHOPPING_LIST));
 
@@ -90,9 +87,19 @@ public class DisplayShoppingList extends ListActivity {
 
         }
 
+
+        // Set up the footer data here, extract it from the list, not from the values
+        // passed from StoreActivity via intent.
+
+        // holder.itemCountEditText.setText(list.get(position).getItemCount();
+
         final ShoppingItemAdapter adapter = new ShoppingItemAdapter(this, list);
 
         listview.setAdapter(adapter);
+
+
+
+        adapter.notifyDataSetChanged();
 
         holder.returnToMainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,13 +152,17 @@ public class DisplayShoppingList extends ListActivity {
 
                 }
 
-                        ShoppingItemAdapter adapter2 = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
+                ShoppingItemAdapter adapter2 = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
 
-                        listview.setAdapter(adapter2);
+                listview.setAdapter(adapter2);
+
+                adapter2.notifyDataSetChanged();
 
             }
 
         });
+
+        listview.addFooterView(totalFooterView);
 
     }
 
@@ -192,10 +203,10 @@ public class DisplayShoppingList extends ListActivity {
         // This ViewHolder is for the footer, to hold the item count, total price, sales tax,
         //and final price.
 
-        public EditText itemCountEditText;
-        public EditText totalPriceEditText;
-        public EditText salesTaxEditText;
-        public EditText finalPriceEditText;
+        public TextView itemCountEditText;
+        public TextView totalPriceEditText;
+        public TextView salesTaxEditText;
+        public TextView finalPriceEditText;
         public Button deleteSelectedItemsBtn, returnToMainBtn;
 
     }

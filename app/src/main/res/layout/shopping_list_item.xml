@@ -65,15 +65,14 @@
                 android:text="@string/plus_button_label"
                 android:id="@+id/incrementButton"/>
 
-            <EditText
+            <TextView
                 android:layout_width="45dp"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:ems="10"
                 android:id="@+id/quantityEditText"
                 android:gravity="center_horizontal"/>
 
-            <EditText
+            <TextView
                 android:layout_width="385dp"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
@@ -122,20 +121,19 @@
             android:layout_height="wrap_content"
             android:id="@+id/layout4">
 
-            <EditText
+            <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/unitPriceEditText"
                 android:gravity="center_horizontal"/>
 
-            <EditText
+            <TextView
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
                 android:ems="10"
                 android:id="@+id/categoryEditText"/>
 
-            <EditText
+            <TextView
                 android:layout_width="127dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/subtotalEditText"

@@ -132,7 +132,9 @@ public class StoreActivity extends Activity  {
 
                 mShoppingItem = new ShoppingItem(quantity, productName, unitPrice, category);
 
-                mShoppingItem.setSubtotal();
+                double subtotal = quantity * unitPrice;
+
+                mShoppingItem.setSubtotal(subtotal);
 
                 mShoppingList.addShoppingItem(mShoppingItem, mRowNumber);
 
