@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.android.shoppingapp2.R;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,12 +23,19 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
     private final List<ShoppingItem> list;
 
+    ArrayList<Boolean> positionArray;
+
     private Context mContext;
 
     public ShoppingItemAdapter(Context context, List<ShoppingItem> list) {
         super(context, R.layout.shopping_list_item, list);
         this.mContext = context;
         this.list = list;
+
+        positionArray = new ArrayList<Boolean>(list.size());
+        for(int i = 0; i < list.size();i++){
+            positionArray.add(false);
+        }
     }
 
     @Override
@@ -73,6 +81,7 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
         else{
             // We have these views set up.
             holder = (ViewHolder) convertView.getTag();
+            holder.checkBox.setOnCheckedChangeListener(null);
 
         }
 
@@ -164,18 +173,28 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
         // Pass the list to the footer view in DisplayShoppingList.java
 
 
+        holder.checkBox.setFocusable(false);
+        holder.checkBox.setChecked(positionArray.get(position));
+
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                ShoppingItem element = (ShoppingItem) holder.checkBox.getTag();
+                if(isChecked ){
 
-                element.setSelected(buttonView.isChecked());
+                    positionArray.add(position, true);
+                    list.get(position).setSelected(true);
+
+                }else {
+
+                    positionArray.add(position, false);
+                    list.get(position).setSelected(false);
+
+                }
 
             }
         });
-
-        holder.checkBox.setTag(list.get(position));
 
         return convertView;
     }
