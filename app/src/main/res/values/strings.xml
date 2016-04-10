@@ -38,6 +38,7 @@
     <string name="TOTAL_PRICE">TOTAL_PRICE</string>
     <string name="SALES_TAX">SALES_TAX</string>
     <string name="FINAL_PRICE">FINAL_PRICE</string>
+    <string name="LIST">LIST</string>
 
 </resources>
 

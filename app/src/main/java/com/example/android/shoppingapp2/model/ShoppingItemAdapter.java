@@ -219,4 +219,3 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
     }
 
 }
-

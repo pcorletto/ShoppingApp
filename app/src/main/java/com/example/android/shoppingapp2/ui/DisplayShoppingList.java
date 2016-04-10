@@ -47,7 +47,8 @@ public class DisplayShoppingList extends ListActivity {
         // Added a footer to the ListView to display the item count, total price,
         // sales tax and final price at the bottom of the list.
 
-        View totalFooterView = View.inflate(this, R.layout.footer_layout, null);
+
+        final View totalFooterView = View.inflate(this, R.layout.footer_layout, null);
 
         ViewHolder holder = new ViewHolder();
 
@@ -71,10 +72,10 @@ public class DisplayShoppingList extends ListActivity {
 
         DecimalFormat df = new DecimalFormat("$0.00");
 
-        //holder.itemCountEditText.setText(mItemCount+"");
-        //holder.totalPriceEditText.setText(df.format(mTotalPrice));
-        //holder.salesTaxEditText.setText(df.format(mSalesTax));
-        //holder.finalPriceEditText.setText(df.format(mFinalPrice));
+        holder.itemCountEditText.setText(mItemCount+"");
+        holder.totalPriceEditText.setText(df.format(mTotalPrice));
+        holder.salesTaxEditText.setText(df.format(mSalesTax));
+        holder.finalPriceEditText.setText(df.format(mFinalPrice));
 
         Parcelable[] parcelables = intent.getParcelableArrayExtra(getString(R.string.SHOPPING_LIST));
 
@@ -95,7 +96,7 @@ public class DisplayShoppingList extends ListActivity {
 
         final ShoppingItemAdapter adapter = new ShoppingItemAdapter(this, list);
 
-        listview.setAdapter(adapter);
+        //listview.setAdapter(adapter);
 
 
 
@@ -141,6 +142,8 @@ public class DisplayShoppingList extends ListActivity {
 
                         Toast.makeText(getApplicationContext(), "Shopping item deleted", Toast.LENGTH_LONG).show();
 
+                        listview.removeFooterView(totalFooterView);
+
 
                     } else {
 
@@ -154,6 +157,41 @@ public class DisplayShoppingList extends ListActivity {
 
                 ShoppingItemAdapter adapter2 = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
 
+                View totalFooterView = View.inflate(getBaseContext(), R.layout.footer_layout, null);
+
+                ViewHolder holder = new ViewHolder();
+
+                holder.itemCountEditText = (TextView) totalFooterView.findViewById(R.id.itemCountEditText);
+                holder.totalPriceEditText = (TextView) totalFooterView.findViewById(R.id.totalPriceEditText);
+                holder.salesTaxEditText = (TextView) totalFooterView.findViewById(R.id.salesTaxEditText);
+                holder.finalPriceEditText = (TextView) totalFooterView.findViewById(R.id.finalPriceEditText);
+
+                int newItemCount = 0;
+                double newTotalPrice = 0;
+                double newSalesTax =0;
+                double newFinalPrice = 0;
+
+                for(int i=0; i<newList.size(); i++){
+
+                    newItemCount = newItemCount + newList.get(i).getQuantity();
+                    newTotalPrice = newTotalPrice + newList.get(i).getSubtotal();
+                }
+
+                newSalesTax = newTotalPrice * 0.07;
+                newFinalPrice = newTotalPrice + newSalesTax;
+
+                //Set the TOTAL data:
+
+                DecimalFormat df = new DecimalFormat("$0.00");
+
+                holder.itemCountEditText.setText(newItemCount+"");
+                holder.totalPriceEditText.setText(df.format(newTotalPrice));
+                holder.salesTaxEditText.setText(df.format(newSalesTax));
+                holder.finalPriceEditText.setText(df.format(newFinalPrice));
+
+
+                listview.addFooterView(totalFooterView);
+
                 listview.setAdapter(adapter2);
 
                 adapter2.notifyDataSetChanged();
@@ -163,6 +201,8 @@ public class DisplayShoppingList extends ListActivity {
         });
 
         listview.addFooterView(totalFooterView);
+
+        listview.setAdapter(adapter);
 
     }
 
