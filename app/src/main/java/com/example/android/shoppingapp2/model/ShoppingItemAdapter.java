@@ -27,6 +27,8 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
     private Context mContext;
 
+    private ShoppingItemAdapterCallBack callback;
+
     public ShoppingItemAdapter(Context context, List<ShoppingItem> list) {
         super(context, R.layout.shopping_list_item, list);
         this.mContext = context;
@@ -125,6 +127,16 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                     list.get(position).setSubtotal(holder.subtotal);
 
+                    // Pass this updated list back to DisplayShoppingList.java activity
+                    // via callback interface so that it is refreshed or updated
+                    // in the footer.
+
+                    if(callback != null){
+
+                        callback.refreshFooter(list);
+
+                    }
+
 
                 } else {
 
@@ -158,7 +170,17 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                     list.get(position).setSubtotal(holder.subtotal);
 
+                    // Pass this updated list back to DisplayShoppingList.java activity
+                    // via callback interface so that it is refreshed or updated
+                    // in the footer.
+
+                    if(callback != null){
+
+                        callback.refreshFooter(list);
+
                 }
+
+                    }
 
                 else{
 
@@ -175,7 +197,6 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
         holder.checkBox.setFocusable(false);
         holder.checkBox.setChecked(positionArray.get(position));
-
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             @Override
@@ -215,6 +236,18 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
         TextView unitPriceEditText;
         TextView categoryEditText;
         TextView subtotalEditText;
+
+    }
+
+    public void setCallback(ShoppingItemAdapterCallBack callback){
+
+        this.callback = callback;
+
+    }
+
+    public interface ShoppingItemAdapterCallBack{
+
+        public void refreshFooter(List<ShoppingItem> list);
 
     }
 

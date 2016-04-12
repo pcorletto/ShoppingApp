@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DisplayShoppingList extends ListActivity {
+public class DisplayShoppingList extends ListActivity implements ShoppingItemAdapter.ShoppingItemAdapterCallBack {
 
     private ListView listview;
     private ShoppingItem[] mShoppingItems;
@@ -111,6 +111,8 @@ public class DisplayShoppingList extends ListActivity {
 
         listview.addFooterView(totalFooterView);
 
+        adapter.setCallback(this);
+
         listview.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
@@ -118,7 +120,6 @@ public class DisplayShoppingList extends ListActivity {
         holder.deleteSelectedItemsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 for(int i=0; i<list.size(); i++) {
 
