@@ -33,10 +33,7 @@ public class DisplayShoppingList extends ListActivity {
     ShoppingDbHelper shoppingDbHelper;
     SQLiteDatabase sqLiteDatabase;
 
-
     private int mRowNumber;
-    private int mItemCount;
-    private double mTotalPrice, mSalesTax, mFinalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +41,39 @@ public class DisplayShoppingList extends ListActivity {
         setContentView(R.layout.activity_display_shopping_list);
         listview = (ListView) findViewById(android.R.id.list);
 
+        Intent intent = getIntent();
+
+        mRowNumber = intent.getIntExtra(getString(R.string.ROW_NUMBER), 0);
+
+        Parcelable[] parcelables = intent.getParcelableArrayExtra(getString(R.string.SHOPPING_LIST));
+
+        mShoppingItems = Arrays.copyOf(parcelables, mRowNumber, ShoppingItem[].class);
+
+        for(int i=0; i<mRowNumber; i++){
+
+            list.add(mShoppingItems[i]);
+
+        }
+
         // Added a footer to the ListView to display the item count, total price,
         // sales tax and final price at the bottom of the list.
 
+        refreshFooter(list);
 
-        final View totalFooterView = View.inflate(this, R.layout.footer_layout, null);
+    }
+
+    public void onBackPressed() {
+
+        Intent startMain = new Intent(DisplayShoppingList.this, MainActivity.class);
+        startActivity(startMain);
+
+    }
+
+    public void refreshFooter(List<ShoppingItem> passedInList){
+
+        // Refresh footer
+
+        final View totalFooterView = View.inflate(getBaseContext(), R.layout.footer_layout, null);
 
         ViewHolder holder = new ViewHolder();
 
@@ -59,60 +84,36 @@ public class DisplayShoppingList extends ListActivity {
         holder.deleteSelectedItemsBtn = (Button) totalFooterView.findViewById(R.id.deleteSelectedItemsBtn);
         holder.returnToMainBtn = (Button) totalFooterView.findViewById(R.id.returnToMainBtn);
 
-        Intent intent = getIntent();
+        int itemCount = 0;
+        double totalPrice = 0;
+        double salesTax;
+        double finalPrice;
 
-        mRowNumber = intent.getIntExtra(getString(R.string.ROW_NUMBER), 0);
+        for(int i=0; i<passedInList.size(); i++){
 
-        mItemCount = intent.getIntExtra(getString(R.string.ITEM_COUNT), 0);
-        mTotalPrice = intent.getDoubleExtra(getString(R.string.TOTAL_PRICE), 0);
-        mSalesTax = intent.getDoubleExtra(getString(R.string.SALES_TAX), 0);
-        mFinalPrice = intent.getDoubleExtra(getString(R.string.FINAL_PRICE), 0);
+            itemCount = itemCount + passedInList.get(i).getQuantity();
+            totalPrice = totalPrice + passedInList.get(i).getSubtotal();
+        }
 
-        // Set the TOTAL data:
+        salesTax = totalPrice * 0.07;
+        finalPrice = totalPrice + salesTax;
+
+        //Set the TOTAL data:
 
         DecimalFormat df = new DecimalFormat("$0.00");
 
-        holder.itemCountEditText.setText(mItemCount+"");
-        holder.totalPriceEditText.setText(df.format(mTotalPrice));
-        holder.salesTaxEditText.setText(df.format(mSalesTax));
-        holder.finalPriceEditText.setText(df.format(mFinalPrice));
+        holder.itemCountEditText.setText(itemCount+"");
+        holder.totalPriceEditText.setText(df.format(totalPrice));
+        holder.salesTaxEditText.setText(df.format(salesTax));
+        holder.finalPriceEditText.setText(df.format(finalPrice));
 
-        Parcelable[] parcelables = intent.getParcelableArrayExtra(getString(R.string.SHOPPING_LIST));
+        ShoppingItemAdapter adapter = new ShoppingItemAdapter(DisplayShoppingList.this, passedInList);
 
+        listview.addFooterView(totalFooterView);
 
-        mShoppingItems = Arrays.copyOf(parcelables, mRowNumber, ShoppingItem[].class);
-
-        for(int i=0; i<mRowNumber; i++){
-
-            list.add(mShoppingItems[i]);
-
-        }
-
-
-        // Set up the footer data here, extract it from the list, not from the values
-        // passed from StoreActivity via intent.
-
-        // holder.itemCountEditText.setText(list.get(position).getItemCount();
-
-        final ShoppingItemAdapter adapter = new ShoppingItemAdapter(this, list);
-
-        //listview.setAdapter(adapter);
-
-
+        listview.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
-
-        holder.returnToMainBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(DisplayShoppingList.this, MainActivity.class);
-
-                startActivity(intent);
-
-            }
-
-        });
 
         holder.deleteSelectedItemsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,64 +156,25 @@ public class DisplayShoppingList extends ListActivity {
 
                 }
 
-                ShoppingItemAdapter adapter2 = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
-
-                View totalFooterView = View.inflate(getBaseContext(), R.layout.footer_layout, null);
-
-                ViewHolder holder = new ViewHolder();
-
-                holder.itemCountEditText = (TextView) totalFooterView.findViewById(R.id.itemCountEditText);
-                holder.totalPriceEditText = (TextView) totalFooterView.findViewById(R.id.totalPriceEditText);
-                holder.salesTaxEditText = (TextView) totalFooterView.findViewById(R.id.salesTaxEditText);
-                holder.finalPriceEditText = (TextView) totalFooterView.findViewById(R.id.finalPriceEditText);
-
-                int newItemCount = 0;
-                double newTotalPrice = 0;
-                double newSalesTax =0;
-                double newFinalPrice = 0;
-
-                for(int i=0; i<newList.size(); i++){
-
-                    newItemCount = newItemCount + newList.get(i).getQuantity();
-                    newTotalPrice = newTotalPrice + newList.get(i).getSubtotal();
-                }
-
-                newSalesTax = newTotalPrice * 0.07;
-                newFinalPrice = newTotalPrice + newSalesTax;
-
-                //Set the TOTAL data:
-
-                DecimalFormat df = new DecimalFormat("$0.00");
-
-                holder.itemCountEditText.setText(newItemCount+"");
-                holder.totalPriceEditText.setText(df.format(newTotalPrice));
-                holder.salesTaxEditText.setText(df.format(newSalesTax));
-                holder.finalPriceEditText.setText(df.format(newFinalPrice));
-
-
-                listview.addFooterView(totalFooterView);
-
-                listview.setAdapter(adapter2);
-
-                adapter2.notifyDataSetChanged();
+                refreshFooter(newList);
 
             }
 
         });
 
-        listview.addFooterView(totalFooterView);
+        holder.returnToMainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        listview.setAdapter(adapter);
+                Intent intent = new Intent(DisplayShoppingList.this, MainActivity.class);
+
+                startActivity(intent);
+
+            }
+
+        });
 
     }
-
-    public void onBackPressed() {
-
-        Intent startMain = new Intent(DisplayShoppingList.this, MainActivity.class);
-        startActivity(startMain);
-
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -235,8 +197,6 @@ public class DisplayShoppingList extends ListActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 
     public final class ViewHolder{
 

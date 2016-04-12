@@ -50,8 +50,7 @@ public class StoreActivity extends Activity  {
     private Keeper mShoppingList = new Keeper();
 
     private String mName, mItemPrice, mUPC, mCategory;
-    private int mQuantity, mItemCount;
-    private double mTotalPrice, mSalesTax, mFinalPrice;
+    private int mQuantity;
 
     Context context;
     ShoppingDbHelper shoppingDbHelper;
@@ -107,21 +106,15 @@ public class StoreActivity extends Activity  {
         cursor = shoppingDbHelper.getShoppingItem(sqLiteDatabase);
 
 
-        // Initialize the Row Number, Item Count, Total Price, Sales Tax and Final Price
+        // Initialize the Row Number
 
         mRowNumber = 0;
-        mItemCount = 0;
-        mTotalPrice = 0;
-        mSalesTax = 0;
-        mFinalPrice = 0;
-
-
 
         if(cursor.moveToFirst()){
 
             do{
 
-                String is_checked, productName, category;
+                String productName, category;
                 int quantity;
                 double unitPrice;
 
@@ -138,13 +131,6 @@ public class StoreActivity extends Activity  {
 
                 mShoppingList.addShoppingItem(mShoppingItem, mRowNumber);
 
-                // Calculate the totals
-                // Accumulate these values for the footer: ItemCount, Total Price
-
-                mItemCount = mItemCount + mShoppingItem.getQuantity();
-
-                mTotalPrice = mTotalPrice + mShoppingItem.getSubtotal();
-
                 mRowNumber++;
 
             }
@@ -152,14 +138,6 @@ public class StoreActivity extends Activity  {
             while(cursor.moveToNext());
 
         }
-
-        // Finally, calculate the sales tax (7% for the State of Florida) and the final price
-
-        mSalesTax = mTotalPrice * 0.07;
-
-        mFinalPrice = mTotalPrice + mSalesTax;
-
-        // Initialize quantity to one
 
         mQuantity = 1;
 
@@ -200,6 +178,7 @@ public class StoreActivity extends Activity  {
         displayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(StoreActivity.this, DisplayShoppingList.class);
 
                 // Next, I will pass in the array of shopping items, mShoppingList, a "Keeper" object
@@ -209,17 +188,6 @@ public class StoreActivity extends Activity  {
                 intent.putExtra(getString(R.string.ROW_NUMBER), mRowNumber);
 
                 intent.putExtra(getString(R.string.SHOPPING_LIST), mShoppingList.mShoppingItems);
-
-                // Besides sending the shopping list object via intent, also send the following:
-                // for the footer: Item Count, Total Price, Sales Tax and Final Price
-
-                intent.putExtra(getString(R.string.ITEM_COUNT), mItemCount);
-
-                intent.putExtra(getString(R.string.TOTAL_PRICE), mTotalPrice);
-
-                intent.putExtra(getString(R.string.SALES_TAX), mSalesTax);
-
-                intent.putExtra(getString(R.string.FINAL_PRICE), mFinalPrice);
 
                 startActivity(intent);
             }
