@@ -197,6 +197,8 @@ public class StoreActivity extends Activity  {
 
     private void getScannedItemInfo(String upc) {
 
+        // API Key for Walmart
+
         String apiKey = "";
 
         String itemLookUpUrl = "http://api.walmartlabs.com/v1/items?apiKey=" +

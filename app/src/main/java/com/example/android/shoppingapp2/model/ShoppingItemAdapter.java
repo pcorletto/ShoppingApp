@@ -188,12 +188,9 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
                     holder.quantity++;
                 }
 
+
             }
         });
-
-
-        // Pass the list to the footer view in DisplayShoppingList.java
-
 
         holder.checkBox.setFocusable(false);
         holder.checkBox.setChecked(positionArray.get(position));
