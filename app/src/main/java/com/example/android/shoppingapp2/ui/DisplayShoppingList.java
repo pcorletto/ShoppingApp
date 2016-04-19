@@ -60,11 +60,30 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
         // Added a footer to the ListView to display the item count, total price,
         // sales tax and final price at the bottom of the list.
 
+        // What list do we display on the footer? We have three options:
+
+        // If the app just starts, it should take the list from "list", which is the one
+        // we get from the mShoppingItems array passed in via Intent from StoreActivity.java
+
+        // If the user taps the increment or decrement quantity buttons on the ListView,
+        // then we need to use the updated "list" from the callback we get from ShoppingItemAdapter
+
+        // If the user deletes an item from the list, then we need to use "newList" from the
+        // holder.deleteSelectedItemsBtn.onClickListener method down below.
+
+
+
         refreshFooter(list);
 
         // Update footer
 
-        
+        ShoppingItemAdapter adapter = new ShoppingItemAdapter(DisplayShoppingList.this, list);
+
+        adapter.setCallback(this);
+
+        adapter.notifyDataSetChanged();
+
+        listview.setAdapter(adapter);
 
         // Add Footer
 
@@ -83,103 +102,111 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
 
         // Refresh footer
 
-            totalFooterView = View.inflate(getBaseContext(), R.layout.footer_layout, null);
+        totalFooterView = View.inflate(getBaseContext(), R.layout.footer_layout, null);
 
-            ViewHolder holder = new ViewHolder();
+        ViewHolder holder = new ViewHolder();
 
-            holder.itemCountEditText = (TextView) totalFooterView.findViewById(R.id.itemCountEditText);
-            holder.totalPriceEditText = (TextView) totalFooterView.findViewById(R.id.totalPriceEditText);
-            holder.salesTaxEditText = (TextView) totalFooterView.findViewById(R.id.salesTaxEditText);
-            holder.finalPriceEditText = (TextView) totalFooterView.findViewById(R.id.finalPriceEditText);
-            holder.deleteSelectedItemsBtn = (Button) totalFooterView.findViewById(R.id.deleteSelectedItemsBtn);
-            holder.returnToMainBtn = (Button) totalFooterView.findViewById(R.id.returnToMainBtn);
+        holder.itemCountEditText = (TextView) totalFooterView.findViewById(R.id.itemCountEditText);
+        holder.totalPriceEditText = (TextView) totalFooterView.findViewById(R.id.totalPriceEditText);
+        holder.salesTaxEditText = (TextView) totalFooterView.findViewById(R.id.salesTaxEditText);
+        holder.finalPriceEditText = (TextView) totalFooterView.findViewById(R.id.finalPriceEditText);
+        holder.deleteSelectedItemsBtn = (Button) totalFooterView.findViewById(R.id.deleteSelectedItemsBtn);
+        holder.returnToMainBtn = (Button) totalFooterView.findViewById(R.id.returnToMainBtn);
 
-            int itemCount = 0;
-            double totalPrice = 0;
-            double salesTax;
-            double finalPrice;
+        int itemCount = 0;
+        double totalPrice = 0;
+        double salesTax;
+        double finalPrice;
 
-            for (int i = 0; i < passedInList.size(); i++) {
+        for (int i = 0; i < passedInList.size(); i++) {
 
-                itemCount = itemCount + passedInList.get(i).getQuantity();
-                totalPrice = totalPrice + passedInList.get(i).getSubtotal();
-            }
+            itemCount = itemCount + passedInList.get(i).getQuantity();
+            totalPrice = totalPrice + passedInList.get(i).getSubtotal();
+        }
 
-            salesTax = totalPrice * 0.07;
-            finalPrice = totalPrice + salesTax;
+        salesTax = totalPrice * 0.07;
+        finalPrice = totalPrice + salesTax;
 
-            //Set the TOTAL data:
+        //Set the TOTAL data:
 
-            DecimalFormat df = new DecimalFormat("$0.00");
+        DecimalFormat df = new DecimalFormat("$0.00");
 
-            holder.itemCountEditText.setText(itemCount + "");
-            holder.totalPriceEditText.setText(df.format(totalPrice));
-            holder.salesTaxEditText.setText(df.format(salesTax));
-            holder.finalPriceEditText.setText(df.format(finalPrice));
+        holder.itemCountEditText.setText(itemCount + "");
+        holder.totalPriceEditText.setText(df.format(totalPrice));
+        holder.salesTaxEditText.setText(df.format(salesTax));
+        holder.finalPriceEditText.setText(df.format(finalPrice));
 
-            ShoppingItemAdapter adapter = new ShoppingItemAdapter(DisplayShoppingList.this, passedInList);
+        holder.deleteSelectedItemsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            adapter.setCallback(this);
+                listview.removeFooterView(totalFooterView);
 
-            listview.setAdapter(adapter);
+                for (int i = 0; i < list.size(); i++) {
 
-            holder.deleteSelectedItemsBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                    if (list.get(i).isSelected()) {
 
-                    for (int i = 0; i < list.size(); i++) {
+                        // For ListView: Skip checked or selected items. These will be deleted and will not
+                        // be added to the new listview.
 
-                        if (list.get(i).isSelected()) {
+                        // For SQLiteDatabase: Delete this item here, if checked.
 
-                            // For ListView: Skip checked or selected items. These will be deleted and will not
-                            // be added to the new listview.
+                        String item_for_DB_deletion = list.get(i).getProductName();
 
-                            // For SQLiteDatabase: Delete this item here, if checked.
+                        // Initialize the shoppingDbHelper object
 
-                            String item_for_DB_deletion = list.get(i).getProductName();
+                        shoppingDbHelper = new ShoppingDbHelper(getApplicationContext());
 
-                            // Initialize the shoppingDbHelper object
+                        // Initialize the SQLiteDatabase object
 
-                            shoppingDbHelper = new ShoppingDbHelper(getApplicationContext());
+                        sqLiteDatabase = shoppingDbHelper.getReadableDatabase();
 
-                            // Initialize the SQLiteDatabase object
+                        shoppingDbHelper.deleteShoppingItem(item_for_DB_deletion, sqLiteDatabase);
 
-                            sqLiteDatabase = shoppingDbHelper.getReadableDatabase();
-
-                            shoppingDbHelper.deleteShoppingItem(item_for_DB_deletion, sqLiteDatabase);
-
-                            Toast.makeText(getApplicationContext(), "Shopping item deleted", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Shopping item deleted", Toast.LENGTH_LONG).show();
 
 
-                        } else {
+                    } else {
 
-                            // Add the item to the listview, because it won't be deleted.
+                        // Add the item to the listview, because it won't be deleted.
 
-                            newList.add(list.get(i));
-
-                        }
+                        newList.add(list.get(i));
 
                     }
 
-                    refreshFooter(newList);
-
                 }
 
-            });
+                refreshFooter(newList);
+
+                // Just testing ...
+
+                ShoppingItemAdapter adapter = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
+
+                adapter.notifyDataSetChanged();
+
+                listview.setAdapter(adapter);
+
+                // Add Footer
+
+                listview.addFooterView(totalFooterView);
+
+            }
+
+        });
 
         holder.returnToMainBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-                    Intent intent = new Intent(DisplayShoppingList.this, MainActivity.class);
+                Intent intent = new Intent(DisplayShoppingList.this, MainActivity.class);
 
-                    startActivity(intent);
+                startActivity(intent);
 
-                }
+            }
 
-            });
+        });
 
-        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -242,6 +242,12 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
     }
 
+    public List<ShoppingItem> getCallBack(){
+
+        return list;
+
+    }
+
     public interface ShoppingItemAdapterCallBack{
 
         public void refreshFooter(List<ShoppingItem> list);
