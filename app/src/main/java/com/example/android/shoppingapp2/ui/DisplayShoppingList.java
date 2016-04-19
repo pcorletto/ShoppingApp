@@ -1,7 +1,9 @@
 package com.example.android.shoppingapp2.ui;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -25,6 +27,9 @@ import java.util.List;
 
 public class DisplayShoppingList extends ListActivity implements ShoppingItemAdapter.ShoppingItemAdapterCallBack {
 
+    private static final String PREFS_FILE = "com.example.android.shoppingapp2.preferences";
+    private static final String ITEMCOUNT = "itemcount" ;
+
     private ListView listview;
     private ShoppingItem[] mShoppingItems;
     private List<ShoppingItem> list = new ArrayList<>();
@@ -37,10 +42,18 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
 
     private int mRowNumber;
 
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_shopping_list);
+
+        mSharedPreferences = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
+
+
         listview = (ListView) findViewById(android.R.id.list);
 
         Intent intent = getIntent();
@@ -52,6 +65,14 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
         mShoppingItems = Arrays.copyOf(parcelables, mRowNumber, ShoppingItem[].class);
 
         for(int i=0; i<mRowNumber; i++){
+
+            int quantity = mSharedPreferences.getInt(ITEMCOUNT + i, 1);
+
+            double subtotal = quantity * mShoppingItems[i].getItemPrice();
+
+            mShoppingItems[i].setQuantity(quantity);
+
+            mShoppingItems[i].setSubtotal(subtotal);
 
             list.add(mShoppingItems[i]);
 
@@ -89,6 +110,21 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
 
         listview.addFooterView(totalFooterView);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        DecimalFormat df = new DecimalFormat("$0.00");
+
+        for(int i=0; i<mShoppingItems.length; i++){
+
+            mEditor.putInt(ITEMCOUNT + i, mShoppingItems[i].getQuantity());
+
+        }
+
+        mEditor.apply();
     }
 
     public void onBackPressed() {
