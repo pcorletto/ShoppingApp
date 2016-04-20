@@ -1,12 +1,12 @@
 package com.example.android.shoppingapp2.ui;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DisplayShoppingList extends ListActivity implements ShoppingItemAdapter.ShoppingItemAdapterCallBack {
+public class DisplayShoppingList extends AppCompatActivity implements ShoppingItemAdapter.ShoppingItemAdapterCallBack {
 
     private static final String PREFS_FILE = "com.example.android.shoppingapp2.preferences";
     private static final String ITEMCOUNT = "itemcount" ;
@@ -34,6 +34,8 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
     private ShoppingItem[] mShoppingItems;
     private List<ShoppingItem> list = new ArrayList<>();
     private List<ShoppingItem> newList = new ArrayList<>();
+
+    private ShoppingItemAdapter mAdapter;
 
     View totalFooterView;
 
@@ -98,13 +100,13 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
 
         // Update footer
 
-        ShoppingItemAdapter adapter = new ShoppingItemAdapter(DisplayShoppingList.this, list);
+        mAdapter = new ShoppingItemAdapter(DisplayShoppingList.this, list);
 
-        adapter.setCallback(this);
+        mAdapter.setCallback(this);
 
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
 
-        listview.setAdapter(adapter);
+        listview.setAdapter(mAdapter);
 
         // Add Footer
 
@@ -216,11 +218,11 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
 
                 // Just testing ...
 
-                ShoppingItemAdapter adapter = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
+                mAdapter = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
 
-                adapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
 
-                listview.setAdapter(adapter);
+                listview.setAdapter(mAdapter);
 
                 // Add Footer
 
@@ -259,7 +261,20 @@ public class DisplayShoppingList extends ListActivity implements ShoppingItemAda
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_reset_item_counts) {
+
+            mEditor.clear();
+            mEditor.apply();
+
+            for(ShoppingItem shoppingItem: mShoppingItems){
+
+                shoppingItem.setQuantity(1);
+                shoppingItem.setSubtotal(1 * shoppingItem.getItemPrice());
+
+            }
+
+            mAdapter.notifyDataSetChanged();
+
             return true;
         }
 
