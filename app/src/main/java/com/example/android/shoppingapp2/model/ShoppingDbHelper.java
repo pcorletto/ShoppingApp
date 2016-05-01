@@ -92,6 +92,23 @@ public class ShoppingDbHelper extends SQLiteOpenHelper {
 
     }
 
+    //public int updateShoppingItem(int old_quantity, int new_quantity, SQLiteDatabase sqLiteDatabase){
+
+      //  ContentValues contentValues = new ContentValues();
+       // contentValues.put(ShoppingList.NewShoppingItem.QUANTITY, new_quantity);
+
+        // Provide a condition or selection
+
+       // String selection = ShoppingList.NewShoppingItem.QUANTITY + " LIKE ?";
+
+      //  String[] selection_args = {old_quantity+""};
+
+      //  int count = sqLiteDatabase.update(ShoppingList.NewShoppingItem.TABLE_NAME, contentValues,
+              //  selection, selection_args);
+
+      //  return count;
+    //}
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

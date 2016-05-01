@@ -29,6 +29,7 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
 
     private static final String PREFS_FILE = "com.example.android.shoppingapp2.preferences";
     private static final String ITEMCOUNT = "itemcount" ;
+    private static final String TOTAL_ITEMCOUNT = "total_itemcount" ;
 
     private ListView listview;
     private ShoppingItem[] mShoppingItems;
@@ -36,6 +37,9 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
     private List<ShoppingItem> newList = new ArrayList<>();
 
     private ShoppingItemAdapter mAdapter;
+
+    // Variables for the footer:
+    private int totalItemCount;
 
     View totalFooterView;
 
@@ -102,7 +106,7 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
 
         mAdapter = new ShoppingItemAdapter(DisplayShoppingList.this, list);
 
-        mAdapter.setCallback(this);
+        //mAdapter.setCallback(this);
 
         mAdapter.notifyDataSetChanged();
 
@@ -125,6 +129,9 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
             mEditor.putInt(ITEMCOUNT + i, mShoppingItems[i].getQuantity());
 
         }
+
+        // For the footer:
+        mEditor.putInt(TOTAL_ITEMCOUNT, totalItemCount);
 
         mEditor.apply();
     }
@@ -151,14 +158,24 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
         holder.deleteSelectedItemsBtn = (Button) totalFooterView.findViewById(R.id.deleteSelectedItemsBtn);
         holder.returnToMainBtn = (Button) totalFooterView.findViewById(R.id.returnToMainBtn);
 
-        int itemCount = 0;
+        totalItemCount = 0;
         double totalPrice = 0;
         double salesTax;
         double finalPrice;
 
+        for(int i=0; i<mShoppingItems.length; i++){
+
+            //passedInList.get(i).setQuantity(mSharedPreferences.getInt(ITEMCOUNT + i, 1));
+            //totalItemCount = totalItemCount + mSharedPreferences.getInt(ITEMCOUNT + i, 1);
+
+            totalItemCount = totalItemCount + passedInList.get(i).getQuantity();
+        }
+
+
+
         for (int i = 0; i < passedInList.size(); i++) {
 
-            itemCount = itemCount + passedInList.get(i).getQuantity();
+          //  itemCount = itemCount + passedInList.get(i).getQuantity();
             totalPrice = totalPrice + passedInList.get(i).getSubtotal();
         }
 
@@ -169,10 +186,20 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
 
         DecimalFormat df = new DecimalFormat("$0.00");
 
-        holder.itemCountEditText.setText(itemCount + "");
+        holder.itemCountEditText.setText(totalItemCount+"");
         holder.totalPriceEditText.setText(df.format(totalPrice));
         holder.salesTaxEditText.setText(df.format(salesTax));
         holder.finalPriceEditText.setText(df.format(finalPrice));
+
+        //mAdapter = new ShoppingItemAdapter(DisplayShoppingList.this, list);
+
+        //mAdapter.notifyDataSetChanged();
+
+        //listview.setAdapter(mAdapter);
+
+        // Add Footer
+
+        //listview.addFooterView(totalFooterView);
 
         holder.deleteSelectedItemsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,13 +241,15 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
 
                 }
 
-                refreshFooter(newList);
+                //refreshFooter(newList);
 
                 // Just testing ...
 
-                mAdapter = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
+                //mAdapter = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
 
                 mAdapter.notifyDataSetChanged();
+
+                mAdapter = new ShoppingItemAdapter(DisplayShoppingList.this, newList);
 
                 listview.setAdapter(mAdapter);
 
@@ -231,6 +260,34 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
             }
 
         });
+
+        //holder.updateCheckedItemsBtn.setOnClickListener(new View.OnClickListener() {
+           // @Override
+           // public void onClick(View v) {
+
+              //  shoppingDbHelper = new ShoppingDbHelper(getApplicationContext());
+              //  sqLiteDatabase = shoppingDbHelper.getWritableDatabase();
+
+
+
+             //   for(int i = 0; i < list.size(); i++) {
+
+                 //   if (list.get(i).isSelected()) {
+
+                       // int old_quantity = list.get(i).getQuantity();
+
+                      //  int new_quantity = list.get(i).getQuantity();
+
+                      //  int count = shoppingDbHelper.updateShoppingItem(old_quantity, new_quantity, sqLiteDatabase);
+                      //  Toast.makeText(getApplicationContext(), count + " shopping item(s) updated", Toast.LENGTH_LONG).show();
+
+                   // }
+           // }
+                  //  finish();
+
+              //  }
+
+       // });
 
         holder.returnToMainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,7 +347,7 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
         public TextView totalPriceEditText;
         public TextView salesTaxEditText;
         public TextView finalPriceEditText;
-        public Button deleteSelectedItemsBtn, returnToMainBtn;
+        public Button deleteSelectedItemsBtn, updateCheckedItemsBtn, returnToMainBtn;
 
     }
 
