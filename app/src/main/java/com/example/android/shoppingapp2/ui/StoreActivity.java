@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -40,9 +38,9 @@ import java.io.IOException;
 
 public class StoreActivity extends Activity  {
 
-    private Button scanBtn, increaseQuantityBtn, decreaseQuantityBtn, displayBtn;
+    private Button scanBtn,displayBtn;
     private TextView formatTxt, contentTxt;
-    private EditText productNameEditText, priceEditText, quantityEditText;
+    private EditText productNameEditText, priceEditText;
     public static final String TAG = StoreActivity.class.getSimpleName();
 
     private ShoppingItem mShoppingItem;
@@ -63,14 +61,11 @@ public class StoreActivity extends Activity  {
         setContentView(R.layout.activity_store);
 
         scanBtn = (Button) findViewById(R.id.scan_button);
-        increaseQuantityBtn = (Button) findViewById(R.id.increaseQuantityButton);
-        decreaseQuantityBtn = (Button) findViewById(R.id.decreaseQuantityButton);
         displayBtn = (Button) findViewById(R.id.display_button);
         formatTxt = (TextView) findViewById(R.id.scan_format);
         contentTxt = (TextView) findViewById(R.id.scan_content);
         productNameEditText = (EditText) findViewById(R.id.productNameEditText);
         priceEditText = (EditText) findViewById(R.id.priceEditText);
-        quantityEditText = (EditText) findViewById(R.id.quantityEditText);
 
         // Variables for the HTTP Request
 
@@ -95,8 +90,6 @@ public class StoreActivity extends Activity  {
         // Initialize shopping item
 
         mShoppingItem = new ShoppingItem();
-
-
 
         //Initialize UserDBHelper and SQLiteDB
 
@@ -140,40 +133,6 @@ public class StoreActivity extends Activity  {
         }
 
         mQuantity = 1;
-
-        quantityEditText.setText(mQuantity+"");
-
-        increaseQuantityBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mQuantity++;
-
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-
-                quantityEditText.setText(mQuantity+"");
-
-                mShoppingItem.setQuantity(mQuantity);
-            }
-        });
-
-        decreaseQuantityBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mQuantity--;
-
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
-
-                if(mQuantity<0){
-                    Toast.makeText(StoreActivity.this, "Your quantity has to be zero or more", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    quantityEditText.setText(mQuantity+"");
-                    mShoppingItem.setQuantity(mQuantity);
-                }
-            }
-        });
 
         displayBtn.setOnClickListener(new View.OnClickListener() {
             @Override

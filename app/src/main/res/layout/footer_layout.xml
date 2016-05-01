@@ -101,13 +101,6 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/update_selected_items_button"
-                android:id="@+id/updateSelectedItemsBtn"
-                android:layout_weight="1"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/return_main_button_label"
                 android:id="@+id/returnToMainBtn"
                 android:layout_weight="1"/>
