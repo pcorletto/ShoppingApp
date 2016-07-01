@@ -40,7 +40,6 @@
     <string name="SALES_TAX">SALES_TAX</string>
     <string name="FINAL_PRICE">FINAL_PRICE</string>
     <string name="LIST">LIST</string>
+    <string name="title_activity_dummy">DummyActivity</string>
 
 </resources>
-
-

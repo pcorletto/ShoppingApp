@@ -38,7 +38,7 @@ import java.io.IOException;
 
 public class StoreActivity extends Activity  {
 
-    private Button scanBtn,displayBtn;
+    private Button scanBtn,storeBtn,displayBtn;
     private TextView formatTxt, contentTxt;
     private EditText productNameEditText, priceEditText;
     public static final String TAG = StoreActivity.class.getSimpleName();
@@ -61,11 +61,16 @@ public class StoreActivity extends Activity  {
         setContentView(R.layout.activity_store);
 
         scanBtn = (Button) findViewById(R.id.scan_button);
+        storeBtn = (Button) findViewById(R.id.store_button);
         displayBtn = (Button) findViewById(R.id.display_button);
         formatTxt = (TextView) findViewById(R.id.scan_format);
         contentTxt = (TextView) findViewById(R.id.scan_content);
         productNameEditText = (EditText) findViewById(R.id.productNameEditText);
         priceEditText = (EditText) findViewById(R.id.priceEditText);
+
+        // Make the Store Button invisible. Only make it visible after a scanning result
+        // is successful so that the user can store the item if he or she so desires.
+        storeBtn.setVisibility(View.INVISIBLE);
 
         // Variables for the HTTP Request
 
@@ -84,6 +89,14 @@ public class StoreActivity extends Activity  {
 
                 }
 
+            }
+        });
+
+        storeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                addItem();
             }
         });
 
@@ -330,6 +343,11 @@ public class StoreActivity extends Activity  {
 
             getScannedItemInfo(mUPC);
 
+            // Make STORE button visible so that user can store the scanned item if he or she
+            // wishes.
+
+            storeBtn.setVisibility(View.VISIBLE);
+
         }
 
         else{
@@ -340,7 +358,7 @@ public class StoreActivity extends Activity  {
 
     }
 
-    public void addItem(View view) {
+    public void addItem() {
 
         context = this;
 
