@@ -1,6 +1,7 @@
 package com.example.android.shoppingapp2.model;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.shoppingapp2.R;
 
@@ -30,6 +30,17 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
     private Context mContext;
     ShoppingDbHelper shoppingDbHelper;
     SQLiteDatabase sqLiteDatabase;
+
+    private int mRowNumber;
+
+    // Variables for the footer:
+    private int mItemCount;
+    private double mTotalPrice;
+    private double mSalesTax;
+    private double mFinalPrice;
+
+    private ShoppingItem mShoppingItem;
+    Cursor cursor;
 
     public ShoppingItemAdapter(Context context, List<ShoppingItem> list) {
         super(context, R.layout.shopping_list_item, list);
@@ -158,13 +169,69 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
                     updateSubtotal(list.get(position).getProductName(),
                             list.get(position).getQuantity()+"", list.get(position).getSubtotal()+"");
 
-                    // In the next update, pull the appropriate values from SQLiteDB, and update
-                    // itemCount, totalPrice, salesTax and finalPrice, instead of 111, 222, 333, 444.
+                    // Refactor the following block of code, and put it in a method called "reloadFromDB"
 
-                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.itemCountEditText.setText(111+"");
-                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.totalPriceEditText.setText(df.format(222));
-                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.salesTaxEditText.setText(df.format(333));
-                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.finalPriceEditText.setText(df.format(444));
+                    // In the next update, pull the appropriate values from SQLiteDB, and update
+                    // itemCount, totalPrice, salesTax and finalPrice
+
+                    mItemCount = 0;
+                    mTotalPrice = 0;
+                    mSalesTax = 0;
+                    mFinalPrice = 0;
+
+                    // Reload the items from the database
+
+                    // Initialize shopping item
+
+                    mShoppingItem = new ShoppingItem();
+
+                    //Initialize ShoppingDbHelper and SQLiteDB
+
+                    shoppingDbHelper = new ShoppingDbHelper(mContext);
+                    sqLiteDatabase = shoppingDbHelper.getReadableDatabase();
+
+                    cursor = ShoppingDbHelper.getShoppingItem(sqLiteDatabase);
+
+                    mRowNumber = 0;
+
+                    if(cursor.moveToFirst()) {
+
+                        do {
+
+                            String productName, category;
+                            int quantity;
+                            double unitPrice, subtotal;
+
+                            quantity = cursor.getInt(0);
+                            productName = cursor.getString(1);
+                            unitPrice = cursor.getDouble(2);
+                            category = cursor.getString(3);
+                            subtotal = cursor.getDouble(4);
+
+                            mShoppingItem = new ShoppingItem(quantity, productName, unitPrice, category, subtotal);
+
+                            list.add(mShoppingItem);
+
+                            mItemCount = quantity + mItemCount;
+                            mTotalPrice = subtotal + mTotalPrice;
+                            mSalesTax = (subtotal * 0.07)+ mSalesTax;
+                            mFinalPrice = mTotalPrice + mSalesTax;
+
+                            mRowNumber++;
+
+
+                        }
+
+                        while (cursor.moveToNext());
+
+                    }
+
+                    // Done reloading items from the database
+
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.itemCountEditText.setText(mItemCount+"");
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.totalPriceEditText.setText(df.format(mTotalPrice));
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.salesTaxEditText.setText(df.format(mSalesTax));
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.finalPriceEditText.setText(df.format(mFinalPrice));
 
 
                 } else {
@@ -206,13 +273,69 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                     // Set the text views in the footer to the new values after update.
 
-                    // In the next update, pull the appropriate values from SQLiteDB, and update
-                    // itemCount, totalPrice, salesTax and finalPrice, instead of 555, 666, 777, 888.
+                    // Refactor the following block of code, and put it in a method called "reloadFromDB"
 
-                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.itemCountEditText.setText(555+"");
-                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.totalPriceEditText.setText(df.format(666));
-                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.salesTaxEditText.setText(df.format(777));
-                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.finalPriceEditText.setText(df.format(888));
+                    // In the next update, pull the appropriate values from SQLiteDB, and update
+                    // itemCount, totalPrice, salesTax and finalPrice
+
+                    mItemCount = 0;
+                    mTotalPrice = 0;
+                    mSalesTax = 0;
+                    mFinalPrice = 0;
+
+                    // Reload the items from the database
+
+                    // Initialize shopping item
+
+                    mShoppingItem = new ShoppingItem();
+
+                    //Initialize ShoppingDbHelper and SQLiteDB
+
+                    shoppingDbHelper = new ShoppingDbHelper(mContext);
+                    sqLiteDatabase = shoppingDbHelper.getReadableDatabase();
+
+                    cursor = ShoppingDbHelper.getShoppingItem(sqLiteDatabase);
+
+                    mRowNumber = 0;
+
+                    if(cursor.moveToFirst()) {
+
+                        do {
+
+                            String productName, category;
+                            int quantity;
+                            double unitPrice, subtotal;
+
+                            quantity = cursor.getInt(0);
+                            productName = cursor.getString(1);
+                            unitPrice = cursor.getDouble(2);
+                            category = cursor.getString(3);
+                            subtotal = cursor.getDouble(4);
+
+                            mShoppingItem = new ShoppingItem(quantity, productName, unitPrice, category, subtotal);
+
+                            list.add(mShoppingItem);
+
+                            mItemCount = quantity + mItemCount;
+                            mTotalPrice = subtotal + mTotalPrice;
+                            mSalesTax = (subtotal * 0.07)+ mSalesTax;
+                            mFinalPrice = mTotalPrice + mSalesTax;
+
+                            mRowNumber++;
+
+
+                        }
+
+                        while (cursor.moveToNext());
+
+                    }
+
+                    // Done reloading items from the database
+
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.itemCountEditText.setText(mItemCount+"");
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.totalPriceEditText.setText(df.format(mTotalPrice));
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.salesTaxEditText.setText(df.format(mSalesTax));
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.finalPriceEditText.setText(df.format(mFinalPrice));
 
                     }
 
@@ -263,8 +386,6 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
         sqLiteDatabase = shoppingDbHelper.getWritableDatabase();
 
         int count = shoppingDbHelper.updateSubtotal(productName, quantity, subtotal, sqLiteDatabase);
-
-        Toast.makeText(mContext.getApplicationContext(), count + " subtotal updated", Toast.LENGTH_LONG).show();
 
     }
 
