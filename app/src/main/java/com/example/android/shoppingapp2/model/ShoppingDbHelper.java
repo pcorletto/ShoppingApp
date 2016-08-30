@@ -18,8 +18,8 @@ public class ShoppingDbHelper extends SQLiteOpenHelper {
             "(" + ShoppingList.NewShoppingItem.UPC_CODE + " TEXT," +
             ShoppingList.NewShoppingItem.QUANTITY + " INTEGER," +
             ShoppingList.NewShoppingItem.PRODUCT_NAME + " TEXT," +
-            ShoppingList.NewShoppingItem.CATEGORY + " TEXT," +
             ShoppingList.NewShoppingItem.ITEM_PRICE + " REAL," +
+            ShoppingList.NewShoppingItem.CATEGORY + " TEXT," +
             ShoppingList.NewShoppingItem.SUBTOTAL + " TEXT);";
 
     // Default Constructor:
@@ -42,7 +42,7 @@ public class ShoppingDbHelper extends SQLiteOpenHelper {
     // Insert the item  next. Method for inserting the shopping item.
 
     public void addItem(String upc, double quantity, String productName,
-                        String category, String itemPrice, SQLiteDatabase db){
+                        String itemPrice, String category, String subtotal, SQLiteDatabase db){
 
         // Map key-values
 
@@ -50,8 +50,9 @@ public class ShoppingDbHelper extends SQLiteOpenHelper {
         contentValues.put(ShoppingList.NewShoppingItem.UPC_CODE, upc);
         contentValues.put(ShoppingList.NewShoppingItem.QUANTITY, quantity);
         contentValues.put(ShoppingList.NewShoppingItem.PRODUCT_NAME, productName);
-        contentValues.put(ShoppingList.NewShoppingItem.CATEGORY, category);
         contentValues.put(ShoppingList.NewShoppingItem.ITEM_PRICE, itemPrice);
+        contentValues.put(ShoppingList.NewShoppingItem.CATEGORY, category);
+        contentValues.put(ShoppingList.NewShoppingItem.SUBTOTAL, subtotal);
 
         // Save all these into the database
 
@@ -61,7 +62,7 @@ public class ShoppingDbHelper extends SQLiteOpenHelper {
 
     }
 
-    public Cursor getShoppingItem(SQLiteDatabase db){
+    public static Cursor getShoppingItem(SQLiteDatabase db){
 
         // The return type of Object is "Cursor"
         Cursor cursor;
@@ -69,8 +70,9 @@ public class ShoppingDbHelper extends SQLiteOpenHelper {
         // Create projections, or the needed column names
         String[] projections = {ShoppingList.NewShoppingItem.QUANTITY,
                 ShoppingList.NewShoppingItem.PRODUCT_NAME,
+                ShoppingList.NewShoppingItem.ITEM_PRICE,
                 ShoppingList.NewShoppingItem.CATEGORY,
-                ShoppingList.NewShoppingItem.ITEM_PRICE};
+                ShoppingList.NewShoppingItem.SUBTOTAL};
 
         // We only need the table name and projection parameters. No conditions will be specified,
         // so, we will pass in null for the last five parameters.
@@ -90,6 +92,24 @@ public class ShoppingDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.delete(ShoppingList.NewShoppingItem.TABLE_NAME, selection, selection_args);
 
 
+    }
+
+    public int updateSubtotal(String old_product_name, String quantity, String subtotal, SQLiteDatabase sqLiteDatabase){
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShoppingList.NewShoppingItem.QUANTITY, quantity);
+        contentValues.put(ShoppingList.NewShoppingItem.SUBTOTAL, subtotal);
+
+        // Provide a condition or selection
+
+        String selection = ShoppingList.NewShoppingItem.PRODUCT_NAME + " LIKE ?";
+
+        String[] selection_args = {old_product_name};
+
+        int count = sqLiteDatabase.update(ShoppingList.NewShoppingItem.TABLE_NAME, contentValues,
+                selection, selection_args);
+
+        return count;
     }
 
     @Override

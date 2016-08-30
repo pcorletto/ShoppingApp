@@ -12,7 +12,7 @@ public class ShoppingItem implements Parcelable {
 
     private String mUPC, mProductName, mCategory;
     private int mQuantity;
-    private double mItemPrice, mRefreshedPrice, mSubtotal;
+    private double mItemPrice, mSubtotal;
     private boolean isSelected;
 
     // Constructors
@@ -21,12 +21,13 @@ public class ShoppingItem implements Parcelable {
 
     }
 
-    public ShoppingItem(int quantity, String name, double price, String category){
+    public ShoppingItem(int quantity, String name, double price, String category, double subtotal){
 
         this.mQuantity = quantity;
         this.mProductName = name;
         this.mItemPrice = price;
         this.mCategory = category;
+        this.mSubtotal = subtotal;
         this.isSelected = false;
 
     }
@@ -73,14 +74,6 @@ public class ShoppingItem implements Parcelable {
         mItemPrice = itemPrice;
     }
 
-    public double getRefreshedPrice() {
-        return mRefreshedPrice;
-    }
-
-    public void setRefreshedPrice(double refreshedPrice) {
-        mRefreshedPrice = refreshedPrice;
-    }
-
     public double getSubtotal() {
         return mSubtotal;
     }
@@ -111,7 +104,6 @@ public class ShoppingItem implements Parcelable {
         dest.writeString(mCategory);
         dest.writeInt(mQuantity);
         dest.writeDouble(mItemPrice);
-        dest.writeDouble(mRefreshedPrice);
         dest.writeDouble(mSubtotal);
 
     }
@@ -123,7 +115,6 @@ public class ShoppingItem implements Parcelable {
         mCategory = in.readString();
         mQuantity = in.readInt();
         mItemPrice = in.readDouble();
-        mRefreshedPrice = in.readDouble();
         mSubtotal = in.readDouble();
 
     }

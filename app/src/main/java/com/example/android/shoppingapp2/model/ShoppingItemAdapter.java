@@ -1,6 +1,7 @@
 package com.example.android.shoppingapp2.model;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.shoppingapp2.R;
 
@@ -21,13 +23,13 @@ import java.util.List;
  */
 public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
-    private final List<ShoppingItem> list;
+    private List<ShoppingItem> list;
 
     ArrayList<Boolean> positionArray;
 
     private Context mContext;
-
-    private ShoppingItemAdapterCallBack callback;
+    ShoppingDbHelper shoppingDbHelper;
+    SQLiteDatabase sqLiteDatabase;
 
     public ShoppingItemAdapter(Context context, List<ShoppingItem> list) {
         super(context, R.layout.shopping_list_item, list);
@@ -89,19 +91,43 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
         // Now, set the data:
 
-        DecimalFormat df = new DecimalFormat("$0.00");
-
         holder.quantity = this.getItem(position).getQuantity();
         holder.productName = this.getItem(position).getProductName();
         holder.itemPrice = this.getItem(position).getItemPrice();
         holder.category = this.getItem(position).getCategory();
         holder.subtotal = this.getItem(position).getSubtotal();
 
+        // Set the text views for the list view
+
+        DecimalFormat df = new DecimalFormat("$0.00");
+
         holder.quantityEditText.setText(holder.quantity + "");
         holder.productNameEditText.setText(holder.productName);
         holder.unitPriceEditText.setText(df.format(holder.itemPrice));
         holder.categoryEditText.setText(holder.category);
         holder.subtotalEditText.setText(df.format(holder.subtotal));
+
+        holder.checkBox.setFocusable(false);
+        holder.checkBox.setChecked(positionArray.get(position));
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked ){
+
+                    positionArray.add(position, true);
+                    list.get(position).setSelected(true);
+
+                }else {
+
+                    positionArray.add(position, false);
+                    list.get(position).setSelected(false);
+
+                }
+
+            }
+        });
 
         holder.decrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,15 +153,18 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                     list.get(position).setSubtotal(holder.subtotal);
 
-                    // Pass this updated list back to DisplayShoppingList.java activity
-                    // via callback interface so that it is refreshed or updated
-                    // in the footer.
+                    // Update new subtotal in the SQLite Database
 
-                    if(callback != null){
+                    updateSubtotal(list.get(position).getProductName(),
+                            list.get(position).getQuantity()+"", list.get(position).getSubtotal()+"");
 
-                        callback.refreshFooter(list);
+                    // In the next update, pull the appropriate values from SQLiteDB, and update
+                    // itemCount, totalPrice, salesTax and finalPrice, instead of 111, 222, 333, 444.
 
-                    }
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.itemCountEditText.setText(111+"");
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.totalPriceEditText.setText(df.format(222));
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.salesTaxEditText.setText(df.format(333));
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.finalPriceEditText.setText(df.format(444));
 
 
                 } else {
@@ -170,15 +199,20 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                     list.get(position).setSubtotal(holder.subtotal);
 
-                    // Pass this updated list back to DisplayShoppingList.java activity
-                    // via callback interface so that it is refreshed or updated
-                    // in the footer.
+                    // Update new subtotal in the SQLite Database
 
-                    if(callback != null){
+                    updateSubtotal(list.get(position).getProductName(),
+                            list.get(position).getQuantity()+"", list.get(position).getSubtotal()+"");
 
-                        callback.refreshFooter(list);
+                    // Set the text views in the footer to the new values after update.
 
-                }
+                    // In the next update, pull the appropriate values from SQLiteDB, and update
+                    // itemCount, totalPrice, salesTax and finalPrice, instead of 555, 666, 777, 888.
+
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.itemCountEditText.setText(555+"");
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.totalPriceEditText.setText(df.format(666));
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.salesTaxEditText.setText(df.format(777));
+                    com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.finalPriceEditText.setText(df.format(888));
 
                     }
 
@@ -191,30 +225,18 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
             }
         });
 
-        holder.checkBox.setFocusable(false);
-        holder.checkBox.setChecked(positionArray.get(position));
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if(isChecked ){
-
-                    positionArray.add(position, true);
-                    list.get(position).setSelected(true);
-
-                }else {
-
-                    positionArray.add(position, false);
-                    list.get(position).setSelected(false);
-
-                }
-
-            }
-        });
 
         return convertView;
     }
+
+    public void refresh(List<ShoppingItem> list){
+
+        this.list = list;
+        notifyDataSetChanged();
+
+    }
+
 
     private static class ViewHolder{
 
@@ -235,22 +257,16 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
     }
 
-    public void setCallback(ShoppingItemAdapterCallBack callback){
+    public void updateSubtotal(String productName, String quantity, String subtotal){
 
-        this.callback = callback;
+        shoppingDbHelper = new ShoppingDbHelper(mContext.getApplicationContext());
+        sqLiteDatabase = shoppingDbHelper.getWritableDatabase();
 
-    }
+        int count = shoppingDbHelper.updateSubtotal(productName, quantity, subtotal, sqLiteDatabase);
 
-    public List<ShoppingItem> getCallBack(){
-
-        return list;
-
-    }
-
-    public interface ShoppingItemAdapterCallBack{
-
-        public void refreshFooter(List<ShoppingItem> list);
+        Toast.makeText(mContext.getApplicationContext(), count + " subtotal updated", Toast.LENGTH_LONG).show();
 
     }
+
 
 }

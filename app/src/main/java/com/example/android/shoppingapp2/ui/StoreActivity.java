@@ -49,6 +49,7 @@ public class StoreActivity extends Activity  {
 
     private String mName, mItemPrice, mUPC, mCategory;
     private int mQuantity;
+    private double mSubtotal;
 
     Context context;
     ShoppingDbHelper shoppingDbHelper;
@@ -122,16 +123,17 @@ public class StoreActivity extends Activity  {
 
                 String productName, category;
                 int quantity;
-                double unitPrice;
+                double unitPrice, subtotal;
 
                 quantity = cursor.getInt(0);
                 productName = cursor.getString(1);
-                category = cursor.getString(2);
-                unitPrice = cursor.getDouble(3);
+                unitPrice = cursor.getDouble(2);
+                category = cursor.getString(3);
+                subtotal = cursor.getDouble(4);
 
-                mShoppingItem = new ShoppingItem(quantity, productName, unitPrice, category);
+                mShoppingItem = new ShoppingItem(quantity, productName, unitPrice, category, subtotal);
 
-                double subtotal = quantity * unitPrice;
+                subtotal = quantity * unitPrice;
 
                 mShoppingItem.setSubtotal(subtotal);
 
@@ -171,7 +173,7 @@ public class StoreActivity extends Activity  {
 
         // API Key for Walmart
 
-        String apiKey = "";
+        String apiKey = "3594g6xebxnqcqvkgwcrqpj3";
 
         String itemLookUpUrl = "http://api.walmartlabs.com/v1/items?apiKey=" +
                 apiKey + "&upc=" + upc;
@@ -231,6 +233,7 @@ public class StoreActivity extends Activity  {
                                             mName = item.getString("name");
                                             mItemPrice = item.getString("salePrice");
                                             mCategory = item.getString("categoryPath");
+
                                         }
 
 
@@ -250,6 +253,7 @@ public class StoreActivity extends Activity  {
 
                                         mShoppingItem.setItemPrice(Double.parseDouble(mItemPrice));
                                         priceEditText.setText("$" + mItemPrice);
+                                        mSubtotal = Double.parseDouble(mItemPrice) * mQuantity;
                                     }
 
 
@@ -370,8 +374,8 @@ public class StoreActivity extends Activity  {
             sqLiteDatabase = shoppingDbHelper.getWritableDatabase();
 
             // Insert the item details in the database
-            shoppingDbHelper.addItem(mUPC, mQuantity, mName, mCategory,
-                    mItemPrice, sqLiteDatabase);
+            shoppingDbHelper.addItem(mUPC, mQuantity, mName, mItemPrice, mCategory,
+                    mSubtotal+"", sqLiteDatabase);
 
             Toast.makeText(StoreActivity.this, "Shopping Item Saved", Toast.LENGTH_LONG).show();
 

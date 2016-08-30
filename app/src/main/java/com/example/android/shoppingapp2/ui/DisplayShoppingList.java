@@ -1,8 +1,7 @@
 package com.example.android.shoppingapp2.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.shoppingapp2.R;
 import com.example.android.shoppingapp2.model.ShoppingDbHelper;
@@ -25,40 +23,43 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DisplayShoppingList extends AppCompatActivity implements ShoppingItemAdapter.ShoppingItemAdapterCallBack {
-
-    private static final String PREFS_FILE = "com.example.android.shoppingapp2.preferences";
-    private static final String ITEMCOUNT = "itemcount" ;
-    private static final String TOTAL_ITEMCOUNT = "total_itemcount" ;
+public class DisplayShoppingList extends AppCompatActivity{
 
     private ListView listview;
     private ShoppingItem[] mShoppingItems;
     private List<ShoppingItem> list = new ArrayList<>();
+
+    // Need a newList, for when shopping items are deleted, a new list is created
     private List<ShoppingItem> newList = new ArrayList<>();
-
-    private ShoppingItemAdapter mAdapter;
-
-    // Variables for the footer:
-    private int totalItemCount;
 
     View totalFooterView;
 
+    private ShoppingItemAdapter mAdapter;
     ShoppingDbHelper shoppingDbHelper;
     SQLiteDatabase sqLiteDatabase;
-
     private int mRowNumber;
 
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
+    // Variables for the footer:
+    private int mItemCount;
+    private double mTotalPrice;
+    private double mSalesTax;
+    private double mFinalPrice;
+
+    private ShoppingItem mShoppingItem;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_shopping_list);
 
-        mSharedPreferences = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-        mEditor = mSharedPreferences.edit();
+        //mSharedPreferences = getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+        //mEditor = mSharedPreferences.edit();
 
+        mItemCount = 0;
+        mTotalPrice = 0;
+        mSalesTax = 0;
+        mFinalPrice = 0;
 
         listview = (ListView) findViewById(android.R.id.list);
 
@@ -70,23 +71,16 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
 
         mShoppingItems = Arrays.copyOf(parcelables, mRowNumber, ShoppingItem[].class);
 
-        for(int i=0; i<mRowNumber; i++){
-
-            int quantity = mSharedPreferences.getInt(ITEMCOUNT + i, 1);
-
-            double subtotal = quantity * mShoppingItems[i].getItemPrice();
-
-            mShoppingItems[i].setQuantity(quantity);
-
-            mShoppingItems[i].setSubtotal(subtotal);
+        for (int i = 0; i < mRowNumber; i++) {
 
             list.add(mShoppingItems[i]);
 
+            mItemCount = mShoppingItems[i].getQuantity() + mItemCount;
+            mTotalPrice = mShoppingItems[i].getItemPrice() + mTotalPrice;
+            mSalesTax = (mShoppingItems[i].getItemPrice() * 0.07) + mSalesTax;
+            mFinalPrice = mTotalPrice + mSalesTax;
+
         }
-
-        refreshFooter(list);
-
-        // Update footer
 
         mAdapter = new ShoppingItemAdapter(DisplayShoppingList.this, list);
 
@@ -94,42 +88,11 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
 
         listview.setAdapter(mAdapter);
 
-        // Add Footer
+        totalFooterView = View.inflate(getBaseContext(), R.layout.footer_layout, null);
 
         listview.addFooterView(totalFooterView);
 
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        for(int i=0; i<mShoppingItems.length; i++){
-
-            mEditor.putInt(ITEMCOUNT + i, mShoppingItems[i].getQuantity());
-
-        }
-
-        // For the footer:
-        mEditor.putInt(TOTAL_ITEMCOUNT, totalItemCount);
-
-        mEditor.apply();
-    }
-
-    public void onBackPressed() {
-
-        Intent startMain = new Intent(DisplayShoppingList.this, MainActivity.class);
-        startActivity(startMain);
-
-    }
-
-    public void refreshFooter(List<ShoppingItem> passedInList) {
-
-        // Refresh footer
-
-        totalFooterView = View.inflate(getBaseContext(), R.layout.footer_layout, null);
-
-        ViewHolder holder = new ViewHolder();
+        final ViewHolder holder = new ViewHolder();
 
         holder.itemCountEditText = (TextView) totalFooterView.findViewById(R.id.itemCountEditText);
         holder.totalPriceEditText = (TextView) totalFooterView.findViewById(R.id.totalPriceEditText);
@@ -138,52 +101,29 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
         holder.deleteSelectedItemsBtn = (Button) totalFooterView.findViewById(R.id.deleteSelectedItemsBtn);
         holder.returnToMainBtn = (Button) totalFooterView.findViewById(R.id.returnToMainBtn);
 
-        totalItemCount = 0;
-        double totalPrice = 0;
-        double salesTax;
-        double finalPrice;
+        final DecimalFormat df = new DecimalFormat("$0.00");
 
-        for(int i=0; i<mShoppingItems.length; i++){
-
-           totalItemCount = totalItemCount + passedInList.get(i).getQuantity();
-
-        }
-
-        for (int i = 0; i < passedInList.size(); i++) {
-
-            totalPrice = totalPrice + passedInList.get(i).getSubtotal();
-        }
-
-        salesTax = totalPrice * 0.07;
-        finalPrice = totalPrice + salesTax;
-
-        //Set the TOTAL data:
-
-        DecimalFormat df = new DecimalFormat("$0.00");
-
-        holder.itemCountEditText.setText(totalItemCount+"");
-        holder.totalPriceEditText.setText(df.format(totalPrice));
-        holder.salesTaxEditText.setText(df.format(salesTax));
-        holder.finalPriceEditText.setText(df.format(finalPrice));
+        holder.itemCountEditText.setText(mItemCount + "");
+        holder.totalPriceEditText.setText(df.format(mTotalPrice));
+        holder.salesTaxEditText.setText(df.format(mSalesTax));
+        holder.finalPriceEditText.setText(df.format(mFinalPrice));
 
         holder.deleteSelectedItemsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                listview.removeFooterView(totalFooterView);
 
                 for (int i = 0; i < list.size(); i++) {
 
                     if (list.get(i).isSelected()) {
 
                         // For ListView: Skip checked or selected items. These will be deleted and will not
-                        // be added to the new listview.
+                        // be added to the new list view.
 
                         // For SQLiteDatabase: Delete this item here, if checked.
 
-                        String item_for_DB_deletion = list.get(i).getProductName();
+                        String item_for_DB_deletion = list.get(i).getProductName() + "";
 
-                        // Initialize the shoppingDbHelper object
+                        // Initialize the shoppingDBHelper object
 
                         shoppingDbHelper = new ShoppingDbHelper(getApplicationContext());
 
@@ -191,9 +131,21 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
 
                         sqLiteDatabase = shoppingDbHelper.getReadableDatabase();
 
+                        mItemCount = mItemCount - list.get(i).getQuantity();
+                        mTotalPrice = mTotalPrice - list.get(i).getItemPrice();
+                        mSalesTax = mSalesTax - (list.get(i).getItemPrice() * 0.07);
+                        mFinalPrice = mFinalPrice - list.get(i).getSubtotal();
+
+                        // Delete the shopping item from the SQLite database
+
                         shoppingDbHelper.deleteShoppingItem(item_for_DB_deletion, sqLiteDatabase);
 
-                        Toast.makeText(getApplicationContext(), "Shopping item deleted", Toast.LENGTH_LONG).show();
+                        // Set the text views in the footer to the new values after deletion
+
+                        holder.itemCountEditText.setText(mItemCount +"");
+                        holder.totalPriceEditText.setText(df.format(mTotalPrice));
+                        holder.salesTaxEditText.setText(df.format(mSalesTax));
+                        holder.finalPriceEditText.setText(df.format(mFinalPrice));
 
 
                     } else {
@@ -212,7 +164,7 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
 
                 listview.setAdapter(mAdapter);
 
-                // Add Footer
+                // Add footer
 
                 listview.addFooterView(totalFooterView);
 
@@ -225,12 +177,104 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
             public void onClick(View v) {
 
                 Intent intent = new Intent(DisplayShoppingList.this, MainActivity.class);
-
                 startActivity(intent);
 
             }
-
         });
+
+    }
+
+        public static final class ViewHolder{
+
+            // This ViewHolder is for the footer, to hold the item count, total price, sales tax,
+            //and final price.
+
+            public static TextView itemCountEditText;
+            public static TextView totalPriceEditText;
+            public static TextView salesTaxEditText;
+            public static TextView finalPriceEditText;
+            public Button deleteSelectedItemsBtn, returnToMainBtn;
+
+        }
+
+    @Override
+    public void onResume(){
+
+        super.onResume();
+        list.clear();
+
+        mItemCount = 0;
+        mTotalPrice = 0;
+        mSalesTax = 0;
+        mFinalPrice = 0;
+
+        // Reload the items from the database
+
+        // Initialize shopping item
+
+        mShoppingItem = new ShoppingItem();
+
+        //Initialize ShoppingDbHelper and SQLiteDB
+
+        shoppingDbHelper = new ShoppingDbHelper(getApplicationContext());
+        sqLiteDatabase = shoppingDbHelper.getReadableDatabase();
+
+        cursor = ShoppingDbHelper.getShoppingItem(sqLiteDatabase);
+
+        mRowNumber = 0;
+
+        if(cursor.moveToFirst()) {
+
+            do {
+
+                String productName, category;
+                int quantity;
+                double unitPrice, subtotal;
+
+                quantity = cursor.getInt(0);
+                productName = cursor.getString(1);
+                unitPrice = cursor.getDouble(2);
+                category = cursor.getString(3);
+                subtotal = cursor.getDouble(4);
+
+                mShoppingItem = new ShoppingItem(quantity, productName, unitPrice, category, subtotal);
+
+                list.add(mShoppingItem);
+
+                mItemCount = quantity + mItemCount;
+                mTotalPrice = subtotal + mTotalPrice;
+                mSalesTax = (subtotal * 0.07)+ mSalesTax;
+                mFinalPrice = mTotalPrice + mSalesTax;
+
+                mRowNumber++;
+
+
+            }
+
+            while (cursor.moveToNext());
+
+        }
+
+        // Done reloading items from the database
+
+        mAdapter.refresh(list);
+
+
+        // Refresh the footer:
+
+
+        final DecimalFormat df = new DecimalFormat("$0.00");
+
+
+        TextView itemCountEditText = (TextView) totalFooterView.findViewById(R.id.itemCountEditText);
+        TextView totalPriceEditText = (TextView) totalFooterView.findViewById(R.id.totalPriceEditText);
+        TextView salesTaxEditText = (TextView) totalFooterView.findViewById(R.id.salesTaxEditText);
+        TextView finalPriceEditText = (TextView) totalFooterView.findViewById(R.id.finalPriceEditText);
+
+        itemCountEditText.setText(mItemCount +"");
+        totalPriceEditText.setText(df.format(mTotalPrice));
+        salesTaxEditText.setText(df.format(mSalesTax));
+        finalPriceEditText.setText(df.format(mFinalPrice));
 
     }
 
@@ -249,37 +293,12 @@ public class DisplayShoppingList extends AppCompatActivity implements ShoppingIt
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_reset_item_counts) {
-
-            mEditor.clear();
-            mEditor.apply();
-
-            for(ShoppingItem shoppingItem: mShoppingItems){
-
-                shoppingItem.setQuantity(1);
-                shoppingItem.setSubtotal(1 * shoppingItem.getItemPrice());
-
-            }
-
-            mAdapter.notifyDataSetChanged();
-
+        if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public final class ViewHolder{
-
-        // This ViewHolder is for the footer, to hold the item count, total price, sales tax,
-        //and final price.
-
-        public TextView itemCountEditText;
-        public TextView totalPriceEditText;
-        public TextView salesTaxEditText;
-        public TextView finalPriceEditText;
-        public Button deleteSelectedItemsBtn, returnToMainBtn;
-
-    }
 
 }
