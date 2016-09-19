@@ -147,6 +147,8 @@ public class DisplayShoppingList extends AppCompatActivity{
                         holder.salesTaxEditText.setText(df.format(mSalesTax));
                         holder.finalPriceEditText.setText(df.format(mFinalPrice));
 
+                        finish();
+
 
                     } else {
 

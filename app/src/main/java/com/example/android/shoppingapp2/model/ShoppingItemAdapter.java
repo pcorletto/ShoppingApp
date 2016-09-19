@@ -210,8 +210,6 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                             mShoppingItem = new ShoppingItem(quantity, productName, unitPrice, category, subtotal);
 
-                            list.add(mShoppingItem);
-
                             mItemCount = quantity + mItemCount;
                             mTotalPrice = subtotal + mTotalPrice;
                             mSalesTax = (subtotal * 0.07)+ mSalesTax;
@@ -314,8 +312,6 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
 
                             mShoppingItem = new ShoppingItem(quantity, productName, unitPrice, category, subtotal);
 
-                            list.add(mShoppingItem);
-
                             mItemCount = quantity + mItemCount;
                             mTotalPrice = subtotal + mTotalPrice;
                             mSalesTax = (subtotal * 0.07)+ mSalesTax;
@@ -337,7 +333,7 @@ public class ShoppingItemAdapter extends ArrayAdapter<ShoppingItem> {
                     com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.salesTaxEditText.setText(df.format(mSalesTax));
                     com.example.android.shoppingapp2.ui.DisplayShoppingList.ViewHolder.finalPriceEditText.setText(df.format(mFinalPrice));
 
-                    }
+                }
 
                 else{
 

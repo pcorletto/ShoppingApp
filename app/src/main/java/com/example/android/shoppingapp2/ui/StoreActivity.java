@@ -173,7 +173,7 @@ public class StoreActivity extends Activity  {
 
         // API Key for Walmart
 
-        String apiKey = "3594g6xebxnqcqvkgwcrqpj3";
+        String apiKey = "";
 
         String itemLookUpUrl = "http://api.walmartlabs.com/v1/items?apiKey=" +
                 apiKey + "&upc=" + upc;
@@ -380,6 +380,8 @@ public class StoreActivity extends Activity  {
             Toast.makeText(StoreActivity.this, "Shopping Item Saved", Toast.LENGTH_LONG).show();
 
             shoppingDbHelper.close();
+
+            finish(); // Go back to Main Activity
 
     }
 
