@@ -45,7 +45,7 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
     // Insert the item  next. Method for inserting the shopping item.
 
     public void addItem(String upc, int quantity, int last_quantity, String last_date_purchased,
-                        String productName, int priority, double itemPrice, String category,
+                        String productName, double priority, double itemPrice, String category,
                         double subtotal, SQLiteDatabase db){
 
         // Map key-values

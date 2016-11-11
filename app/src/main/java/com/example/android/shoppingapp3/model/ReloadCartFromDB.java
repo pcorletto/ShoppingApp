@@ -54,8 +54,8 @@ public class ReloadCartFromDB {
         if(cursor.moveToFirst()){
 
             do{
-                int priority, quantity, lastQuantity;
-                double price, subtotal;
+                int quantity, lastQuantity;
+                double price, priority, subtotal;
                 String upc, lastDatePurchased, name, category;
 
                 upc = cursor.getString(0);
@@ -63,7 +63,7 @@ public class ReloadCartFromDB {
                 lastQuantity = cursor.getInt(2);
                 lastDatePurchased = cursor.getString(3);
                 name = cursor.getString(4);
-                priority = cursor.getInt(5);
+                priority = cursor.getDouble(5);
                 price = cursor.getDouble(6);
                 category = cursor.getString(7);
                 subtotal = cursor.getDouble(8);

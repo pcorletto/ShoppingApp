@@ -11,7 +11,7 @@ public class ShoppingItem implements Parcelable {
     // Private member variables
 
     private String mUPC, mProductName, mCategory;
-    private int mPriority;
+    private double mPriority;
     private int mQuantity;
     private int mLastQuantity;
     private String mLastDatePurchased;
@@ -25,7 +25,7 @@ public class ShoppingItem implements Parcelable {
     }
 
     public ShoppingItem(String upc, int quantity, int lastQuantity, String lastDatePurchased,
-                        String name, int priority, double price, String category,
+                        String name, double priority, double price, String category,
                         double subtotal){
 
         this.mUPC = upc;
@@ -67,7 +67,7 @@ public class ShoppingItem implements Parcelable {
         mCategory = category;
     }
 
-    public int getPriority() {
+    public double getPriority() {
         return mPriority;
     }
 
@@ -137,7 +137,7 @@ public class ShoppingItem implements Parcelable {
         dest.writeInt(mLastQuantity);
         dest.writeString(mLastDatePurchased);
         dest.writeString(mProductName);
-        dest.writeInt(mPriority);
+        dest.writeDouble(mPriority);
         dest.writeDouble(mItemPrice);
         dest.writeString(mCategory);
         dest.writeDouble(mSubtotal);
@@ -151,7 +151,7 @@ public class ShoppingItem implements Parcelable {
         mLastQuantity = in.readInt();
         mLastDatePurchased = in.readString();
         mProductName = in.readString();
-        mPriority = in.readInt();
+        mPriority = in.readDouble();
         mItemPrice = in.readDouble();
         mCategory = in.readString();
         mSubtotal = in.readDouble();

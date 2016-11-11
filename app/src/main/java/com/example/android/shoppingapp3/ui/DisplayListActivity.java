@@ -1,5 +1,6 @@
 package com.example.android.shoppingapp3.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
@@ -158,10 +159,12 @@ public class DisplayListActivity extends ActionBarActivity {
         FloatingActionButton myFAB = (FloatingActionButton) findViewById(R.id.myFAB);
 
         myFAB.setOnClickListener(new View.OnClickListener() {
+
                                      @Override
                                      public void onClick(View v) {
 
-                                         Toast.makeText(DisplayListActivity.this, "You clicked me!", Toast.LENGTH_LONG).show();
+                                         Intent intent = new Intent(DisplayListActivity.this, ScanActivity.class);
+                                         startActivity(intent);
 
                                      }
                                  }

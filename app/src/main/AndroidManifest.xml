@@ -21,15 +21,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.StoreActivity"
-            android:label="@string/title_activity_store"
-            android:parentActivityName=".ui.MainActivity"
-            android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.shoppingapp3.ui.MainActivity" />
-        </activity>
-        <activity
             android:name=".ui.DisplayListActivity"
             android:label="@string/title_activity_display_list"
             android:parentActivityName=".ui.MainActivity">
@@ -46,7 +37,7 @@
                 android:value="com.example.android.shoppingapp3.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.StoreDummyActivity"
+            android:name=".ui.ScanActivity"
             android:label="@string/title_activity_store_dummy"
             android:parentActivityName=".ui.MainActivity">
             <meta-data

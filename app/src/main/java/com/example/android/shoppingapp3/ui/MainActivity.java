@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         storeDummyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, StoreDummyActivity.class);
+                Intent intent = new Intent(MainActivity.this, ScanActivity.class);
                 startActivity(intent);
             }
         });
