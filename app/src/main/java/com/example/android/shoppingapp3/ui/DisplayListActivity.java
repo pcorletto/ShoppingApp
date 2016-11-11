@@ -37,8 +37,8 @@ public class DisplayListActivity extends ActionBarActivity {
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
-    List<String> listDataHeader;
-    HashMap<String, List<ShoppingItem>> listDataChild;
+    List<ShoppingItem> listDataHeader;
+    HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
     private Toolbar toolbar;
 
     @Override
@@ -52,13 +52,13 @@ public class DisplayListActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(R.drawable.ic_hamburger);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
+        getSupportActionBar().setTitle("Shop List");
         toolbar.setSubtitle("PCorletto 2016");
 
         // Get the expandable list view
         expListView = (ExpandableListView) findViewById(android.R.id.list);
 
-        listDataChild = new HashMap<String, List<ShoppingItem>>();
+        listDataChild = new HashMap<ShoppingItem, List<ShoppingItem>>();
 
         // Preparing list data
 
@@ -115,9 +115,9 @@ public class DisplayListActivity extends ActionBarActivity {
     private void prepareListData(){
 
 
-        listDataHeader = new ArrayList<String>();
+        listDataHeader = new ArrayList<ShoppingItem>();
 
-        listDataChild = new HashMap<String, List<ShoppingItem>>();
+        listDataChild = new HashMap<ShoppingItem, List<ShoppingItem>>();
 
         // Get the list of shopping items from the database
 
@@ -133,7 +133,7 @@ public class DisplayListActivity extends ActionBarActivity {
 
         for(int i = 0; i<mRowNumber; i++){
 
-            listDataHeader.add(mShoppingList.getShoppingItem(i).getProductName());
+            listDataHeader.add(mShoppingList.getShoppingItem(i));
 
         }
 

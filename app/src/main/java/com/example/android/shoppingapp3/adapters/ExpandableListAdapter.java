@@ -6,12 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.shoppingapp3.model.ShoppingItem;
 import com.example.android.shoppingapp3.R;
+import com.example.android.shoppingapp3.model.ShoppingItem;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,12 +22,12 @@ import java.util.List;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context _context;
-    private List<String> _listDataHeader; // header titles
+    private List<ShoppingItem> _listDataHeader; // header titles
     // child data in format of header title, child title
-    private HashMap<String, List<ShoppingItem>> _listDataChild;
+    private HashMap<ShoppingItem, List<ShoppingItem>> _listDataChild;
 
-    public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<ShoppingItem>> listChildData) {
+    public ExpandableListAdapter(Context context, List<ShoppingItem> listDataHeader,
+                                 HashMap<ShoppingItem, List<ShoppingItem>> listChildData) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
@@ -71,7 +71,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
+        ShoppingItem headerTitle = (ShoppingItem) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -79,10 +79,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         }
 
+        TextView quantityTextView = (TextView) convertView.
+                findViewById(R.id.quantityTextView);
+        quantityTextView.setText(headerTitle.getQuantity()+"");
+
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);
-        lblListHeader.setText(headerTitle);
+        lblListHeader.setText(headerTitle.getProductName());
 
         return convertView;
     }
@@ -98,14 +102,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_item, null);
 
-            holder.systolicReading = (TextView) convertView.findViewById(R.id.systolicReading);
-            holder.diastolicReading = (TextView) convertView.findViewById(R.id.diastolicReading);
-            holder.systolicStatusImageView = (ImageView) convertView.findViewById(R.id.systolicStatusImageView);
-            holder.diastolicStatusImageView = (ImageView) convertView.findViewById(R.id.diastolicStatusImageView);
-            holder.pulseLabel = (TextView) convertView.findViewById(R.id.pulseLabel);
-            holder.pulseReading = (TextView) convertView.findViewById(R.id.pulseReading);
-            holder.descriptionLabel = (TextView) convertView.findViewById(R.id.descriptionLabel);
-            holder.description = (TextView) convertView.findViewById(R.id.description);
+            holder.quantityTextView = (TextView) convertView.findViewById(R.id.quantityTextView);
+            holder.itemPriceTextView = (TextView) convertView.findViewById(R.id.itemPriceTextView);
+            holder.subtotalTextView = (TextView) convertView.findViewById(R.id.subtotalTextView);
+            holder.categoryTextView = (TextView) convertView.findViewById(R.id.categoryTextView);
+            holder.lastDatePurchasedTextView = (TextView) convertView.findViewById(R.id.lastDatePurchasedTextView);
+            holder.priorityTextView = (TextView) convertView.findViewById(R.id.priorityTextView);
 
             convertView.setTag(holder);
 
@@ -114,25 +116,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        //TextView txtListChild = (TextView) convertView
-        //      .findViewById(R.id.lblListItem);
+        DecimalFormat df = new DecimalFormat("$0.00");
 
-        //txtListChild.setText(childText);
-
-        holder.systolicReading.setText(childText.getQuantity()+"");
-        holder.diastolicReading.setText(childText.getQuantity()+"");
-
-
-        //holder.systolicStatusImageView.setImageResource(childText.getSystolicIconId());
-
-        //holder.diastolicStatusImageView.setImageResource(childText.getDiastolicIconId());
-
-        holder.pulseLabel.setText("PULSE RATE: ");
-        holder.pulseReading.setText(childText.getLastQuantity()+"");
-        holder.descriptionLabel.setText("DESCRIPTION");
-        holder.description.setText(childText.getCategory());
-
-
+        holder.quantityTextView.setText(childText.getQuantity()+"");
+        holder.itemPriceTextView.setText(df.format(childText.getItemPrice()));
+        holder.subtotalTextView.setText(df.format(childText.getSubtotal()));
+        holder.categoryTextView.setText(childText.getCategory());
+        holder.lastDatePurchasedTextView.setText(childText.getLastDatePurchased());
+        holder.priorityTextView.setText(childText.getPriority()+"");
 
         return convertView;
 
@@ -140,14 +131,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private static class ViewHolder{
 
-        public TextView systolicReading;
-        public TextView diastolicReading;
-        ImageView systolicStatusImageView;
-        ImageView diastolicStatusImageView;
-        public TextView pulseLabel;
-        public TextView pulseReading;
-        public TextView descriptionLabel;
-        public TextView description;
+        public TextView quantityTextView;
+        public TextView itemPriceTextView;
+        public TextView subtotalTextView;
+        public TextView categoryTextView;
+        public TextView lastDatePurchasedTextView;
+        public TextView priorityTextView;
 
     }
 

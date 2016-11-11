@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              android:orientation="horizontal"
               android:padding="8dp"
-              android:background="#581845"
+              android:background="@color/ColorPrimaryDark"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content">
+
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox"
+        android:focusable="false"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/quantityTextView"
+        android:focusable="false"
+        android:text="99"
+        android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/lblListHeader"

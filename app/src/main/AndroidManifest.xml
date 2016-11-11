@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.shoppingapp2" >
+    package="com.example.android.shoppingapp3" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,12 +8,12 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat" >
+        android:theme="@style/AppTheme"
+        android:label="@string/app_name" >
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,16 +27,32 @@
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.shoppingapp2.ui.MainActivity" />
+                android:value="com.example.android.shoppingapp3.ui.MainActivity" />
         </activity>
         <activity
-        android:name=".ui.DisplayShoppingList"
-        android:label="@string/title_activity_display_shopping_list"
-        android:parentActivityName=".ui.StoreActivity" >
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.android.shoppingapp2.ui.StoreActivity" />
-    </activity>
+            android:name=".ui.DisplayListActivity"
+            android:label="@string/title_activity_display_list"
+            android:parentActivityName=".ui.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.shoppingapp3.ui.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.DisplayCartActivity"
+            android:label="@string/title_activity_display_cart"
+            android:parentActivityName=".ui.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.shoppingapp3.ui.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.StoreDummyActivity"
+            android:label="@string/title_activity_store_dummy"
+            android:parentActivityName=".ui.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.shoppingapp3.ui.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

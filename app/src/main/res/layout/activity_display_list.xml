@@ -30,11 +30,12 @@
             android:gravity="bottom|end"
             android:layout_marginEnd="@dimen/button_margin"
             android:layout_marginBottom="@dimen/button_margin"
-            android:src="@drawable/ic_heart"
+            android:src="@drawable/ic_scan"
             app:elevation="@dimen/elevation_button"
             app:fabSize="normal"
             app:borderWidth="0dp"
-            android:layout_gravity="bottom|right"/>
+            android:layout_gravity="bottom|right"
+            />
 
     </FrameLayout>
 
