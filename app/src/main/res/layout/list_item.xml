@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              tools:background="#ffffff"
+              android:paddingTop="8dp"
+              android:paddingBottom="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="83dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/rectangle1ImageView"
+            android:src="@drawable/bg_reading"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/rectangle1ImageView"
+            android:layout_alignBottom="@+id/rectangle1ImageView"
+            android:layout_alignLeft="@+id/rectangle1ImageView"
+            android:layout_alignRight="@+id/rectangle1ImageView"
+            android:id="@+id/systolicReading"
+            android:gravity="center"
+            android:textColor="#581845"
+            android:textSize="50sp"
+            tools:text="120"/>
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="83dp"
+            android:id="@+id/systolicStatusImageView"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_toRightOf="@id/systolicReading"
+            android:src="@drawable/normal_reading"/>
+
+
+    </RelativeLayout>
+
+    <!-- Separator -->
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#581845" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="83dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/rectangle2ImageView"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@drawable/bg_reading"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/rectangle2ImageView"
+            android:layout_alignBottom="@+id/rectangle2ImageView"
+            android:layout_alignLeft="@+id/rectangle2ImageView"
+            android:layout_alignRight="@+id/rectangle2ImageView"
+            android:id="@+id/diastolicReading"
+            android:textSize="50sp"
+            tools:text="80"
+            android:gravity="center"
+            android:textColor="#581845"/>
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="83dp"
+            android:id="@+id/diastolicStatusImageView"
+            android:layout_toRightOf="@id/diastolicReading"
+            android:src="@drawable/high_reading"/>
+
+    </RelativeLayout>
+
+    <!-- Separator -->
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#581845" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pulseLabel"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            tools:text="PULSE RATE:"
+            android:textColor="#581845"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pulseReading"
+            android:textSize="25sp"
+            android:layout_toRightOf="@id/pulseLabel"
+            tools:text="100"
+            android:textColor="#581845"/>
+
+    </RelativeLayout>
+
+    <!-- Separator -->
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#581845" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/descriptionLabel"
+            android:textSize="15sp"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            tools:text="DESCRIPTION:"
+            android:textColor="#581845"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/description"
+            android:textSize="15sp"
+            android:layout_below="@id/descriptionLabel"
+            tools:text="An optional description or comment would go here ... You could comment anything related to the time, day or circumstance when the blood pressure reading was taken"
+            android:textColor="#581845"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
