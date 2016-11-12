@@ -23,6 +23,7 @@
         <activity
             android:name=".ui.DisplayListActivity"
             android:label="@string/title_activity_display_list"
+            android:screenOrientation="portrait"
             android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -31,6 +32,7 @@
         <activity
             android:name=".ui.DisplayCartActivity"
             android:label="@string/title_activity_display_cart"
+            android:screenOrientation="portrait"
             android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -39,6 +41,7 @@
         <activity
             android:name=".ui.ScanActivity"
             android:label="@string/title_activity_store_dummy"
+            android:screenOrientation="portrait"
             android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

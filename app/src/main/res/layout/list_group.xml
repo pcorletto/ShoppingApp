@@ -1,32 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:padding="8dp"
+              android:orientation="vertical"
               android:background="@color/ColorPrimaryDark"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content">
-
-
-    <CheckBox
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkBox"
-        android:focusable="false"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/quantityTextView"
-        android:focusable="false"
-        android:text="99"
-        android:textColor="@android:color/white"/>
+        <CheckBox
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBox"
+            android:focusable="false"/>
 
-    <TextView
-        android:id="@+id/lblListHeader"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:textSize="17sp"
-        android:textColor="#ffffff"/>
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:text="@string/minus_button_label"
+            android:focusable="false"
+            android:id="@+id/decreaseButton"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:text="@string/plus_button_label"
+            android:focusable="false"
+            android:id="@+id/increaseButton"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/small_padding"
+            android:paddingRight="@dimen/small_padding"
+            android:id="@+id/quantityTextView"
+            android:focusable="false"
+            android:text="99"
+            android:textColor="@android:color/white"
+            android:background="@color/ColorAccent"/>
+
+        <TextView
+            android:id="@+id/lblListHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#ffffff"/>
+
+        </LinearLayout>
+
 
 </LinearLayout>

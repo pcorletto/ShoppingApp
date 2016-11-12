@@ -84,10 +84,6 @@ public class ScanActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(TAG);
         toolbar.setSubtitle("PCorletto 2016");
 
-        // Make the Store Button invisible. Only make it visible after a scanning result
-        // is successful so that the user can store the item if he or she so desires.
-        storeBtn.setVisibility(View.INVISIBLE);
-
         // Variables for the HTTP Request
 
         Log.d(TAG, "Main UI code is running!");
@@ -161,6 +157,9 @@ public class ScanActivity extends AppCompatActivity {
                 mSubtotal = mQuantity * mPriceValue;
 
                 addItem();
+
+                Intent intent = new Intent(ScanActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -417,11 +416,6 @@ public class ScanActivity extends AppCompatActivity {
             mShoppingItem.setUPC(mUPC);
 
             getScannedItemInfo(mUPC);
-
-            // Make STORE button visible so that user can store the scanned item if he or she
-            // wishes.
-
-            storeBtn.setVisibility(View.VISIBLE);
 
         }
 

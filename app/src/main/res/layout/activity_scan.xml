@@ -87,14 +87,15 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/plus_button_label"
-            android:id="@+id/plusButton"/>
+            android:text="@string/minus_button_label"
+            android:id="@+id/minusButton"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/minus_button_label"
-            android:id="@+id/minusButton"/>
+            android:text="@string/plus_button_label"
+            android:id="@+id/plusButton"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -131,24 +132,33 @@
         android:id="@+id/textView5"
         android:gravity="center_horizontal"/>
 
-    <Button
-
-        android:id="@+id/store_button"
-        android:layout_below="@+id/textView5"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/store_button_label"/>
+        android:id="@+id/layout5"
+        android:layout_below="@id/textView5"
+        android:gravity="center_horizontal">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/view_shopping_list"
-        android:id="@+id/display_button"
-        android:layout_below="@+id/store_button"
-        android:layout_centerHorizontal="true"/>
+        <Button
 
-    </RelativeLayout>
+            android:id="@+id/store_button"
+            android:layout_below="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/store_button_label"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_shopping_list"
+            android:id="@+id/display_button"
+            android:layout_below="@+id/store_button"
+            android:layout_centerHorizontal="true"/>
+    </LinearLayout>
+
+</RelativeLayout>
 
 </LinearLayout>
 

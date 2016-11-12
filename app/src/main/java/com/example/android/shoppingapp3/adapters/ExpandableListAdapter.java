@@ -1,15 +1,19 @@
 package com.example.android.shoppingapp3.adapters;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.android.shoppingapp3.R;
 import com.example.android.shoppingapp3.model.ShoppingItem;
+import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -25,6 +29,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private List<ShoppingItem> _listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<ShoppingItem, List<ShoppingItem>> _listDataChild;
+
+    ShoppingListDbHelper shoppingListDbHelper;
+    SQLiteDatabase sqLiteDatabase;
 
     public ExpandableListAdapter(Context context, List<ShoppingItem> listDataHeader,
                                  HashMap<ShoppingItem, List<ShoppingItem>> listChildData) {
@@ -70,8 +77,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        ShoppingItem headerTitle = (ShoppingItem) getGroup(groupPosition);
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, final ViewGroup parent) {
+        final ShoppingItem headerTitle = (ShoppingItem) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -79,7 +86,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         }
 
-        TextView quantityTextView = (TextView) convertView.
+        final TextView quantityTextView = (TextView) convertView.
                 findViewById(R.id.quantityTextView);
         quantityTextView.setText(headerTitle.getQuantity()+"");
 
@@ -87,6 +94,48 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle.getProductName());
+
+        CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkBox);
+
+        Button increaseButton = (Button) convertView.findViewById(R.id.increaseButton);
+        Button decreaseButton = (Button) convertView.findViewById(R.id.decreaseButton);
+
+        increaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int newQuantity = headerTitle.getQuantity();
+                newQuantity++;
+                headerTitle.setQuantity(newQuantity);
+                quantityTextView.setText(newQuantity+"");
+
+                double newSubtotal = newQuantity * headerTitle.getItemPrice();
+
+                // Update quantity and subtotal in SQLite DB...
+                updateSubtotal(headerTitle.getProductName(), newQuantity+"", newSubtotal+"");
+
+
+            }
+        });
+
+        decreaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int newQuantity = headerTitle.getQuantity();
+                newQuantity--;
+                if(newQuantity==0){
+                    newQuantity=1;
+                }
+                headerTitle.setQuantity(newQuantity);
+                quantityTextView.setText(newQuantity+"");
+
+                double newSubtotal = newQuantity * headerTitle.getItemPrice();
+
+                // Update quantity and subtotal in SQLite DB...
+                updateSubtotal(headerTitle.getProductName(), newQuantity+"", newSubtotal+"");
+
+
+            }
+        });
 
         return convertView;
     }
@@ -120,7 +169,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         holder.quantityTextView.setText(childText.getQuantity()+"");
         holder.itemPriceTextView.setText(df.format(childText.getItemPrice()));
-        holder.subtotalTextView.setText(df.format(childText.getSubtotal()));
+        holder.subtotalTextView.setText(df.format(childText.getQuantity()*childText.getItemPrice()));
         holder.categoryTextView.setText(childText.getCategory());
         holder.lastDatePurchasedTextView.setText(childText.getLastDatePurchased());
         holder.priorityTextView.setText(childText.getPriority()+"");
@@ -137,6 +186,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         public TextView categoryTextView;
         public TextView lastDatePurchasedTextView;
         public TextView priorityTextView;
+
+    }
+
+    public void updateSubtotal(String productName, String quantity, String subtotal){
+
+        shoppingListDbHelper = new ShoppingListDbHelper(_context.getApplicationContext());
+        sqLiteDatabase = shoppingListDbHelper.getWritableDatabase();
+
+        int count = shoppingListDbHelper.updateSubtotal(productName, quantity, subtotal, sqLiteDatabase);
 
     }
 
