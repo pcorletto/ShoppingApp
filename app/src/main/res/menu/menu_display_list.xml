@@ -14,10 +14,16 @@
           android:orderInCategory="200"
           app:showAsAction="always"/>
 
-    <item android:id="@+id/action_user"
+    <item android:id="@+id/action_delete"
+          android:title="Delete"
+          android:icon="@drawable/ic_trash"
+          android:orderInCategory="300"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/action_cart"
           android:title="Shopping Cart"
           android:icon="@drawable/ic_cart"
-          android:orderInCategory="300"
+          android:orderInCategory="400"
           app:showAsAction="always"/>
 
 </menu>

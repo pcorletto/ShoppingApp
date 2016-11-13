@@ -47,4 +47,23 @@
     <string name="scan_new_product">Scan-In New Item</string>
     <string name="view_shopping_list">View Shopping List</string>
 
+    <!-- Label for the language preference [CHAR LIMIT=30] -->
+    <string name="pref_language_label">Language</string>
+
+    <!-- Label for English option in language preference [CHAR LIMIT=25] -->
+    <string name="pref_language_label_english">English</string>
+
+    <!-- Label for Spanish option in language preference [CHAR LIMIT=25] -->
+    <string name="pref_language_label_spanish">Español</string>
+
+    <!-- Key name for language preference in SharedPreferences [CHAR LIMIT=NONE] -->
+    <string name="pref_language_key" translatable="false">language</string>
+
+    <!-- Value in SharedPreferences for English language option [CHAR LIMIT=NONE] -->
+    <string name="pref_language_english" translatable="false">English</string>
+
+    <!-- Value in SharedPreferences for Spanish language option [CHAR LIMIT=NONE] -->
+    <string name="pref_language_spanish" translatable="false">Español</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
 </resources>

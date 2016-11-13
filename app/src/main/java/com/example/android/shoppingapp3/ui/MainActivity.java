@@ -1,13 +1,16 @@
 package com.example.android.shoppingapp3.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
 
@@ -28,6 +31,15 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_hamburger);
         getSupportActionBar().setTitle(getString(R.string.app_name));
         //toolbar.setSubtitle("Subtitle");
+
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String language = sharedPrefs.getString(
+                getString(R.string.pref_language_key),
+                getString(R.string.pref_language_english));
+
+        Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
+
 
         storeDummyButton = (Button) findViewById(R.id.storeDummyButton);
 
@@ -120,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

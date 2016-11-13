@@ -1,7 +1,9 @@
 package com.example.android.shoppingapp3.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,8 +55,17 @@ public class DisplayListActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(R.drawable.ic_hamburger);
-        getSupportActionBar().setTitle("Shop List");
-        toolbar.setSubtitle("PCorletto 2016");
+        getSupportActionBar().setTitle("List");
+        toolbar.setSubtitle("Shopping");
+
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String language = sharedPrefs.getString(
+                getString(R.string.pref_language_key),
+                getString(R.string.pref_language_english));
+
+        Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
+
 
         // Get the expandable list view
         expListView = (ExpandableListView) findViewById(android.R.id.list);
@@ -93,7 +104,8 @@ public class DisplayListActivity extends ActionBarActivity {
             case R.id.action_settings:
 
             {
-                Toast.makeText(DisplayListActivity.this, "Settings pressed!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(DisplayListActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
 
             }
@@ -101,6 +113,22 @@ public class DisplayListActivity extends ActionBarActivity {
             {
 
                 Toast.makeText(DisplayListActivity.this, "Search button pressed!", Toast.LENGTH_LONG).show();
+                return true;
+
+            }
+
+            case R.id.action_delete:
+            {
+
+                Toast.makeText(DisplayListActivity.this, "Delete button pressed!", Toast.LENGTH_LONG).show();
+                return true;
+
+            }
+
+            case R.id.action_cart:
+            {
+
+                Toast.makeText(DisplayListActivity.this, "Cart button pressed!", Toast.LENGTH_LONG).show();
                 return true;
 
             }
