@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.android.shoppingapp3.R;
@@ -99,6 +100,26 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         Button increaseButton = (Button) convertView.findViewById(R.id.increaseButton);
         Button decreaseButton = (Button) convertView.findViewById(R.id.decreaseButton);
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+
+
+                if(isChecked ){
+
+                    _listDataHeader.get(groupPosition).setSelected(true);
+
+                }else {
+
+                    _listDataHeader.get(groupPosition).setSelected(false);
+
+                }
+
+            }
+        });
 
         increaseButton.setOnClickListener(new View.OnClickListener() {
             @Override

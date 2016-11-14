@@ -2,6 +2,7 @@ package com.example.android.shoppingapp3.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import com.example.android.shoppingapp3.adapters.ExpandableListAdapter;
 import com.example.android.shoppingapp3.model.ReloadListFromDB;
 import com.example.android.shoppingapp3.model.ShoppingItem;
 import com.example.android.shoppingapp3.model.ShoppingList;
+import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,15 +36,17 @@ public class DisplayListActivity extends ActionBarActivity {
     ReloadListFromDB reloadedList = new ReloadListFromDB();
 
 
-    private String mDateTime, mSystolicBPStatus, mDiastolicBPStatus, mComments;
-
     // Added these for ExpandableListView extension...
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<ShoppingItem> listDataHeader;
     HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
+
     private Toolbar toolbar;
+
+    ShoppingListDbHelper mShoppingListDbHelper;
+    SQLiteDatabase sqLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +81,6 @@ public class DisplayListActivity extends ActionBarActivity {
         prepareListData();
 
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
-
 
         expListView.setAdapter(listAdapter);
 
@@ -120,7 +123,38 @@ public class DisplayListActivity extends ActionBarActivity {
             case R.id.action_delete:
             {
 
-                Toast.makeText(DisplayListActivity.this, "Delete button pressed!", Toast.LENGTH_LONG).show();
+                for(int i=0; i<mRowNumber; i++) {
+
+                    listDataHeader.add(mShoppingList.getShoppingItem(i));
+
+                }
+
+                for(int i=0; i<listDataHeader.size(); i++){
+
+                    if(listDataHeader.get(i).isSelected()){
+
+                        // For SQLiteDatabase: Delete this item here, if checked.
+
+                        String item_for_DB_deletion = listDataHeader.get(i).getProductName() + "";
+
+                        // Initialize the shoppingListDBHelper object
+
+                        mShoppingListDbHelper = new ShoppingListDbHelper(getApplicationContext());
+
+                        // Initialize the SQLiteDatabase object
+
+                        sqLiteDatabase = mShoppingListDbHelper.getReadableDatabase();
+
+                        // Delete the shopping item from the SQLite database
+
+                        mShoppingListDbHelper.deleteShoppingItem(item_for_DB_deletion, sqLiteDatabase);
+
+                        finish();
+
+                    }
+
+                }
+
                 return true;
 
             }
