@@ -36,6 +36,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     ShoppingCartDbHelper shoppingCartDbHelper;
     SQLiteDatabase sqLiteDatabase;
 
+    private String calling_activity_name;
+
     public ExpandableListAdapter(Context context, List<ShoppingItem> listDataHeader,
                                  HashMap<ShoppingItem, List<ShoppingItem>> listChildData) {
         this._context = context;
@@ -82,6 +84,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(final int groupPosition, boolean isExpanded, View convertView, final ViewGroup parent) {
         final ShoppingItem headerTitle = (ShoppingItem) getGroup(groupPosition);
+
+        calling_activity_name = _context.getClass().getName().toString();
+
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -93,7 +98,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 findViewById(R.id.quantityTextView);
         quantityTextView.setText(headerTitle.getQuantity()+"");
 
-        TextView lblListHeader = (TextView) convertView
+        final TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle.getProductName());
@@ -136,6 +141,34 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 // Update quantity and subtotal in SQLite DB...
                 updateSubtotal(headerTitle.getProductName(), newQuantity+"", newSubtotal+"");
 
+                if(calling_activity_name.equals("com.example.android.shoppingapp3.ui.DisplayListActivity")){
+
+                    // If the group view was already expanded, collapse it, and expand it again,
+                    // so that the data in the child view can be refreshed.
+
+                    if(com.example.android.shoppingapp3.ui.DisplayListActivity.expListView.isGroupExpanded(groupPosition)){
+
+                        com.example.android.shoppingapp3.ui.DisplayListActivity.expListView.collapseGroup(groupPosition);
+                        com.example.android.shoppingapp3.ui.DisplayListActivity.expListView.expandGroup(groupPosition);
+
+                    }
+
+                }
+
+                else if(calling_activity_name.equals("com.example.android.shoppingapp3.ui.DisplayCartActivity")) {
+
+                    // If the group view was already expanded, collapse it, and expand it again,
+                    // so that the data in the child view can be refreshed.
+
+                    if(com.example.android.shoppingapp3.ui.DisplayCartActivity.expListView.isGroupExpanded(groupPosition)){
+
+                        com.example.android.shoppingapp3.ui.DisplayCartActivity.expListView.collapseGroup(groupPosition);
+                        com.example.android.shoppingapp3.ui.DisplayCartActivity.expListView.expandGroup(groupPosition);
+
+                    }
+
+
+                }
 
             }
         });
@@ -156,6 +189,34 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 // Update quantity and subtotal in SQLite DB...
                 updateSubtotal(headerTitle.getProductName(), newQuantity+"", newSubtotal+"");
 
+                if(calling_activity_name.equals("com.example.android.shoppingapp3.ui.DisplayListActivity")){
+
+                    // If the group view was already expanded, collapse it, and expand it again,
+                    // so that the data in the child view can be refreshed.
+
+                    if(com.example.android.shoppingapp3.ui.DisplayListActivity.expListView.isGroupExpanded(groupPosition)){
+
+                        com.example.android.shoppingapp3.ui.DisplayListActivity.expListView.collapseGroup(groupPosition);
+                        com.example.android.shoppingapp3.ui.DisplayListActivity.expListView.expandGroup(groupPosition);
+
+                    }
+
+                }
+
+                else if(calling_activity_name.equals("com.example.android.shoppingapp3.ui.DisplayCartActivity")) {
+
+                    // If the group view was already expanded, collapse it, and expand it again,
+                    // so that the data in the child view can be refreshed.
+
+                    if(com.example.android.shoppingapp3.ui.DisplayCartActivity.expListView.isGroupExpanded(groupPosition)){
+
+                        com.example.android.shoppingapp3.ui.DisplayCartActivity.expListView.collapseGroup(groupPosition);
+                        com.example.android.shoppingapp3.ui.DisplayCartActivity.expListView.expandGroup(groupPosition);
+
+                    }
+
+
+                }
 
             }
         });
@@ -213,8 +274,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     public void updateSubtotal(String productName, String quantity, String subtotal){
-
-        String calling_activity_name = _context.getClass().getName().toString();
 
         // If the calling activity is the DisplayListActivity, update the subtotal in the LIST DB
         // If the calling activity is the DisplayCartActivity, update the subtotal in the CART DB

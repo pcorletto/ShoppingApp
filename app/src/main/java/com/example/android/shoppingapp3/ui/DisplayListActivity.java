@@ -40,7 +40,7 @@ public class DisplayListActivity extends ActionBarActivity {
     // Added these for ExpandableListView extension...
 
     ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
+    public static ExpandableListView expListView;
     List<ShoppingItem> listDataHeader;
     HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
 
@@ -191,14 +191,13 @@ public class DisplayListActivity extends ActionBarActivity {
                         mShoppingCartDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
                                 mPriority, mPriceValue, mCategory, mSubtotal, sqLiteDatabase);
 
-                        Toast.makeText(this, "Item(s) checked out to Shopping Cart!", Toast.LENGTH_LONG).show();
-
-
                     }
 
                 }
 
-                    finish();
+                    Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
+
+                    startActivity(intent);
 
                 return true;
 

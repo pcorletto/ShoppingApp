@@ -40,7 +40,7 @@ public class DisplayCartActivity extends ActionBarActivity {
     // Added these for ExpandableListView extension...
 
     ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
+    public static ExpandableListView expListView;
     List<ShoppingItem> listDataHeader;
     HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
 
