@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
 
@@ -38,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 getString(R.string.pref_language_key),
                 getString(R.string.pref_language_english));
 
-        Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
-
+        //Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
 
         storeDummyButton = (Button) findViewById(R.id.storeDummyButton);
 

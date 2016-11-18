@@ -138,7 +138,7 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
 
     }
 
-    public int updateSubtotal(String old_product_name, String quantity, String subtotal, SQLiteDatabase sqLiteDatabase){
+    public void updateSubtotal(String old_product_name, String quantity, String subtotal, SQLiteDatabase sqLiteDatabase){
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ShoppingCartDB.NewCartItem.QUANTITY, quantity);
@@ -150,10 +150,9 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
 
         String[] selection_args = {old_product_name};
 
-        int count = sqLiteDatabase.update(ShoppingCartDB.NewCartItem.TABLE_NAME, contentValues,
+        sqLiteDatabase.update(ShoppingCartDB.NewCartItem.TABLE_NAME, contentValues,
                 selection, selection_args);
 
-        return count;
     }
 
     @Override

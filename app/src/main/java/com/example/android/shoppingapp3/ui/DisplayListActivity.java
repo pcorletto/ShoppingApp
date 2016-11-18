@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.android.shoppingapp3.R;
 import com.example.android.shoppingapp3.adapters.ExpandableListAdapter;
 import com.example.android.shoppingapp3.model.ReloadListFromDB;
+import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
 import com.example.android.shoppingapp3.model.ShoppingItem;
 import com.example.android.shoppingapp3.model.ShoppingList;
 import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
@@ -46,7 +47,12 @@ public class DisplayListActivity extends ActionBarActivity {
     private Toolbar toolbar;
 
     ShoppingListDbHelper mShoppingListDbHelper;
+    ShoppingCartDbHelper mShoppingCartDbHelper;
     SQLiteDatabase sqLiteDatabase;
+
+    private String mUPC, mLastDatePurchased, mName, mPrice, mCategory;
+    int mQuantity, mLastQuantity;
+    double mPriceValue, mSubtotal, mPriority;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +74,7 @@ public class DisplayListActivity extends ActionBarActivity {
                 getString(R.string.pref_language_key),
                 getString(R.string.pref_language_english));
 
-        Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
-
+        //Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
 
         // Get the expandable list view
         expListView = (ExpandableListView) findViewById(android.R.id.list);
@@ -123,27 +128,22 @@ public class DisplayListActivity extends ActionBarActivity {
             case R.id.action_delete:
             {
 
-                for(int i=0; i<mRowNumber; i++) {
+                // Initialize the shoppingListDBHelper object
 
-                    listDataHeader.add(mShoppingList.getShoppingItem(i));
+                mShoppingListDbHelper = new ShoppingListDbHelper(getApplicationContext());
 
-                }
+                // Initialize the SQLiteDatabase object
 
-                for(int i=0; i<listDataHeader.size(); i++){
+                sqLiteDatabase = mShoppingListDbHelper.getReadableDatabase();
+
+
+                for(int i=0; i<listDataHeader.size(); i++) {
 
                     if(listDataHeader.get(i).isSelected()){
 
                         // For SQLiteDatabase: Delete this item here, if checked.
 
                         String item_for_DB_deletion = listDataHeader.get(i).getProductName() + "";
-
-                        // Initialize the shoppingListDBHelper object
-
-                        mShoppingListDbHelper = new ShoppingListDbHelper(getApplicationContext());
-
-                        // Initialize the SQLiteDatabase object
-
-                        sqLiteDatabase = mShoppingListDbHelper.getReadableDatabase();
 
                         // Delete the shopping item from the SQLite database
 
@@ -162,8 +162,46 @@ public class DisplayListActivity extends ActionBarActivity {
             case R.id.action_cart:
             {
 
-                Toast.makeText(DisplayListActivity.this, "Cart button pressed!", Toast.LENGTH_LONG).show();
+                // For SQLiteDatabase: insert the item into ShoppingCartDB, if checked.
+
+                // Initialize the shoppingCartDBHelper object
+
+                mShoppingCartDbHelper = new ShoppingCartDbHelper(getApplicationContext());
+
+                // Initialize the SQLiteDatabase object
+
+                sqLiteDatabase = mShoppingCartDbHelper.getWritableDatabase();
+
+
+                for(int i=0; i<listDataHeader.size(); i++) {
+
+                    if (listDataHeader.get(i).isSelected()) {
+
+                        mUPC = listDataHeader.get(i).getUPC();
+                        mQuantity = listDataHeader.get(i).getQuantity();
+                        mLastQuantity = listDataHeader.get(i).getLastQuantity();
+                        mName = listDataHeader.get(i).getProductName();
+                        mPriority = listDataHeader.get(i).getPriority();
+                        mPriceValue = listDataHeader.get(i).getItemPrice();
+                        mCategory = listDataHeader.get(i).getCategory();
+                        mSubtotal = listDataHeader.get(i).getSubtotal();
+
+                        // Insert the shopping item into the Shopping Cart SQLite database
+
+                        mShoppingCartDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
+                                mPriority, mPriceValue, mCategory, mSubtotal, sqLiteDatabase);
+
+                        Toast.makeText(this, "Item(s) checked out to Shopping Cart!", Toast.LENGTH_LONG).show();
+
+
+                    }
+
+                }
+
+                    finish();
+
                 return true;
+
 
             }
 

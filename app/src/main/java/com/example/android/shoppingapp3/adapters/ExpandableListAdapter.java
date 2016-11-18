@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.android.shoppingapp3.R;
+import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
 import com.example.android.shoppingapp3.model.ShoppingItem;
 import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
 
@@ -32,6 +33,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private HashMap<ShoppingItem, List<ShoppingItem>> _listDataChild;
 
     ShoppingListDbHelper shoppingListDbHelper;
+    ShoppingCartDbHelper shoppingCartDbHelper;
     SQLiteDatabase sqLiteDatabase;
 
     public ExpandableListAdapter(Context context, List<ShoppingItem> listDataHeader,
@@ -212,10 +214,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     public void updateSubtotal(String productName, String quantity, String subtotal){
 
-        shoppingListDbHelper = new ShoppingListDbHelper(_context.getApplicationContext());
-        sqLiteDatabase = shoppingListDbHelper.getWritableDatabase();
+        String calling_activity_name = _context.getClass().getName().toString();
 
-        int count = shoppingListDbHelper.updateSubtotal(productName, quantity, subtotal, sqLiteDatabase);
+        // If the calling activity is the DisplayListActivity, update the subtotal in the LIST DB
+        // If the calling activity is the DisplayCartActivity, update the subtotal in the CART DB
+
+        if(calling_activity_name.equals("com.example.android.shoppingapp3.ui.DisplayListActivity")){
+
+            shoppingListDbHelper = new ShoppingListDbHelper(_context.getApplicationContext());
+            sqLiteDatabase = shoppingListDbHelper.getWritableDatabase();
+            shoppingListDbHelper.updateSubtotal(productName, quantity, subtotal, sqLiteDatabase);
+
+        }
+
+        else if(calling_activity_name.equals("com.example.android.shoppingapp3.ui.DisplayCartActivity")) {
+
+            shoppingCartDbHelper = new ShoppingCartDbHelper(_context.getApplicationContext());
+            sqLiteDatabase = shoppingCartDbHelper.getWritableDatabase();
+            shoppingCartDbHelper.updateSubtotal(productName, quantity, subtotal, sqLiteDatabase);
+
+        }
+
 
     }
 
