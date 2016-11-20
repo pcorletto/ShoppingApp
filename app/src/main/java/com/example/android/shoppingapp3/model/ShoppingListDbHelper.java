@@ -23,7 +23,8 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
             ShoppingListDB.NewListItem.PRIORITY + " INTEGER," +
             ShoppingListDB.NewListItem.ITEM_PRICE + " REAL," +
             ShoppingListDB.NewListItem.CATEGORY + " TEXT," +
-            ShoppingListDB.NewListItem.SUBTOTAL + " TEXT);";
+            ShoppingListDB.NewListItem.SUBTOTAL + " TEXT," +
+            ShoppingListDB.NewListItem.IMAGE + " TEXT);";
 
     // Default Constructor:
 
@@ -46,7 +47,7 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
 
     public void addItem(String upc, int quantity, int last_quantity, String last_date_purchased,
                         String productName, double priority, double itemPrice, String category,
-                        double subtotal, SQLiteDatabase db){
+                        double subtotal, String image, SQLiteDatabase db){
 
         // Map key-values
 
@@ -60,6 +61,7 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
         contentValues.put(ShoppingListDB.NewListItem.ITEM_PRICE, itemPrice);
         contentValues.put(ShoppingListDB.NewListItem.CATEGORY, category);
         contentValues.put(ShoppingListDB.NewListItem.SUBTOTAL, subtotal);
+        contentValues.put(ShoppingListDB.NewListItem.IMAGE, image);
 
         // Save all these into the database
 
@@ -83,7 +85,8 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
                 ShoppingListDB.NewListItem.PRIORITY,
                 ShoppingListDB.NewListItem.ITEM_PRICE,
                 ShoppingListDB.NewListItem.CATEGORY,
-                ShoppingListDB.NewListItem.SUBTOTAL};
+                ShoppingListDB.NewListItem.SUBTOTAL,
+                ShoppingListDB.NewListItem.IMAGE};
 
         // We only need the table name and projection parameters. No conditions will be specified,
         // so, we will pass in null for the last five parameters.

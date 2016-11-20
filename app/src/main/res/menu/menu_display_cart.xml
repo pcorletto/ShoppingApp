@@ -20,4 +20,10 @@
           android:orderInCategory="300"
           app:showAsAction="always"/>
 
+    <item android:id="@+id/action_pay"
+          android:title="Pay Items"
+          android:icon="@drawable/ic_cash_register"
+          android:orderInCategory="400"
+          app:showAsAction="always"/>
+
 </menu>

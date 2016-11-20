@@ -56,7 +56,7 @@ public class ReloadCartFromDB {
             do{
                 int quantity, lastQuantity;
                 double price, priority, subtotal;
-                String upc, lastDatePurchased, name, category;
+                String upc, lastDatePurchased, name, category, image;
 
                 upc = cursor.getString(0);
                 quantity = cursor.getInt(1);
@@ -67,9 +67,10 @@ public class ReloadCartFromDB {
                 price = cursor.getDouble(6);
                 category = cursor.getString(7);
                 subtotal = cursor.getDouble(8);
+                image = cursor.getString(9);
 
                 mShoppingItem = new ShoppingItem(upc, quantity, lastQuantity, lastDatePurchased, name, priority,
-                        price, category, subtotal);
+                        price, category, subtotal, image);
 
                 mShoppinglist.addShoppingItem(mShoppingItem, mRowNumber);
 

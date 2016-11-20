@@ -50,7 +50,7 @@ public class DisplayListActivity extends ActionBarActivity {
     ShoppingCartDbHelper mShoppingCartDbHelper;
     SQLiteDatabase sqLiteDatabase;
 
-    private String mUPC, mLastDatePurchased, mName, mPrice, mCategory;
+    private String mUPC, mLastDatePurchased, mName, mPrice, mCategory, mImage;
     int mQuantity, mLastQuantity;
     double mPriceValue, mSubtotal, mPriority;
 
@@ -185,11 +185,13 @@ public class DisplayListActivity extends ActionBarActivity {
                         mPriceValue = listDataHeader.get(i).getItemPrice();
                         mCategory = listDataHeader.get(i).getCategory();
                         mSubtotal = listDataHeader.get(i).getSubtotal();
+                        mImage = listDataHeader.get(i).getImage();
+
 
                         // Insert the shopping item into the Shopping Cart SQLite database
 
                         mShoppingCartDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
-                                mPriority, mPriceValue, mCategory, mSubtotal, sqLiteDatabase);
+                                mPriority, mPriceValue, mCategory, mSubtotal, mImage, sqLiteDatabase);
 
                     }
 

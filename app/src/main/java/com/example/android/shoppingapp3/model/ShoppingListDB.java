@@ -16,6 +16,7 @@ public class ShoppingListDB {
         public static final String ITEM_PRICE = "item_price";
         public static final String CATEGORY = "category";
         public static final String SUBTOTAL = "subtotal";
+        public static final String IMAGE = "image";
 
         // Table name
 

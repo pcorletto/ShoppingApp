@@ -23,7 +23,8 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
             ShoppingCartDB.NewCartItem.PRIORITY + " INTEGER," +
             ShoppingCartDB.NewCartItem.ITEM_PRICE + " REAL," +
             ShoppingCartDB.NewCartItem.CATEGORY + " TEXT," +
-            ShoppingCartDB.NewCartItem.SUBTOTAL + " TEXT);";
+            ShoppingCartDB.NewCartItem.SUBTOTAL + " TEXT," +
+            ShoppingCartDB.NewCartItem.IMAGE + " TEXT);";
 
     // Default Constructor:
 
@@ -46,7 +47,7 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
 
     public void addItem(String upc, int quantity, int last_quantity, String last_date_purchased,
                         String productName, double priority, double itemPrice, String category,
-                        double subtotal, SQLiteDatabase db){
+                        double subtotal, String image, SQLiteDatabase db){
 
         // Map key-values
 
@@ -60,6 +61,7 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
         contentValues.put(ShoppingCartDB.NewCartItem.ITEM_PRICE, itemPrice);
         contentValues.put(ShoppingCartDB.NewCartItem.CATEGORY, category);
         contentValues.put(ShoppingCartDB.NewCartItem.SUBTOTAL, subtotal);
+        contentValues.put(ShoppingCartDB.NewCartItem.IMAGE, image);
 
         // Save all these into the database
 
@@ -83,7 +85,8 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
                 ShoppingCartDB.NewCartItem.PRIORITY,
                 ShoppingCartDB.NewCartItem.ITEM_PRICE,
                 ShoppingCartDB.NewCartItem.CATEGORY,
-                ShoppingCartDB.NewCartItem.SUBTOTAL};
+                ShoppingCartDB.NewCartItem.SUBTOTAL,
+                ShoppingCartDB.NewCartItem.IMAGE};
 
         // We only need the table name and projection parameters. No conditions will be specified,
         // so, we will pass in null for the last five parameters.

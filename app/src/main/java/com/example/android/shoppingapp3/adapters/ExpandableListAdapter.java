@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -241,6 +242,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             holder.categoryTextView = (TextView) convertView.findViewById(R.id.categoryTextView);
             holder.lastDatePurchasedTextView = (TextView) convertView.findViewById(R.id.lastDatePurchasedTextView);
             holder.priorityTextView = (TextView) convertView.findViewById(R.id.priorityTextView);
+            holder.productImage = (WebView) convertView.findViewById(R.id.productImage);
 
             convertView.setTag(holder);
 
@@ -257,6 +259,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         holder.categoryTextView.setText(childText.getCategory());
         holder.lastDatePurchasedTextView.setText(childText.getLastDatePurchased());
         holder.priorityTextView.setText(childText.getPriority()+"");
+        holder.productImage.loadUrl(childText.getImage());
 
         return convertView;
 
@@ -270,6 +273,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         public TextView categoryTextView;
         public TextView lastDatePurchasedTextView;
         public TextView priorityTextView;
+        public WebView productImage;
 
     }
 

@@ -51,7 +51,7 @@ public class ScanActivity extends AppCompatActivity {
     private int mRowNumber;
     private ShoppingList mShoppingList = new ShoppingList();
 
-    private String mUPC, mLastDatePurchased, mName, mPrice, mCategory;
+    private String mUPC, mLastDatePurchased, mName, mPrice, mCategory, mImage;
     int mQuantity, mLastQuantity;
     double mPriceValue, mSubtotal, mPriority;
 
@@ -195,9 +195,10 @@ public class ScanActivity extends AppCompatActivity {
                 mCategory = cursor.getString(7);
 
                 mSubtotal = mQuantity * price;
+                mImage = cursor.getString(9);
 
                 mShoppingItem = new ShoppingItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased,
-                        mName, mPriority, price, mCategory, mSubtotal);
+                        mName, mPriority, price, mCategory, mSubtotal, mImage);
 
                 mShoppingItem.setSubtotal(mSubtotal);
 
@@ -297,8 +298,11 @@ public class ScanActivity extends AppCompatActivity {
                                             mName = item.getString("name");
                                             mPrice = item.getString("salePrice");
                                             mCategory = item.getString("categoryPath");
+                                            mImage = item.getString("largeImage");
 
                                         }
+
+                                        Log.d("TEST", items.toString());
 
 
                                     } catch (JSONException e) {
@@ -440,7 +444,7 @@ public class ScanActivity extends AppCompatActivity {
 
         // Insert the item details in the database
         mShoppingListDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
-                mPriority, mPriceValue, mCategory, mSubtotal, sqLiteDatabase);
+                mPriority, mPriceValue, mCategory, mSubtotal, mImage, sqLiteDatabase);
 
         Toast.makeText(ScanActivity.this, "Shopping Item Saved", Toast.LENGTH_LONG).show();
 

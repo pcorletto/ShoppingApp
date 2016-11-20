@@ -57,7 +57,7 @@ public class DisplayCartActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_list);
+        setContentView(R.layout.activity_display_cart);
 
         // Get the toolbar
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -209,15 +209,17 @@ public class DisplayCartActivity extends ActionBarActivity {
 
     public void placeFAB(){
 
-        FloatingActionButton myFAB = (FloatingActionButton) findViewById(R.id.myFAB);
+        FloatingActionButton payFAB = (FloatingActionButton) findViewById(R.id.payFAB);
 
-        myFAB.setOnClickListener(new View.OnClickListener() {
+        payFAB.setOnClickListener(new View.OnClickListener() {
 
                                      @Override
                                      public void onClick(View v) {
 
-                                         Intent intent = new Intent(DisplayCartActivity.this, ScanActivity.class);
-                                         startActivity(intent);
+                                         Toast.makeText(getApplicationContext(), "Pay feature under construction...", Toast.LENGTH_LONG).show();
+
+                                         //Intent intent = new Intent(DisplayCartActivity.this, ScanActivity.class);
+                                         //startActivity(intent);
 
                                      }
                                  }

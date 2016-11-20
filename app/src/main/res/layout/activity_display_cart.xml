@@ -26,11 +26,11 @@
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/myFAB"
+            android:id="@+id/payFAB"
             android:gravity="bottom|end"
             android:layout_marginEnd="@dimen/button_margin"
             android:layout_marginBottom="@dimen/button_margin"
-            android:src="@drawable/ic_scan"
+            android:src="@drawable/ic_cash_register"
             app:elevation="@dimen/elevation_button"
             app:fabSize="normal"
             app:borderWidth="0dp"
