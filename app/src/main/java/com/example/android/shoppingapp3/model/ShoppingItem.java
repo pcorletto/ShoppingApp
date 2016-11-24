@@ -18,6 +18,7 @@ public class ShoppingItem implements Parcelable {
     private double mItemPrice, mSubtotal;
     private boolean isSelected;
     private String mImage;
+    private boolean mTaxable;
 
     // Constructors
 
@@ -27,7 +28,7 @@ public class ShoppingItem implements Parcelable {
 
     public ShoppingItem(String upc, int quantity, int lastQuantity, String lastDatePurchased,
                         String name, double priority, double price, String category,
-                        double subtotal, String image){
+                        double subtotal, String image, boolean taxable){
 
         this.mUPC = upc;
         this.mQuantity = quantity;
@@ -40,6 +41,7 @@ public class ShoppingItem implements Parcelable {
         this.mSubtotal = subtotal;
         this.isSelected = false;
         this.mImage = image;
+        this.mTaxable = taxable;
 
     }
 
@@ -132,6 +134,14 @@ public class ShoppingItem implements Parcelable {
 
     public void setImage(String image) {
         mImage = image;
+    }
+
+    public boolean isTaxable() {
+        return mTaxable;
+    }
+
+    public void setTaxable(boolean taxable) {
+        mTaxable = taxable;
     }
 
     @Override

@@ -55,6 +55,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.shoppingapp3.ui.MainActivity" />
         </activity>
+        <activity
+            android:name=".ui.PayActivity"
+            android:label="@string/title_activity_pay"
+            android:parentActivityName=".ui.DisplayCartActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.shoppingapp3.ui.DisplayCartActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
 import com.example.android.shoppingapp3.adapters.ExpandableListAdapter;
+import com.example.android.shoppingapp3.model.ReloadCartFromDB;
 import com.example.android.shoppingapp3.model.ReloadListFromDB;
 import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
 import com.example.android.shoppingapp3.model.ShoppingItem;
@@ -36,6 +37,8 @@ public class DisplayListActivity extends ActionBarActivity {
 
     ReloadListFromDB reloadedList = new ReloadListFromDB();
 
+    ReloadCartFromDB reloadedCart = new ReloadCartFromDB();
+
 
     // Added these for ExpandableListView extension...
 
@@ -51,6 +54,7 @@ public class DisplayListActivity extends ActionBarActivity {
     SQLiteDatabase sqLiteDatabase;
 
     private String mUPC, mLastDatePurchased, mName, mPrice, mCategory, mImage;
+    private boolean mTaxable;
     int mQuantity, mLastQuantity;
     double mPriceValue, mSubtotal, mPriority;
 
@@ -160,6 +164,7 @@ public class DisplayListActivity extends ActionBarActivity {
             }
 
             case R.id.action_cart:
+
             {
 
                 // For SQLiteDatabase: insert the item into ShoppingCartDB, if checked.
@@ -173,7 +178,7 @@ public class DisplayListActivity extends ActionBarActivity {
                 sqLiteDatabase = mShoppingCartDbHelper.getWritableDatabase();
 
 
-                for(int i=0; i<listDataHeader.size(); i++) {
+                for (int i = 0; i < listDataHeader.size(); i++) {
 
                     if (listDataHeader.get(i).isSelected()) {
 
@@ -185,24 +190,35 @@ public class DisplayListActivity extends ActionBarActivity {
                         mPriceValue = listDataHeader.get(i).getItemPrice();
                         mCategory = listDataHeader.get(i).getCategory();
                         mSubtotal = listDataHeader.get(i).getSubtotal();
+                        mLastDatePurchased = listDataHeader.get(i).getLastDatePurchased();
                         mImage = listDataHeader.get(i).getImage();
+                        mTaxable = listDataHeader.get(i).isTaxable();
+
+                        String taxable_string;
+
+                        if (mTaxable) {
+                            taxable_string = "true";
+                        } else {
+                            taxable_string = "false";
+                        }
+
+                        mShoppingCartDbHelper.getCartItem(sqLiteDatabase);
 
 
                         // Insert the shopping item into the Shopping Cart SQLite database
 
                         mShoppingCartDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
-                                mPriority, mPriceValue, mCategory, mSubtotal, mImage, sqLiteDatabase);
+                                mPriority, mPriceValue, mCategory, mSubtotal, mImage, taxable_string, sqLiteDatabase);
 
                     }
 
                 }
 
-                    Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
+                Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
 
-                    startActivity(intent);
+                startActivity(intent);
 
                 return true;
-
 
             }
 
@@ -254,6 +270,8 @@ public class DisplayListActivity extends ActionBarActivity {
         }
 
     }
+
+
 
     public void placeFAB(){
 

@@ -65,5 +65,6 @@
     <!-- Value in SharedPreferences for Spanish language option [CHAR LIMIT=NONE] -->
     <string name="pref_language_spanish" translatable="false">Español</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_pay">PayActivity</string>
 
 </resources>

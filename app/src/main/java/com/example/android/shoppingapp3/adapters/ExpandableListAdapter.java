@@ -243,6 +243,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             holder.lastDatePurchasedTextView = (TextView) convertView.findViewById(R.id.lastDatePurchasedTextView);
             holder.priorityTextView = (TextView) convertView.findViewById(R.id.priorityTextView);
             holder.productImage = (WebView) convertView.findViewById(R.id.productImage);
+            holder.taxableTextView = (TextView) convertView.findViewById(R.id.taxableTextView);
 
             convertView.setTag(holder);
 
@@ -258,7 +259,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         holder.subtotalTextView.setText(df.format(childText.getQuantity()*childText.getItemPrice()));
         holder.categoryTextView.setText(childText.getCategory());
         holder.lastDatePurchasedTextView.setText(childText.getLastDatePurchased());
+
         holder.priorityTextView.setText(childText.getPriority()+"");
+
+        if(childText.isTaxable()){
+            holder.taxableTextView.setText("Yes");
+        }
+
+        else{
+            holder.taxableTextView.setText("No");
+        }
+
+        holder.productImage.getSettings().setLoadsImagesAutomatically(true);
+        holder.productImage.getSettings().setLoadWithOverviewMode(true);
+        holder.productImage.getSettings().setUseWideViewPort(true);
+
         holder.productImage.loadUrl(childText.getImage());
 
         return convertView;
@@ -274,6 +289,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         public TextView lastDatePurchasedTextView;
         public TextView priorityTextView;
         public WebView productImage;
+        public TextView taxableTextView;
 
     }
 

@@ -56,7 +56,8 @@ public class ReloadListFromDB {
             do{
                 int quantity, lastQuantity;
                 double price, subtotal, priority;
-                String upc, lastDatePurchased, name, category, image;
+                String upc, lastDatePurchased, name, category, image, taxable_string;
+                boolean taxable = true;
 
                 upc = cursor.getString(0);
                 quantity = cursor.getInt(1);
@@ -68,9 +69,22 @@ public class ReloadListFromDB {
                 category = cursor.getString(7);
                 subtotal = cursor.getDouble(8);
                 image = cursor.getString(9);
+                taxable_string = cursor.getString(10);
+
+                if(taxable_string.equals("false")){
+
+                    taxable = false;
+
+                }
+
+                else if(taxable_string.equals("true")){
+
+                    taxable = true;
+
+                }
 
                 mShoppingItem = new ShoppingItem(upc, quantity, lastQuantity, lastDatePurchased, name,
-                        priority, price, category, subtotal, image);
+                        priority, price, category, subtotal, image, taxable);
 
                 mShoppinglist.addShoppingItem(mShoppingItem, mRowNumber);
 

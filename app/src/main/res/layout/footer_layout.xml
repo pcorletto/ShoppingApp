@@ -1,110 +1,180 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/totalRelativeLayout">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/ColorPrimaryDark"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical|center_horizontal"
+              android:id="@+id/footerLayout">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/small_padding"
+            android:gravity="center_horizontal">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Count"
+                android:id="@+id/TextView"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/small_padding"
+                android:id="@+id/quantityTextView"
+                android:focusable="false"
+                android:text="99"
+                android:textColor="@android:color/white"
+                android:background="@color/ColorAccent"
+                android:gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subtotal"
+                android:id="@+id/textView8"
+                android:textColor="@android:color/white"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/small_padding"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$999.99"
+                android:id="@+id/subtotalTextView"
+                android:textColor="@android:color/white"
+                android:background="@color/ColorAccent"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/small_padding"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sales Tax"
+                android:id="@+id/textView9"
+                android:textColor="@android:color/white"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/small_padding"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$999.99"
+                android:id="@+id/salesTaxTextView"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/small_padding"
+                android:background="@color/ColorAccent"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total"
+                android:id="@+id/TextView2"
+                android:textColor="@android:color/white"
+                android:paddingLeft="@dimen/small_padding"
+                android:paddingRight="@dimen/small_padding"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="$999.99"
+                android:id="@+id/totalTextView"
+                android:focusable="false"
+                android:textColor="@android:color/white"
+                android:background="@color/ColorAccent"
+                android:paddingRight="@dimen/small_padding"
+                android:paddingLeft="@dimen/small_padding"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/mainLayout">
+        >
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
+        <RadioButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/layout1">
+            android:text="Cash"
+            android:id="@+id/cashRadioButton"
+            android:textColor="@android:color/white"/>
 
-            <TextView
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:text="@string/item_count_label"
-                android:id="@+id/itemCountLabel"
-                android:gravity="center_horizontal"
-                android:textColor="@android:color/white"
-                android:background="@android:color/holo_purple"/>
-
-            <TextView
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:text="@string/total_price_label"
-                android:id="@+id/totalPriceLabel"
-                android:gravity="center_horizontal"
-                android:textColor="@android:color/white"
-                android:background="@android:color/holo_orange_dark"/>
-
-            <TextView
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:text="@string/sales_tax_label"
-                android:id="@+id/salesTaxLabel"
-                android:gravity="center_horizontal"
-                android:textColor="@android:color/white"
-                android:background="@android:color/holo_purple"/>
-
-            <TextView
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:text="@string/final_price_label"
-                android:id="@+id/finalPriceLabel"
-                android:gravity="center_horizontal"
-                android:textColor="@android:color/white"
-                android:background="@android:color/holo_orange_dark"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
+        <RadioButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/layout2">
+            android:text="Debit"
+            android:id="@+id/debitRadioButton"
+            android:textColor="@android:color/white"/>
 
-            <TextView
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/itemCountEditText"
-                android:gravity="center_horizontal"/>
-
-            <TextView
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/totalPriceEditText"
-                android:gravity="center_horizontal"/>
-
-            <TextView
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/salesTaxEditText"
-                android:gravity="center_horizontal"/>
-
-            <TextView
-                android:layout_width="132dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/finalPriceEditText"
-                android:gravity="center_horizontal"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="528dp"
+        <RadioButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/layout3">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delete_selected_items_button"
-                android:id="@+id/deleteSelectedItemsBtn"
-                android:layout_weight="1"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/return_main_button_label"
-                android:id="@+id/returnToMainBtn"
-                android:layout_weight="1"/>
-        </LinearLayout>
+            android:text="Credit"
+            android:id="@+id/creditRadioButton"
+            android:textColor="@android:color/white"
+            android:paddingRight="@dimen/small_padding"/>
 
     </LinearLayout>
-</RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last 4 Digits:"
+            android:id="@+id/textView10"
+            android:textColor="@android:color/white"
+            android:paddingLeft="@dimen/small_padding"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9999"
+            android:id="@+id/lastFourDigitsTextView"
+            android:background="@color/ColorAccent"
+            android:textColor="@android:color/white"
+            android:paddingLeft="@dimen/small_padding"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

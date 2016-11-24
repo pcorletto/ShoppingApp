@@ -17,6 +17,7 @@ public class ShoppingCartDB {
         public static final String ITEM_PRICE = "item_price";
         public static final String SUBTOTAL = "subtotal";
         public static final String IMAGE = "image";
+        public static final String TAXABLE = "taxable";
 
         // Table name
 

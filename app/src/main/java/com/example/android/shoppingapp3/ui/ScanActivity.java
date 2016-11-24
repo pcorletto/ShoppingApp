@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
@@ -44,6 +48,7 @@ public class ScanActivity extends AppCompatActivity {
 
     private Button scanBtn,storeBtn,displayBtn, minusBtn, plusBtn;
     private RatingBar ratingBar;
+    private RadioGroup radioGroup;
     private EditText productNameEditText, priceEditText, quantityEditText;
     public static final String TAG = ScanActivity.class.getSimpleName();
 
@@ -51,9 +56,10 @@ public class ScanActivity extends AppCompatActivity {
     private int mRowNumber;
     private ShoppingList mShoppingList = new ShoppingList();
 
-    private String mUPC, mLastDatePurchased, mName, mPrice, mCategory, mImage;
+    private String mUPC, mLastDatePurchased, mName, mPrice, mCategory, mImage, mTaxable;
     int mQuantity, mLastQuantity;
     double mPriceValue, mSubtotal, mPriority;
+    boolean taxable;
 
     Context context;
     ShoppingListDbHelper mShoppingListDbHelper;
@@ -74,6 +80,7 @@ public class ScanActivity extends AppCompatActivity {
         quantityEditText = (EditText) findViewById(R.id.quantityEditText);
         productNameEditText = (EditText) findViewById(R.id.productNameEditText);
         priceEditText = (EditText) findViewById(R.id.priceEditText);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
         // Get the toolbar
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -156,10 +163,26 @@ public class ScanActivity extends AppCompatActivity {
 
                 mSubtotal = mQuantity * mPriceValue;
 
-                addItem();
+                if(radioGroup.getCheckedRadioButtonId() == -1){
 
-                Intent intent = new Intent(ScanActivity.this, MainActivity.class);
-                startActivity(intent);
+                    // Alert user to check yes
+
+                    Toast.makeText(ScanActivity.this, "Check YES or NO!",
+                            Toast.LENGTH_LONG).show();
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    return;
+
+                } else {
+
+                    addItem();
+
+                    Intent intent = new Intent(ScanActivity.this, MainActivity.class);
+                    startActivity(intent);
+
+                }
+
+
             }
         });
 
@@ -196,9 +219,18 @@ public class ScanActivity extends AppCompatActivity {
 
                 mSubtotal = mQuantity * price;
                 mImage = cursor.getString(9);
+                mTaxable = cursor.getString(10);
+
+                if(mTaxable.equals("true")){
+                    taxable = true;
+                }
+
+                else{
+                    taxable = false;
+                }
 
                 mShoppingItem = new ShoppingItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased,
-                        mName, mPriority, price, mCategory, mSubtotal, mImage);
+                        mName, mPriority, price, mCategory, mSubtotal, mImage, taxable);
 
                 mShoppingItem.setSubtotal(mSubtotal);
 
@@ -324,11 +356,12 @@ public class ScanActivity extends AppCompatActivity {
                                         quantityEditText.setText(mQuantity+"");
                                         priceEditText.setText(mPrice);
                                         mPriceValue = Double.parseDouble(mPrice);
-                                        mSubtotal = mPriceValue * mQuantity;
+                                        mSubtotal = mPriceValue * mShoppingItem.getQuantity();
+                                        mShoppingItem.setSubtotal(mSubtotal);
                                         mLastQuantity=0; //Set it to 0 for now. Later, let the user enter it
                                         //mPriority=1; // Set it to 1 for now, later add a continuum or slider or
                                         // radio group to set priority, from 1 to 3
-                                        mLastDatePurchased="01/01/1980"; // Set it to this for now, later let
+                                        mLastDatePurchased="NEVER"; // Set it to this for now, later let
                                         // user enter it from a calendar widget or edittext.
 
                                     }
@@ -444,7 +477,7 @@ public class ScanActivity extends AppCompatActivity {
 
         // Insert the item details in the database
         mShoppingListDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
-                mPriority, mPriceValue, mCategory, mSubtotal, mImage, sqLiteDatabase);
+                mPriority, mPriceValue, mCategory, mSubtotal, mImage, mTaxable, sqLiteDatabase);
 
         Toast.makeText(ScanActivity.this, "Shopping Item Saved", Toast.LENGTH_LONG).show();
 
@@ -452,6 +485,24 @@ public class ScanActivity extends AppCompatActivity {
 
         finish(); // Go back to Main Activity
 
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch (view.getId()) {
+            case R.id.yesRadioButton:
+                if (checked)
+                    mTaxable = "true";
+                break;
+
+            case R.id.noRadioButton:
+                if (checked)
+                    mTaxable = "false";
+                break;
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.example.android.shoppingapp3.ui.DisplayCartActivity">
+      tools:context="com.example.android.shoppingapp3.ui.PayActivity">
 
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
@@ -14,11 +14,10 @@
           android:orderInCategory="200"
           app:showAsAction="always"/>
 
-    <item android:id="@+id/action_delete"
-          android:title="Delete"
-          android:icon="@drawable/ic_trash"
+    <item android:id="@+id/action_edit"
+          android:title="Edit"
+          android:icon="@drawable/ic_edit"
           android:orderInCategory="300"
           app:showAsAction="always"/>
-
 
 </menu>
