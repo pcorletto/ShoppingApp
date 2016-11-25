@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.android.shoppingapp3.R;
 
@@ -17,7 +17,7 @@ import com.example.android.shoppingapp3.R;
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private Button storeDummyButton, shoppingListButton, shoppingCartButton;
+    private ImageButton scanImageButton, listImageButton, cartImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(R.drawable.ic_hamburger);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
+        getSupportActionBar().setTitle(getString(R.string.shopping_app_title));
+
+
         //toolbar.setSubtitle("Subtitle");
 
         SharedPreferences sharedPrefs =
@@ -39,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
 
         //Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
 
-        storeDummyButton = (Button) findViewById(R.id.storeDummyButton);
+        scanImageButton = (ImageButton) findViewById(R.id.scanImageButton);
 
-        shoppingListButton =  (Button) findViewById(R.id.shoppingListButton);
+        listImageButton =  (ImageButton) findViewById(R.id.listImageButton);
 
-        shoppingCartButton = (Button) findViewById(R.id.shoppingCartButton);
+        cartImageButton = (ImageButton) findViewById(R.id.cartImageButton);
 
-        storeDummyButton.setOnClickListener(new View.OnClickListener() {
+        scanImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ScanActivity.class);
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        shoppingListButton.setOnClickListener(new View.OnClickListener() {
+        listImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         */
 
-        shoppingCartButton.setOnClickListener(new View.OnClickListener() {
+        cartImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

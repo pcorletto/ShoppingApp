@@ -68,9 +68,17 @@ public class DisplayListActivity extends ActionBarActivity {
 
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setTitle("List");
         toolbar.setSubtitle("Shopping");
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DisplayListActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(this);

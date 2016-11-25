@@ -4,7 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="#f4f4f4"
+              android:background="@drawable/backgroundtwo"
               tools:context="com.example.android.shoppingapp3.ui.DisplayListActivity">
 
     <include

@@ -11,6 +11,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.shoppingapp3.R;
@@ -95,12 +96,34 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         }
 
+        // If the priority is the highest "3" shade it red.
+        // If the priority is medium "2" shade it yellow.
+        // If the priority is low "1" shade it blue.
+
+        LinearLayout listGroupLayout = (LinearLayout) convertView.findViewById(R.id.listGroupLayout);
+        if(headerTitle.getPriority()==3){
+
+            listGroupLayout.setBackgroundColor(convertView.getResources().getColor(R.color.RedHighestPriority));
+        }
+
+        if(headerTitle.getPriority()==2){
+
+            listGroupLayout.setBackgroundColor(convertView.getResources().getColor(R.color.YellowMediumPriority));
+        }
+
+        else if(headerTitle.getPriority()==1){
+
+            listGroupLayout.setBackgroundColor(convertView.getResources().getColor(R.color.BlueLowPriority));
+        }
+
+
         final TextView quantityTextView = (TextView) convertView.
                 findViewById(R.id.quantityTextView);
         quantityTextView.setText(headerTitle.getQuantity()+"");
 
         final TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);
+
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle.getProductName());
 

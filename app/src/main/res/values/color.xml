@@ -2,6 +2,9 @@
 
     <color name="ColorPrimary">#3F51B5</color>
     <color name="ColorPrimaryDark">#303F9F</color>
-    <color name="ColorAccent">#FF4081</color>
+    <color name="ColorAccent">#009688</color>
+    <color name="RedHighestPriority">#DA5D42</color>
+    <color name="YellowMediumPriority">#D1C338</color>
+    <color name="BlueLowPriority">#05CEFA</color>
 
 </resources>

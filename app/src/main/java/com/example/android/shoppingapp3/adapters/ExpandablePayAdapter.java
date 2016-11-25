@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.shoppingapp3.R;
@@ -89,6 +90,27 @@ public class ExpandablePayAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.pay_group, null);
 
         }
+
+        // If the priority is the highest "3" shade it red.
+        // If the priority is medium "2" shade it yellow.
+        // If the priority is low "1" shade it blue.
+
+        LinearLayout payGroupLayout = (LinearLayout) convertView.findViewById(R.id.payGroupLayout);
+        if(headerTitle.getPriority()==3){
+
+            payGroupLayout.setBackgroundColor(convertView.getResources().getColor(R.color.RedHighestPriority));
+        }
+
+        if(headerTitle.getPriority()==2){
+
+            payGroupLayout.setBackgroundColor(convertView.getResources().getColor(R.color.YellowMediumPriority));
+        }
+
+        else if(headerTitle.getPriority()==1){
+
+            payGroupLayout.setBackgroundColor(convertView.getResources().getColor(R.color.BlueLowPriority));
+        }
+
 
         final TextView quantityTextView = (TextView) convertView.
                 findViewById(R.id.quantityTextView);
