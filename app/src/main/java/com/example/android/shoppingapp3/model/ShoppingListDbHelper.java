@@ -146,7 +146,7 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
 
     }
 
-    public void updateSubtotal(String old_product_name, String quantity, String subtotal, SQLiteDatabase sqLiteDatabase){
+    public void updateSubtotal(String product_name, String quantity, String subtotal, SQLiteDatabase sqLiteDatabase){
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ShoppingListDB.NewListItem.QUANTITY, quantity);
@@ -156,7 +156,23 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
 
         String selection = ShoppingListDB.NewListItem.PRODUCT_NAME + " LIKE ?";
 
-        String[] selection_args = {old_product_name};
+        String[] selection_args = {product_name};
+
+        sqLiteDatabase.update(ShoppingListDB.NewListItem.TABLE_NAME, contentValues,
+                selection, selection_args);
+
+    }
+
+    public void updateLastDatePurchased(String product_name, String lastDatePurchased, SQLiteDatabase sqLiteDatabase){
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShoppingListDB.NewListItem.LAST_DATE_PURCHASED, lastDatePurchased);
+
+        // Provide a condition or selection
+
+        String selection = ShoppingListDB.NewListItem.PRODUCT_NAME + " LIKE ?";
+
+        String[] selection_args = {product_name};
 
         sqLiteDatabase.update(ShoppingListDB.NewListItem.TABLE_NAME, contentValues,
                 selection, selection_args);

@@ -87,9 +87,19 @@ public class ScanActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setTitle(TAG);
         toolbar.setSubtitle("PCorletto 2016");
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(ScanActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         // Variables for the HTTP Request
 
@@ -362,10 +372,9 @@ public class ScanActivity extends AppCompatActivity {
                                         //mPriority=1; // Set it to 1 for now, later add a continuum or slider or
                                         // radio group to set priority, from 1 to 3
                                         mLastDatePurchased="NEVER"; // Set it to this for now, later let
-                                        // user enter it from a calendar widget or edittext.
+                                        // this be updated using the system's date, when the user shops.
 
                                     }
-
 
                                 }
 

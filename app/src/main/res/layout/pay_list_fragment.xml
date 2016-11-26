@@ -23,18 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></ExpandableListView>
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/payFAB"
-            android:gravity="bottom|end"
-            android:layout_marginEnd="@dimen/button_margin"
-            android:layout_marginBottom="@dimen/button_margin"
-            android:src="@drawable/ic_checkout"
-            app:elevation="@dimen/elevation_button"
-            app:fabSize="normal"
-            app:borderWidth="0dp"
-            android:layout_gravity="bottom|right"/>
+
 
     </FrameLayout>
 

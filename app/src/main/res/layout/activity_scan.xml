@@ -5,7 +5,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/backgroundtwo"
-              tools:context="com.example.android.shoppingapp3.ui.ScanActivity">
+              tools:context="com.example.android.shoppingapp3.ui.ScanActivity"
+    >
 
     <include
         android:id="@+id/tool_bar"
@@ -13,7 +14,8 @@
     </include>
 
 <RelativeLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+    >
 
     <Button android:id="@+id/scan_button"
             android:layout_width="wrap_content"
@@ -69,7 +71,8 @@
         android:layout_below="@+id/layout2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/layout3">
+        android:id="@+id/layout3"
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -105,7 +108,8 @@
         android:layout_below="@+id/layout3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/layout4">
+        android:id="@+id/layout4"
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -128,16 +132,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout4"
-        android:text="5-stars = highest priority\n1-star = lowest priority"
+        android:text="3-stars = highest priority\n1-star = lowest priority"
         android:id="@+id/textView5"
         android:gravity="center_horizontal"/>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView5"
-        android:id="@+id/layout5">
+        android:id="@+id/layout5"
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -145,10 +150,11 @@
             android:text="Taxable?"
             android:id="@+id/textView7"/>
 
-    <RadioGroup android:layout_width="match_parent"
+    <RadioGroup android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/radioGroup">
+                android:id="@+id/radioGroup"
+                android:gravity="center_horizontal">
 
         <RadioButton
             android:layout_width="wrap_content"

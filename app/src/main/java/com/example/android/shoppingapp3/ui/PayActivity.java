@@ -12,6 +12,7 @@ public class PayActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay);
 
+
         if(savedInstanceState == null){
 
             getSupportFragmentManager().beginTransaction()
@@ -20,7 +21,5 @@ public class PayActivity extends ActionBarActivity {
         }
 
     }
-
-
 
 }

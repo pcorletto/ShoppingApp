@@ -1,22 +1,28 @@
 package com.example.android.shoppingapp3.ui;
 
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.android.shoppingapp3.R;
 import com.example.android.shoppingapp3.model.ReloadCartFromDB;
+import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
 import com.example.android.shoppingapp3.model.ShoppingItem;
 import com.example.android.shoppingapp3.model.ShoppingList;
+import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,6 +30,10 @@ import java.util.List;
  * Created by hernandez on 11/25/2016.
  */
 public class FooterFragment extends Fragment {
+
+    ShoppingListDbHelper shoppingListDbHelper;
+    ShoppingCartDbHelper shoppingCartDbHelper;
+    SQLiteDatabase sqLiteDatabase;
 
     private ShoppingList mShoppingList = new ShoppingList();
 
@@ -35,7 +45,8 @@ public class FooterFragment extends Fragment {
     HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
 
 
-    public LinearLayout footerLayout;
+    FloatingActionButton payFAB;
+
     public TextView quantityTextView;
     public TextView subtotalTextView;
     public TextView salesTaxTextView;
@@ -106,6 +117,62 @@ public class FooterFragment extends Fragment {
         totalTextView.setText(df.format(total));
 
 
+        payFAB = (FloatingActionButton) rootView.findViewById(R.id.payFAB);
+
+        payFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // Capture the count, subtotal, sales tax, total, payment method (cash, debit or credit)
+                // and the last 4 digits entered by the user. Then, store all these data in the
+                // PURCHASE TABLE of the database so that a record of purchases can be kept
+
+                // Traverse all the items in the shopping cart using a loop
+
+                // Update all those items, in the Shopping LIST database, not on the
+                // Shopping Cart DB. The update will include the last date purchased
+                // with will be obtained using the System's Date
+
+                for(int i=0; i<listDataHeader.size(); i++){
+
+                    updateLastDatePurchased(listDataHeader.get(i).getProductName(),
+                            getCurrentDate());
+
+                }
+
+                // Delete all the items from the Shopping CART database.
+
+                // Initialize the shoppingCartDBHelper object
+
+                shoppingCartDbHelper = new ShoppingCartDbHelper(getContext().getApplicationContext());
+
+                // Initialize the SQLiteDatabase object
+
+                sqLiteDatabase = shoppingCartDbHelper.getReadableDatabase();
+
+
+                for(int i=0; i<listDataHeader.size(); i++) {
+
+
+                        // Delete the cart item from the SQLite database
+
+                        shoppingCartDbHelper.deleteCartItem(listDataHeader.get(i).getProductName(), sqLiteDatabase);
+
+
+                }
+
+                // Play a "Thank you for Shopping" sound.
+
+                MediaPlayer player = MediaPlayer.create(getContext().getApplicationContext(), R.raw.thankyou);
+                player.start();
+
+                // Return to MainActivity
+                Intent intent = new Intent(getContext().getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
         return rootView;
 
     }
@@ -148,6 +215,32 @@ public class FooterFragment extends Fragment {
             listDataChild.put(listDataHeader.get(i), childrenItems);
 
         }
+
+    }
+
+    public String getCurrentDate(){
+
+        Calendar ci = Calendar.getInstance();
+
+        // Add one to the number of the month, because in Java, January is represented
+        // using zero.
+
+        String formattedMonth = String.format("%02d", ci.get(Calendar.MONTH)+1 );
+        String formattedDay = String.format("%02d", ci.get(Calendar.DAY_OF_MONTH));
+        String formattedYear = String.format("%04d", ci.get(Calendar.YEAR));
+
+        String currentDate = formattedMonth + "/" + formattedDay + "/" + formattedYear;
+
+        return currentDate;
+
+
+    }
+
+    public void updateLastDatePurchased(String productName, String lastDatePurchased){
+
+            shoppingListDbHelper = new ShoppingListDbHelper(getContext().getApplicationContext());
+            sqLiteDatabase = shoppingListDbHelper.getWritableDatabase();
+            shoppingListDbHelper.updateLastDatePurchased(productName, lastDatePurchased, sqLiteDatabase);
 
     }
 }

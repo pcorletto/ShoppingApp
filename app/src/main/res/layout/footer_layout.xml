@@ -1,16 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:background="@color/ColorPrimaryDark"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:gravity="center_vertical|center_horizontal"
+              android:gravity="center_vertical"
               android:id="@+id/footerLayout"
               android:layout_marginTop="@dimen/activity_vertical_margin">
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center_vertical">
 
         <LinearLayout
@@ -124,8 +125,8 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         >
 
         <RadioButton
@@ -154,8 +155,8 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         >
 
         <TextView
@@ -168,7 +169,7 @@
             android:paddingRight="@dimen/small_padding"/>
 
         <EditText
-            android:layout_width="40dp"
+            android:layout_width="55dp"
             android:layout_height="wrap_content"
             android:text=""
             android:id="@+id/lastFourDigitsEditText"
@@ -177,6 +178,18 @@
             android:paddingLeft="@dimen/small_padding"/>
 
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/payFAB"
+        android:layout_marginEnd="@dimen/button_margin"
+        android:layout_marginBottom="@dimen/button_margin"
+        android:src="@drawable/ic_checkout"
+        app:elevation="@dimen/elevation_button"
+        app:fabSize="normal"
+        app:borderWidth="0dp"
+        android:layout_gravity="bottom|right"/>
 
 
 </LinearLayout>

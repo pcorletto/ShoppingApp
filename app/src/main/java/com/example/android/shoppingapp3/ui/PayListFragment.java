@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -48,12 +47,12 @@ public class PayListFragment extends Fragment {
 
     private Toolbar toolbar;
 
-    FloatingActionButton payFAB;
+    //FloatingActionButton payFAB;
 
     Fragment frag;
     FragmentTransaction fragTransaction;
 
-    public PayListFragment(){
+    public PayListFragment() {
 
 
     }
@@ -67,7 +66,7 @@ public class PayListFragment extends Fragment {
         // Get the toolbar
         toolbar = (Toolbar) view.findViewById(R.id.tool_bar);
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
 
@@ -106,7 +105,7 @@ public class PayListFragment extends Fragment {
         fragTransaction = getFragmentManager().beginTransaction().add(R.id.container, frag);
         fragTransaction.commit();
 
-        payFAB = (FloatingActionButton) view.findViewById(R.id.payFAB);
+        /*payFAB = (FloatingActionButton) view.findViewById(R.id.payFAB);
 
         payFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,12 +116,12 @@ public class PayListFragment extends Fragment {
                 fragTransaction.commit();
 
             }
-        });
+        });*/
 
         return view;
     }
 
-    private void prepareListData(){
+    private void prepareListData() {
 
 
         listDataHeader = new ArrayList<ShoppingItem>();
@@ -141,7 +140,7 @@ public class PayListFragment extends Fragment {
         mRowNumber = reloadedCart.getListSize();
 
 
-        for(int i = 0; i<mRowNumber; i++){
+        for (int i = 0; i < mRowNumber; i++) {
 
             listDataHeader.add(mShoppingList.getShoppingItem(i));
 
@@ -151,7 +150,7 @@ public class PayListFragment extends Fragment {
 
         // Adding child data:
 
-        for(int i=0; i<mRowNumber; i++) {
+        for (int i = 0; i < mRowNumber; i++) {
 
             List<ShoppingItem> childrenItems = new ArrayList<ShoppingItem>();
 
@@ -162,4 +161,7 @@ public class PayListFragment extends Fragment {
         }
 
     }
+
+
+
 }
