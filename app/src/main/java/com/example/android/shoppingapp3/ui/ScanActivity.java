@@ -156,13 +156,13 @@ public class ScanActivity extends AppCompatActivity {
             }
         });
 
+
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
 
-                mPriority = Double.parseDouble((String.valueOf(rating)));
-
-
+                    mPriority = Double.parseDouble((String.valueOf(rating)));
+                
             }
         });
 
@@ -217,6 +217,16 @@ public class ScanActivity extends AppCompatActivity {
                     toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
                     return;
                 }
+
+                if(ratingBar.getRating()==0){
+
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    Toast.makeText(ScanActivity.this, "Select one or more stars!", Toast.LENGTH_LONG).show();
+                    return;
+
+                }
+
 
 
                 else {

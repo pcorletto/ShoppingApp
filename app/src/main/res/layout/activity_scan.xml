@@ -124,7 +124,7 @@
             android:layout_height="wrap_content"
             android:numStars="3"
             android:stepSize="1.0"
-            android:rating="1.0" />
+            android:rating="0" />
 
     </LinearLayout>
 
