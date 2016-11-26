@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -169,7 +170,19 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String quantity = quantityEditText.getText().toString();
+
+                // Check if quantity is empty. If no entry, then alert
+                if (TextUtils.isEmpty(quantity)) {
+                    quantityEditText.setError(getString(R.string.empty_quantity_alert));
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    return;
+                }
+
                 mQuantity = Integer.parseInt(quantityEditText.getText().toString());
+
+
 
                 mSubtotal = mQuantity * mPriceValue;
 
@@ -183,7 +196,30 @@ public class ScanActivity extends AppCompatActivity {
                     toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
                     return;
 
-                } else {
+                }
+
+                String productName = productNameEditText.getText().toString();
+
+                // Check if product name is empty. If no entry, then alert
+                if (TextUtils.isEmpty(productName)) {
+                    productNameEditText.setError(getString(R.string.empty_product_name_alert));
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    return;
+                }
+
+                String price = priceEditText.getText().toString();
+
+                // Check if price is empty. If no entry, then alert
+                if (TextUtils.isEmpty(price)) {
+                    priceEditText.setError(getString(R.string.empty_price_alert));
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    return;
+                }
+
+
+                else {
 
                     addItem();
 

@@ -69,4 +69,8 @@
     <string name="title_activity_checkout">CheckoutActivity</string>
     <string name="title_activity_pay">PayActivity</string>
 
+    <string name="empty_product_name_alert">No product name! Please scan again.</string>
+    <string name="empty_price_alert">No price! Please scan again.</string>
+    <string name="empty_quantity_alert">No quantity! Please select it.</string>
+
 </resources>
