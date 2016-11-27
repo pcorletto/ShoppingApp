@@ -37,10 +37,11 @@
             android:text="@string/product_name_label"
             android:id="@+id/productNameLabel"/>
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/productNameEditText"/>
+            android:id="@+id/productNameTextView"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -56,12 +57,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/price_label"
-            android:id="@+id/priceLabel"/>
+            android:id="@+id/priceLabel"
+            />
 
-        <EditText
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/priceEditText"/>
+            android:id="@+id/priceTextView"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
     <LinearLayout
@@ -80,12 +83,14 @@
             android:text="Quantity:  "
             android:id="@+id/textView3"/>
 
-        <EditText
+        <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/quantityEditText"/>
+            android:id="@+id/quantityTextView"
+            android:textColor="@android:color/white"
+            android:gravity="center_horizontal"/>
 
         <Button
             android:layout_width="wrap_content"

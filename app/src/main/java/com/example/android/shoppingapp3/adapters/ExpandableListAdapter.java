@@ -162,6 +162,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 double newSubtotal = newQuantity * headerTitle.getItemPrice();
 
+                headerTitle.setSubtotal(newSubtotal);
+
                 // Update quantity and subtotal in SQLite DB...
                 updateSubtotal(headerTitle.getProductName(), newQuantity+"", newSubtotal+"");
 
@@ -209,6 +211,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 quantityTextView.setText(newQuantity+"");
 
                 double newSubtotal = newQuantity * headerTitle.getItemPrice();
+
+                headerTitle.setSubtotal(newSubtotal);
 
                 // Update quantity and subtotal in SQLite DB...
                 updateSubtotal(headerTitle.getProductName(), newQuantity+"", newSubtotal+"");
@@ -279,7 +283,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         holder.quantityTextView.setText(childText.getQuantity()+"");
         holder.itemPriceTextView.setText(df.format(childText.getItemPrice()));
-        holder.subtotalTextView.setText(df.format(childText.getQuantity()*childText.getItemPrice()));
+        holder.subtotalTextView.setText(df.format(childText.getSubtotal()));
         holder.categoryTextView.setText(childText.getCategory());
         holder.lastDatePurchasedTextView.setText(childText.getLastDatePurchased());
 

@@ -159,7 +159,7 @@ public class ExpandablePayAdapter extends BaseExpandableListAdapter {
 
         holder.quantityTextView.setText(childText.getQuantity()+"");
         holder.itemPriceTextView.setText(df.format(childText.getItemPrice()));
-        holder.subtotalTextView.setText(df.format(childText.getQuantity() * childText.getItemPrice()));
+        holder.subtotalTextView.setText(df.format(childText.getSubtotal()));
         holder.categoryTextView.setText(childText.getCategory());
         holder.lastDatePurchasedTextView.setText(childText.getLastDatePurchased());
 
@@ -177,6 +177,7 @@ public class ExpandablePayAdapter extends BaseExpandableListAdapter {
 
         if(childText.isTaxable()) {
             salesTax = childText.getSubtotal() * 0.07;
+            //salesTax = childText.getItemPrice() * childText.getQuantity() * 0.07;
         }
 
         else{ // Non-taxable items: food, medicine

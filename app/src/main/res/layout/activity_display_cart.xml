@@ -34,8 +34,7 @@
             app:elevation="@dimen/elevation_button"
             app:fabSize="normal"
             app:borderWidth="0dp"
-            android:layout_gravity="bottom|right"
-            />
+            android:layout_gravity="bottom|right"/>
 
     </FrameLayout>
 

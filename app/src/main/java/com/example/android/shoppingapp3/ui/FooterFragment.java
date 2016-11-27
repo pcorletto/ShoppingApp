@@ -90,7 +90,7 @@ public class FooterFragment extends Fragment {
         for(int i=0; i<listDataHeader.size(); i++){
 
             count = count + listDataHeader.get(i).getQuantity();
-            subtotal = subtotal + listDataHeader.get(i).getQuantity() * listDataHeader.get(i).getItemPrice();
+            subtotal = subtotal + listDataHeader.get(i).getSubtotal();
             if(listDataHeader.get(i).isTaxable()){
 
                 addtax = listDataHeader.get(i).getSubtotal() * 0.07;

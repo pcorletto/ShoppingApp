@@ -17,10 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.shoppingapp3.BuildConfig;
@@ -50,7 +50,7 @@ public class ScanActivity extends AppCompatActivity {
     private Button scanBtn,storeBtn,displayBtn, minusBtn, plusBtn;
     private RatingBar ratingBar;
     private RadioGroup radioGroup;
-    private EditText productNameEditText, priceEditText, quantityEditText;
+    private TextView productNameTextView, priceTextView, quantityTextView;
     public static final String TAG = ScanActivity.class.getSimpleName();
 
     private ShoppingItem mShoppingItem;
@@ -78,9 +78,9 @@ public class ScanActivity extends AppCompatActivity {
         plusBtn = (Button) findViewById(R.id.plusButton);
         displayBtn = (Button) findViewById(R.id.display_button);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-        quantityEditText = (EditText) findViewById(R.id.quantityEditText);
-        productNameEditText = (EditText) findViewById(R.id.productNameEditText);
-        priceEditText = (EditText) findViewById(R.id.priceEditText);
+        quantityTextView = (TextView) findViewById(R.id.quantityTextView);
+        productNameTextView = (TextView) findViewById(R.id.productNameTextView);
+        priceTextView = (TextView) findViewById(R.id.priceTextView);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
         // Get the toolbar
@@ -141,7 +141,7 @@ public class ScanActivity extends AppCompatActivity {
 
                 }
 
-                quantityEditText.setText(mQuantity+"");
+                quantityTextView.setText(mQuantity + "");
             }
         });
 
@@ -152,7 +152,7 @@ public class ScanActivity extends AppCompatActivity {
 
                 mQuantity++;
 
-                quantityEditText.setText(mQuantity+"");
+                quantityTextView.setText(mQuantity + "");
             }
         });
 
@@ -162,7 +162,7 @@ public class ScanActivity extends AppCompatActivity {
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
 
                     mPriority = Double.parseDouble((String.valueOf(rating)));
-                
+
             }
         });
 
@@ -170,17 +170,18 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String quantity = quantityEditText.getText().toString();
+                String quantity = quantityTextView.getText().toString();
 
                 // Check if quantity is empty. If no entry, then alert
                 if (TextUtils.isEmpty(quantity)) {
-                    quantityEditText.setError(getString(R.string.empty_quantity_alert));
+                    quantityTextView.setError(getString(R.string.empty_quantity_alert));
+                    Toast.makeText(ScanActivity.this, getString(R.string.empty_quantity_alert), Toast.LENGTH_LONG).show();
                     ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                     toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
                     return;
                 }
 
-                mQuantity = Integer.parseInt(quantityEditText.getText().toString());
+                mQuantity = Integer.parseInt(quantityTextView.getText().toString());
 
 
 
@@ -198,21 +199,23 @@ public class ScanActivity extends AppCompatActivity {
 
                 }
 
-                String productName = productNameEditText.getText().toString();
+                String productName = productNameTextView.getText().toString();
 
                 // Check if product name is empty. If no entry, then alert
                 if (TextUtils.isEmpty(productName)) {
-                    productNameEditText.setError(getString(R.string.empty_product_name_alert));
+                    productNameTextView.setError(getString(R.string.empty_product_name_alert));
+                    Toast.makeText(ScanActivity.this, getString(R.string.empty_product_name_alert), Toast.LENGTH_LONG).show();
                     ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                     toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
                     return;
                 }
 
-                String price = priceEditText.getText().toString();
+                String price = priceTextView.getText().toString();
 
                 // Check if price is empty. If no entry, then alert
                 if (TextUtils.isEmpty(price)) {
-                    priceEditText.setError(getString(R.string.empty_price_alert));
+                    priceTextView.setError(getString(R.string.empty_price_alert));
+                    Toast.makeText(ScanActivity.this, getString(R.string.empty_price_alert), Toast.LENGTH_LONG).show();
                     ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                     toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
                     return;
@@ -399,7 +402,7 @@ public class ScanActivity extends AppCompatActivity {
                                     }
 
                                     mShoppingItem.setProductName(mName);
-                                    productNameEditText.setText(mName);
+                                    productNameTextView.setText(mName);
 
                                     if(mPrice==null){
                                         Toast.makeText(ScanActivity.this, "Price unavailable",Toast.LENGTH_LONG).show();;
@@ -409,8 +412,8 @@ public class ScanActivity extends AppCompatActivity {
 
                                         mShoppingItem.setItemPrice(Double.parseDouble(mPrice));
                                         mQuantity = 1;
-                                        quantityEditText.setText(mQuantity+"");
-                                        priceEditText.setText(mPrice);
+                                        quantityTextView.setText(mQuantity + "");
+                                        priceTextView.setText(mPrice);
                                         mPriceValue = Double.parseDouble(mPrice);
                                         mSubtotal = mPriceValue * mShoppingItem.getQuantity();
                                         mShoppingItem.setSubtotal(mSubtotal);
