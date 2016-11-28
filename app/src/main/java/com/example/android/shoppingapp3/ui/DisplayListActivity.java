@@ -261,7 +261,12 @@ public class DisplayListActivity extends ActionBarActivity {
 
         else if(sortOrder.equals("alphabetical")){
 
-            mShoppingList = reloadedList.reloadListFromDB("sort", searchItem, getApplicationContext());
+            mShoppingList = reloadedList.reloadListFromDB("sortByName", searchItem, getApplicationContext());
+        }
+
+        else if(sortOrder.equals("priority")){
+
+            mShoppingList = reloadedList.reloadListFromDB("sortByPriority", searchItem, getApplicationContext());
         }
 
 

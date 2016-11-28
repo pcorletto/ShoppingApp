@@ -42,10 +42,16 @@ public class ReloadListFromDB {
 
             cursor = shoppingListDbHelper.getShoppingItem(sqLiteDatabase);
         }
-        else if (selector.equals("sort")){
+        else if (selector.equals("sortByName")){
 
-            cursor = shoppingListDbHelper.sortListItems(sqLiteDatabase);
+            cursor = shoppingListDbHelper.sortListItemsByName(sqLiteDatabase);
         }
+
+        else if (selector.equals("sortByPriority")){
+
+            cursor = shoppingListDbHelper.sortListItemsByPriority(sqLiteDatabase);
+        }
+
 
         // Initialize the row number
 
