@@ -80,14 +80,6 @@ public class DisplayListActivity extends ActionBarActivity {
             }
         });
 
-        SharedPreferences sharedPrefs =
-                PreferenceManager.getDefaultSharedPreferences(this);
-        String language = sharedPrefs.getString(
-                getString(R.string.pref_language_key),
-                getString(R.string.pref_language_english));
-
-        //Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
-
         // Get the expandable list view
         expListView = (ExpandableListView) findViewById(android.R.id.list);
 
@@ -240,6 +232,15 @@ public class DisplayListActivity extends ActionBarActivity {
 
     private void prepareListData(){
 
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+        String sortOrder = sharedPrefs.getString(
+                getString(R.string.pref_sort_key),
+                getString(R.string.pref_sort_default));
+
+        Toast.makeText(this, sortOrder, Toast.LENGTH_LONG).show();
+
 
         listDataHeader = new ArrayList<ShoppingItem>();
 
@@ -252,7 +253,18 @@ public class DisplayListActivity extends ActionBarActivity {
 
         String searchItem = "";
 
-        mShoppingList = reloadedList.reloadListFromDB("get", searchItem, getApplicationContext());
+        if(sortOrder.equals("no sort")){
+
+            mShoppingList = reloadedList.reloadListFromDB("get", searchItem, getApplicationContext());
+
+        }
+
+        else if(sortOrder.equals("alphabetical")){
+
+            mShoppingList = reloadedList.reloadListFromDB("sort", searchItem, getApplicationContext());
+        }
+
+
 
         mRowNumber = reloadedList.getListSize();
 

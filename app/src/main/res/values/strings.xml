@@ -60,11 +60,45 @@
     <!-- Key name for language preference in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_language_key" translatable="false">language</string>
 
+    <!-- Key name for language default in SharedPreferences [CHAR LIMIT=NONE] -->
+    <string name="pref_language_default" translatable="false">English</string>
+
     <!-- Value in SharedPreferences for English language option [CHAR LIMIT=NONE] -->
     <string name="pref_language_english" translatable="false">English</string>
 
     <!-- Value in SharedPreferences for Spanish language option [CHAR LIMIT=NONE] -->
     <string name="pref_language_spanish" translatable="false">Español</string>
+
+
+    <!-- Label for the sort preference [CHAR LIMIT=30] -->
+    <string name="pref_sort_label">Sort Order</string>
+
+    <!-- Label for alphabetical option in sort preference [CHAR LIMIT=25] -->
+    <string name="pref_sort_label_alphabetical">By Product Name: A-Z</string>
+
+    <!-- Label for priority option in sort preference [CHAR LIMIT=25] -->
+    <string name="pref_sort_label_priority">By Priority: Hi to Low</string>
+
+    <!-- Label for no sort option in sort preference [CHAR LIMIT=25] -->
+    <string name="pref_sort_label_no_sort">Not Sorted</string>
+
+    <!-- Key name for sort preference in SharedPreferences [CHAR LIMIT=NONE] -->
+    <string name="pref_sort_key" translatable="false">sort</string>
+
+    <!-- Key name for sort default in SharedPreferences [CHAR LIMIT=NONE] -->
+    <string name="pref_sort_default" translatable="false">no sort</string>
+
+    <!-- Value in SharedPreferences for alphabetical sort option [CHAR LIMIT=NONE] -->
+    <string name="pref_sort_alphabetical" translatable="false">alphabetical</string>
+
+    <!-- Value in SharedPreferences for priority sort option [CHAR LIMIT=NONE] -->
+    <string name="pref_sort_priority" translatable="false">priority</string>
+
+    <!-- Value in SharedPreferences for no sort option [CHAR LIMIT=NONE] -->
+    <string name="pref_sort_no_sort" translatable="false">no sort</string>
+
+
+
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_checkout">CheckoutActivity</string>
     <string name="title_activity_pay">PayActivity</string>

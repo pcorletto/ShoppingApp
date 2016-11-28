@@ -1,5 +1,6 @@
 package com.example.android.shoppingapp3.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -30,6 +31,9 @@ public class SettingsActivity extends PreferenceActivity
         // updated when the preference changes.
         // TODO: Add preferences
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_language_key)));
+
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sort_key)));
+
     }
 
     /**
@@ -68,4 +72,9 @@ public class SettingsActivity extends PreferenceActivity
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, DisplayListActivity.class);
+        startActivity(intent);
+    }
 }

@@ -11,4 +11,16 @@
         <item>@string/pref_language_spanish</item>
     </string-array>
 
+    <string-array name="pref_sort_options">
+        <item>@string/pref_sort_label_alphabetical</item>
+        <item>@string/pref_sort_label_priority</item>
+        <item>@string/pref_sort_label_no_sort</item>
+    </string-array>
+
+    <string-array name="pref_sort_values">
+        <item>@string/pref_sort_alphabetical</item>
+        <item>@string/pref_sort_priority</item>
+        <item>@string/pref_sort_no_sort</item>
+    </string-array>
+
 </resources>
