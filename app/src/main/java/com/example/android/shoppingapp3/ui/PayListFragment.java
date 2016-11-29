@@ -123,6 +123,12 @@ public class PayListFragment extends Fragment {
 
     private void prepareListData() {
 
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        String sortOrder = sharedPrefs.getString(
+                getString(R.string.pref_sort_key),
+                getString(R.string.pref_sort_default));
 
         listDataHeader = new ArrayList<ShoppingItem>();
 
@@ -135,8 +141,22 @@ public class PayListFragment extends Fragment {
 
         String searchItem = "";
 
-        mShoppingList = reloadedCart.reloadCartFromDB("get", searchItem, getContext());
+        if(sortOrder.equals("no sort")){
 
+            mShoppingList = reloadedCart.reloadCartFromDB("get", searchItem, getContext());
+
+        }
+
+        else if(sortOrder.equals("alphabetical")){
+
+            mShoppingList = reloadedCart.reloadCartFromDB("sortByName", searchItem, getContext());
+        }
+
+        else if(sortOrder.equals("priority")){
+
+            mShoppingList = reloadedCart.reloadCartFromDB("sortByPriority", searchItem, getContext());
+        }
+        
         mRowNumber = reloadedCart.getListSize();
 
 
