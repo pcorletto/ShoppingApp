@@ -116,7 +116,7 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor sortCartItems(SQLiteDatabase db){
+    public Cursor sortCartItemsByName(SQLiteDatabase db){
 
         Cursor cursor;
 
@@ -129,6 +129,17 @@ public class ShoppingCartDbHelper extends SQLiteOpenHelper {
         // Another valid way to sort it, case insensitive, in SQL is as follows:
         // cursor = db.rawQuery("SELECT * FROM " + EntryListDB.NewEntryItem.TABLE_NAME +
         //        " ORDER BY LOWER(" + EntryListDB.NewEntryItem.WORD + ") ASC", null);
+
+        return cursor;
+
+    }
+
+    public Cursor sortCartItemsByPriority(SQLiteDatabase db){
+
+        Cursor cursor;
+
+        cursor = db.rawQuery("SELECT * FROM " + ShoppingCartDB.NewCartItem.TABLE_NAME +
+                " ORDER BY " + ShoppingCartDB.NewCartItem.PRIORITY + " DESC", null);
 
         return cursor;
 

@@ -74,7 +74,26 @@ public class SettingsActivity extends PreferenceActivity
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, DisplayListActivity.class);
-        startActivity(intent);
+
+        Intent intent1 = getIntent();
+
+        // Get the name of the activity from which SettingsActivity was called.
+
+        String calling_activity_name = intent1.getStringExtra(getString(R.string.calling_activity_name));
+
+        if(calling_activity_name.equals("ui.DisplayListActivity")){//Return to DisplayListActivity
+
+            Intent intent2 = new Intent(this, DisplayListActivity.class);
+            startActivity(intent2);
+
+        }
+
+        else if(calling_activity_name.equals("ui.DisplayCartActivity")){//Return to DisplayCartActivity
+
+            Intent intent3 = new Intent(this, DisplayCartActivity.class);
+            startActivity(intent3);
+
+        }
+
     }
 }

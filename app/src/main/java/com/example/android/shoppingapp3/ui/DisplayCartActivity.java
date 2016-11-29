@@ -123,6 +123,12 @@ public class DisplayCartActivity extends ActionBarActivity {
 
             {
                 Intent intent = new Intent(DisplayCartActivity.this, SettingsActivity.class);
+
+                // Pass the name of the activity so that we can detect it inside SettingsActivity,
+                // and we can return to this activity and list can be refreshed if the sort
+                // order is changed.
+                intent.putExtra(getString(R.string.calling_activity_name), this.getLocalClassName());
+
                 startActivity(intent);
                 return true;
 
@@ -181,6 +187,12 @@ public class DisplayCartActivity extends ActionBarActivity {
 
     private void prepareListData(){
 
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+        String sortOrder = sharedPrefs.getString(
+                getString(R.string.pref_sort_key),
+                getString(R.string.pref_sort_default));
 
         listDataHeader = new ArrayList<ShoppingItem>();
 
@@ -193,7 +205,22 @@ public class DisplayCartActivity extends ActionBarActivity {
 
         String searchItem = "";
 
-        mShoppingList = reloadedCart.reloadCartFromDB("get", searchItem, getApplicationContext());
+        if(sortOrder.equals("no sort")){
+
+            mShoppingList = reloadedCart.reloadCartFromDB("get", searchItem, getApplicationContext());
+
+        }
+
+        else if(sortOrder.equals("alphabetical")){
+
+            mShoppingList = reloadedCart.reloadCartFromDB("sortByName", searchItem, getApplicationContext());
+        }
+
+        else if(sortOrder.equals("priority")){
+
+            mShoppingList = reloadedCart.reloadCartFromDB("sortByPriority", searchItem, getApplicationContext());
+        }
+
 
         mRowNumber = reloadedCart.getListSize();
 

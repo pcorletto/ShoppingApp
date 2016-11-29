@@ -117,6 +117,13 @@ public class DisplayListActivity extends ActionBarActivity {
 
             {
                 Intent intent = new Intent(DisplayListActivity.this, SettingsActivity.class);
+
+                // Pass the name of the activity so that we can detect it inside SettingsActivity,
+                // and we can return to this activity and list can be refreshed if the sort
+                // order is changed.
+                intent.putExtra(getString(R.string.calling_activity_name), this.getLocalClassName());
+
+
                 startActivity(intent);
                 return true;
 
@@ -238,8 +245,6 @@ public class DisplayListActivity extends ActionBarActivity {
         String sortOrder = sharedPrefs.getString(
                 getString(R.string.pref_sort_key),
                 getString(R.string.pref_sort_default));
-
-        Toast.makeText(this, sortOrder, Toast.LENGTH_LONG).show();
 
 
         listDataHeader = new ArrayList<ShoppingItem>();

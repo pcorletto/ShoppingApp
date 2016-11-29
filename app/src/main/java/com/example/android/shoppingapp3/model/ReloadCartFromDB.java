@@ -42,9 +42,14 @@ public class ReloadCartFromDB {
 
             cursor = shoppingCartDbHelper.getCartItem(sqLiteDatabase);
         }
-        else if (selector.equals("sort")){
+        else if (selector.equals("sortByName")){
 
-            cursor = shoppingCartDbHelper.sortCartItems(sqLiteDatabase);
+            cursor = shoppingCartDbHelper.sortCartItemsByName(sqLiteDatabase);
+        }
+
+        else if (selector.equals("sortByPriority")){
+
+            cursor = shoppingCartDbHelper.sortCartItemsByPriority(sqLiteDatabase);
         }
 
         // Initialize the row number

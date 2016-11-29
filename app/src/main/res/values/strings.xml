@@ -107,4 +107,6 @@
     <string name="empty_price_alert">No price! Please scan again.</string>
     <string name="empty_quantity_alert">No quantity! Please select it.</string>
 
+    <string name="calling_activity_name">calling_activity_name</string>
+
 </resources>
