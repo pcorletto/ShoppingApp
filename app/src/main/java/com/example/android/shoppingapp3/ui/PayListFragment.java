@@ -156,7 +156,7 @@ public class PayListFragment extends Fragment {
 
             mShoppingList = reloadedCart.reloadCartFromDB("sortByPriority", searchItem, getContext());
         }
-        
+
         mRowNumber = reloadedCart.getListSize();
 
 

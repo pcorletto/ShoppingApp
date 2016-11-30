@@ -255,11 +255,72 @@ public class DisplayCartActivity extends ActionBarActivity {
 
                                      @Override
                                      public void onClick(View v) {
-                                         MediaPlayer player = MediaPlayer.create(getApplicationContext(), R.raw.cashregister);
-                                           player.start();
 
-                                         Intent intent = new Intent(DisplayCartActivity.this, PayActivity.class);
-                                         startActivity(intent);
+                                         // Only send the cart items that have a check mark to the PayActivity and
+                                         // reject those unchecked. In other words, delete unchecked cart items from the
+                                         // ShoppingCartDB. If no items are selected at all, and the FAB button is pressed,
+                                         // then alert the user to mark some items, and do not send intent to PayActivity
+
+                                         int unMarked = 0;
+
+
+                                         for(int i=0; i<listDataHeader.size(); i++) {
+
+                                             if (!listDataHeader.get(i).isSelected()) {
+
+                                                 // Count the number of items that are not selected,
+                                                 // if it equals the size of the list, it means that none are selected.
+                                                 // In that case, alert the user to check some items for checkout
+                                                 // and DO NOT go to PayActivity
+
+                                                 unMarked++;
+
+                                             }
+
+                                         }
+
+                                             if(unMarked==listDataHeader.size()){
+
+                                                 Toast.makeText(getApplicationContext(), "You have not selected any items for checkout. Please check some!",
+                                                         Toast.LENGTH_LONG).show();
+
+                                             }
+
+                                         else{ // Some items are checked. Delete the unchecked ones from the ShoppingCartDB.
+
+                                                 // Initialize the shoppingCartDBHelper object
+
+                                                 mShoppingCartDbHelper = new ShoppingCartDbHelper(getApplicationContext());
+
+                                                 // Initialize the SQLiteDatabase object
+
+                                                 sqLiteDatabase = mShoppingCartDbHelper.getReadableDatabase();
+
+                                                 for(int i=0; i<listDataHeader.size(); i++) {
+
+                                                     if (!listDataHeader.get(i).isSelected()) {
+
+                                                         // For SQLiteDatabase: Delete this item here, if checked.
+
+                                                         String item_for_DB_deletion = listDataHeader.get(i).getProductName() + "";
+
+                                                         // Delete the shopping item from the SQLite database
+
+                                                         mShoppingCartDbHelper.deleteCartItem(item_for_DB_deletion, sqLiteDatabase);
+
+                                                     }
+
+                                                 }
+
+                                                 // Then, play a cash register sound, and go to PayActivity to show the checkout list.
+
+                                                 MediaPlayer player = MediaPlayer.create(getApplicationContext(), R.raw.cashregister);
+                                                 player.start();
+
+                                                 Intent intent = new Intent(DisplayCartActivity.this, PayActivity.class);
+                                                 startActivity(intent);
+
+                                             }
 
                                      }
                                  }

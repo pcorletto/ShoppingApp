@@ -2,7 +2,9 @@ package com.example.android.shoppingapp3.ui;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -10,8 +12,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
 import com.example.android.shoppingapp3.model.ReloadCartFromDB;
@@ -29,7 +35,7 @@ import java.util.List;
 /**
  * Created by hernandez on 11/25/2016.
  */
-public class FooterFragment extends Fragment {
+public class FooterFragment extends Fragment{
 
     ShoppingListDbHelper shoppingListDbHelper;
     ShoppingCartDbHelper shoppingCartDbHelper;
@@ -51,8 +57,18 @@ public class FooterFragment extends Fragment {
     public TextView subtotalTextView;
     public TextView salesTaxTextView;
     public TextView totalTextView;
+
     // Radio group, radio buttons go here...
+    public String paymentMethod;
+
+    public RadioGroup paymentGroup;
+    public RadioButton cashRadioButton;
+    public RadioButton debitRadioButton;
+    public RadioButton creditRadioButton;
+
     public EditText lastFourDigitsEditText;
+
+    public int lastFourDigits;
 
     public FooterFragment(){
 
@@ -75,6 +91,14 @@ public class FooterFragment extends Fragment {
         salesTaxTextView = (TextView) rootView.findViewById(R.id.salesTaxTextView);
         totalTextView = (TextView) rootView.findViewById(R.id.totalTextView);
         // Radio Group, radio buttons go here ...
+
+        paymentGroup = (RadioGroup) rootView.findViewById(R.id.paymentGroup);
+
+
+        cashRadioButton = (RadioButton) rootView.findViewById(R.id.cashRadioButton);
+        debitRadioButton = (RadioButton) rootView.findViewById(R.id.debitRadioButton);
+        creditRadioButton = (RadioButton) rootView.findViewById(R.id.creditRadioButton);
+
         lastFourDigitsEditText = (EditText) rootView.findViewById(R.id.lastFourDigitsEditText);
 
         // Footer section:
@@ -116,6 +140,26 @@ public class FooterFragment extends Fragment {
         salesTaxTextView.setText(df.format(tax));
         totalTextView.setText(df.format(total));
 
+        cashRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                paymentMethod = "cash";
+            }
+        });
+
+        debitRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                paymentMethod = "debit";
+            }
+        });
+
+        creditRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                paymentMethod = "credit";
+            }
+        });
 
         payFAB = (FloatingActionButton) rootView.findViewById(R.id.payFAB);
 
@@ -123,9 +167,25 @@ public class FooterFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                if(paymentGroup.getCheckedRadioButtonId() == -1){
+
+                    // Alert user to check one payment type
+
+                    Toast.makeText(getContext(), "Select one payment type!",
+                            Toast.LENGTH_LONG).show();
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    return;
+
+                }
+
                 // Capture the count, subtotal, sales tax, total, payment method (cash, debit or credit)
                 // and the last 4 digits entered by the user. Then, store all these data in the
                 // PURCHASE TABLE of the database so that a record of purchases can be kept
+
+                // Get the last four digits from the user
+                lastFourDigits = Integer.parseInt(lastFourDigitsEditText.getText().toString());
+
 
                 // Traverse all the items in the shopping cart using a loop
 
@@ -165,6 +225,8 @@ public class FooterFragment extends Fragment {
 
                 MediaPlayer player = MediaPlayer.create(getContext().getApplicationContext(), R.raw.thankyou);
                 player.start();
+
+                Toast.makeText(getContext(), paymentMethod + lastFourDigits, Toast.LENGTH_LONG).show();
 
                 // Return to MainActivity
                 Intent intent = new Intent(getContext().getApplicationContext(), MainActivity.class);
@@ -243,4 +305,6 @@ public class FooterFragment extends Fragment {
             shoppingListDbHelper.updateLastDatePurchased(productName, lastDatePurchased, sqLiteDatabase);
 
     }
+
+
 }
