@@ -66,6 +66,8 @@ public class FooterFragment extends Fragment{
     public RadioButton debitRadioButton;
     public RadioButton creditRadioButton;
 
+    public String summary;
+
     public EditText lastFourDigitsEditText;
 
     public int lastFourDigits;
@@ -111,6 +113,13 @@ public class FooterFragment extends Fragment{
         double total;
         double addtax = 0;
 
+        DecimalFormat df = new DecimalFormat("$0.00");
+
+        // Initialize the summary string. This string will hold a summary of a list of
+        // items purchased, quantities, unit prices, subtotals, total, and tax paid
+
+        summary = "";
+
         for(int i=0; i<listDataHeader.size(); i++){
 
             count = count + listDataHeader.get(i).getQuantity();
@@ -128,12 +137,17 @@ public class FooterFragment extends Fragment{
                 tax = tax + addtax;
             }
 
-        }
+            summary += listDataHeader.get(i).getQuantity() + " " +
+                    listDataHeader.get(i).getProductName() + " @ " +
+                    df.format(listDataHeader.get(i).getItemPrice()) + " = " +
+                    df.format(listDataHeader.get(i).getSubtotal()) + "\n";
 
-        DecimalFormat df = new DecimalFormat("$0.00");
+        }
 
         total = subtotal + tax;
 
+        summary += "\n" + "Subtotal: " + df.format(subtotal) + "\n" +
+                "Tax: " + df.format(tax) + "\n" + "Total: " + df.format(total) + "\n";
 
         quantityTextView.setText(count+"");
         subtotalTextView.setText(df.format(subtotal));
@@ -226,7 +240,9 @@ public class FooterFragment extends Fragment{
                 MediaPlayer player = MediaPlayer.create(getContext().getApplicationContext(), R.raw.thankyou);
                 player.start();
 
-                Toast.makeText(getContext(), paymentMethod + lastFourDigits, Toast.LENGTH_LONG).show();
+                summary += "Paid by: " + paymentMethod + " ending in " + lastFourDigits;
+
+                Toast.makeText(getContext(), summary, Toast.LENGTH_LONG).show();
 
                 // Return to MainActivity
                 Intent intent = new Intent(getContext().getApplicationContext(), MainActivity.class);
