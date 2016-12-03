@@ -68,6 +68,7 @@ public class FooterFragment extends Fragment{
 
     public String summary;
 
+    public TextView lastFourDigitsTextView;
     public EditText lastFourDigitsEditText;
 
     public int lastFourDigits;
@@ -86,7 +87,7 @@ public class FooterFragment extends Fragment{
 
         prepareListData();
 
-        View rootView = inflater.inflate(R.layout.footer_layout, container, false);
+        final View rootView = inflater.inflate(R.layout.footer_layout, container, false);
 
         quantityTextView = (TextView) rootView.findViewById(R.id.quantityTextView);
         subtotalTextView = (TextView)rootView.findViewById(R.id.subtotalTextView);
@@ -101,6 +102,7 @@ public class FooterFragment extends Fragment{
         debitRadioButton = (RadioButton) rootView.findViewById(R.id.debitRadioButton);
         creditRadioButton = (RadioButton) rootView.findViewById(R.id.creditRadioButton);
 
+        lastFourDigitsTextView = (TextView) rootView.findViewById(R.id.lastFourDigitsTextView);
         lastFourDigitsEditText = (EditText) rootView.findViewById(R.id.lastFourDigitsEditText);
 
         // Footer section:
@@ -139,8 +141,8 @@ public class FooterFragment extends Fragment{
 
             summary += listDataHeader.get(i).getQuantity() + " " +
                     listDataHeader.get(i).getProductName() + " @ " +
-                    df.format(listDataHeader.get(i).getItemPrice()) + " = " +
-                    df.format(listDataHeader.get(i).getSubtotal()) + "\n";
+                    df.format(listDataHeader.get(i).getItemPrice()) + " each = " +
+                    df.format(listDataHeader.get(i).getSubtotal()) + "\n\n";
 
         }
 
@@ -157,21 +159,49 @@ public class FooterFragment extends Fragment{
         cashRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                paymentMethod = "cash";
+                paymentMethod = "Cash";
+
+                // Clear any previous radio button selections
+                paymentGroup.clearCheck();
+
+                // Hide the last 4-digits textbox, since the user is paying cash
+                lastFourDigitsTextView.setVisibility(View.INVISIBLE);
+                lastFourDigitsEditText.setVisibility(View.INVISIBLE);
+
             }
         });
 
         debitRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                paymentMethod = "debit";
+                paymentMethod = "Debit";
+
+                // Clear any previous radio button selections
+                paymentGroup.clearCheck();
+
+                // Display the last four digits if they were already invisible
+                if(lastFourDigitsEditText.getVisibility()==View.INVISIBLE){
+                    lastFourDigitsTextView.setVisibility(View.VISIBLE);
+                    lastFourDigitsEditText.setVisibility(View.VISIBLE);
+                }
+
             }
         });
 
         creditRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                paymentMethod = "credit";
+                paymentMethod = "Credit";
+
+                // Clear any previous radio button selections
+                paymentGroup.clearCheck();
+
+                // Display the last four digits if they were already invisible
+                if(lastFourDigitsEditText.getVisibility()==View.INVISIBLE){
+                    lastFourDigitsTextView.setVisibility(View.VISIBLE);
+                    lastFourDigitsEditText.setVisibility(View.VISIBLE);
+                }
+
             }
         });
 
@@ -240,7 +270,9 @@ public class FooterFragment extends Fragment{
                 MediaPlayer player = MediaPlayer.create(getContext().getApplicationContext(), R.raw.thankyou);
                 player.start();
 
-                summary += "Paid by: " + paymentMethod + " ending in " + lastFourDigits;
+                // In the next line, the store name and the location will be obtained using Google Maps, later...
+                summary += "Paid by: " + paymentMethod + ". Ending in " + lastFourDigits + "\n" +
+                        "Store: ABCDEFGH Store" + "\n" + "Location: AnyTown, CA";
 
                 Toast.makeText(getContext(), summary, Toast.LENGTH_LONG).show();
 

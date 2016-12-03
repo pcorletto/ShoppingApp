@@ -176,7 +176,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Last 4 Digits:"
-            android:id="@+id/textView10"
+            android:id="@+id/lastFourDigitsTextView"
             android:textColor="@android:color/white"
             android:paddingLeft="@dimen/small_padding"
             android:paddingRight="@dimen/small_padding"/>
