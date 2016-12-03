@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,6 +162,9 @@ public class FooterFragment extends Fragment{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 paymentMethod = "Cash";
 
+                // Set the dummy value 9999 for the EditText
+                lastFourDigitsEditText.setText("9999");
+
                 // Clear any previous radio button selections
                 paymentGroup.clearCheck();
 
@@ -228,8 +232,40 @@ public class FooterFragment extends Fragment{
                 // PURCHASE TABLE of the database so that a record of purchases can be kept
 
                 // Get the last four digits from the user
-                lastFourDigits = Integer.parseInt(lastFourDigitsEditText.getText().toString());
+                String lastFourDigitsString = lastFourDigitsEditText.getText().toString();
 
+                // Check if last four digits are empty. If no entry, then alert
+                if (TextUtils.isEmpty(lastFourDigitsString)) {
+                    lastFourDigitsEditText.setError(getString(R.string.empty_four_digits_alert));
+                    Toast.makeText(getContext(), getString(R.string.empty_four_digits_alert), Toast.LENGTH_LONG).show();
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    return;
+                }
+
+                // Check if last four digits are not exactly 4 digits long. Then alert
+                if ((lastFourDigitsString.length()!=4)){
+
+                    lastFourDigitsEditText.setError(getString(R.string.not_four_digits_alert));
+                    Toast.makeText(getContext(), getString(R.string.not_four_digits_alert), Toast.LENGTH_LONG).show();
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    return;
+                }
+
+                // Check if the user enter only digits. If not, alert
+                for(int i=0; i<lastFourDigitsString.length(); i++){
+
+                    if (!Character.isDigit(lastFourDigitsString.charAt(i))) {
+                        lastFourDigitsEditText.setError(getString(R.string.not_digits_alert));
+                        Toast.makeText(getContext(), getString(R.string.not_digits_alert), Toast.LENGTH_LONG).show();
+                        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                        toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                        return;
+                    }
+                }
+
+                lastFourDigits = Integer.parseInt(lastFourDigitsString);
 
                 // Traverse all the items in the shopping cart using a loop
 
@@ -270,9 +306,18 @@ public class FooterFragment extends Fragment{
                 MediaPlayer player = MediaPlayer.create(getContext().getApplicationContext(), R.raw.thankyou);
                 player.start();
 
-                // In the next line, the store name and the location will be obtained using Google Maps, later...
-                summary += "Paid by: " + paymentMethod + ". Ending in " + lastFourDigits + "\n" +
-                        "Store: ABCDEFGH Store" + "\n" + "Location: AnyTown, CA";
+
+                if(paymentMethod=="Cash") { // No last four digits
+                    // In the next line, the store name and the location will be obtained using Google Maps, later...
+                    summary += "Paid by: " + paymentMethod + ".\n" +
+                            "Store: ABCDEFGH Store" + "\n" + "Location: AnyTown, CA";
+                }
+
+                else{ // Last four digits displayed
+                    // In the next line, the store name and the location will be obtained using Google Maps, later...
+                    summary += "Paid by: " + paymentMethod + ". Ending in " + lastFourDigitsString + "\n" +
+                            "Store: ABCDEFGH Store" + "\n" + "Location: AnyTown, CA";
+                }
 
                 Toast.makeText(getContext(), summary, Toast.LENGTH_LONG).show();
 

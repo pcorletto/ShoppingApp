@@ -106,6 +106,9 @@
     <string name="empty_product_name_alert">No product name! Please scan again.</string>
     <string name="empty_price_alert">No price! Please scan again.</string>
     <string name="empty_quantity_alert">No quantity! Please select it.</string>
+    <string name="empty_four_digits_alert">No last four digits entered! Please enter!</string>
+    <string name="not_four_digits_alert">You did not enter 4 digits! Please check!</string>
+    <string name="not_digits_alert">You did not enter only digits! Please check!</string>
 
     <string name="calling_activity_name">calling_activity_name</string>
 
