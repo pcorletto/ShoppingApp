@@ -11,6 +11,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -81,6 +84,8 @@ public class FooterFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        setHasOptionsMenu(true);
 
         listDataChild = new HashMap<ShoppingItem, List<ShoppingItem>>();
 
@@ -332,6 +337,29 @@ public class FooterFragment extends Fragment{
         return rootView;
 
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.footer_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings:
+                // do stuff
+                return true;
+
+            case R.id.action_share:
+                // do more stuff
+                return true;
+        }
+
+        return false;
+    }
+
+
 
     private void prepareListData(){
 
