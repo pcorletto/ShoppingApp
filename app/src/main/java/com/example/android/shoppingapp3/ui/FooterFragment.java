@@ -149,7 +149,8 @@ public class FooterFragment extends Fragment{
 
         total = subtotal + tax;
 
-        summary += "\n" + "Subtotal: " + df.format(subtotal) + "\n" +
+        summary += "Date: " + getCurrentDate() + "  " + getCurrentTime() +
+                "\n" + "Subtotal: " + df.format(subtotal) + "\n" +
                 "Tax: " + df.format(tax) + "\n" + "Total: " + df.format(total) + "\n";
 
         quantityTextView.setText(count+"");
@@ -387,6 +388,36 @@ public class FooterFragment extends Fragment{
         String currentDate = formattedMonth + "/" + formattedDay + "/" + formattedYear;
 
         return currentDate;
+
+
+    }
+
+    public String getCurrentTime(){
+
+        Calendar ci = Calendar.getInstance();
+
+        String formattedHour, timeSuffix;
+
+        if(ci.get(Calendar.HOUR_OF_DAY)>12){
+
+            int non_military_hour = ci.get(Calendar.HOUR_OF_DAY)%12;
+            formattedHour = String.format("%02d", non_military_hour);
+            timeSuffix = "PM";
+        }
+
+        else{
+
+            formattedHour = String.format("%02d", ci.get(Calendar.HOUR_OF_DAY));
+            timeSuffix = "AM";
+
+        }
+
+        String formattedMinute = String.format("%02d", ci.get(Calendar.MINUTE));
+
+
+        String currentTime = formattedHour + ":" + formattedMinute + " " + timeSuffix;
+
+        return currentTime;
 
 
     }
