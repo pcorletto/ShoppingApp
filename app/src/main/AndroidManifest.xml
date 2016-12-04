@@ -63,6 +63,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.shoppingapp3.ui.DisplayCartActivity" />
         </activity>
+
     </application>
 
 </manifest>
