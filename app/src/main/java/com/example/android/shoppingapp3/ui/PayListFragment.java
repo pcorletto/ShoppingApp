@@ -68,11 +68,9 @@ public class PayListFragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Pay");
+
         toolbar.setNavigationIcon(R.drawable.ic_back);
-
-        toolbar.setTitle("Pay");
-
-        toolbar.setSubtitle("Checkout");
 
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(getContext());

@@ -70,7 +70,6 @@ public class DisplayListActivity extends ActionBarActivity {
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setTitle("List");
-        toolbar.setSubtitle("Shopping");
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

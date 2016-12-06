@@ -95,5 +95,10 @@ public class SettingsActivity extends PreferenceActivity
 
         }
 
+        else{
+            Intent intent4 = new Intent(this, PayActivity.class);
+            startActivity(intent4);
+        }
+
     }
 }

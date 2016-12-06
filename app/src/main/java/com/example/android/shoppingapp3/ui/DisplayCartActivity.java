@@ -69,7 +69,6 @@ public class DisplayCartActivity extends ActionBarActivity {
 
         toolbar.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setTitle("Cart");
-        toolbar.setSubtitle("Shopping");
 
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(this);

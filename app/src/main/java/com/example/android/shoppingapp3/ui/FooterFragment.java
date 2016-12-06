@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ToneGenerator;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -62,31 +60,32 @@ public class FooterFragment extends Fragment{
 
     FloatingActionButton payFAB;
 
-    public TextView quantityTextView;
-    public TextView subtotalTextView;
-    public TextView salesTaxTextView;
-    public TextView totalTextView;
+    ShareActionProvider mShareActionProvider;
+
+    private TextView quantityTextView;
+    private TextView subtotalTextView;
+    private TextView salesTaxTextView;
+    private TextView totalTextView;
 
     // Radio group, radio buttons go here...
-    public String paymentMethod;
+    private String paymentMethod;
 
-    public RadioGroup paymentGroup;
-    public RadioButton cashRadioButton;
-    public RadioButton debitRadioButton;
-    public RadioButton creditRadioButton;
+    private RadioGroup paymentGroup;
+    private RadioButton cashRadioButton;
+    private RadioButton debitRadioButton;
+    private RadioButton creditRadioButton;
 
-    public String summary;
+    private String storeName, storeLocation;
 
-    public TextView lastFourDigitsTextView;
-    public EditText lastFourDigitsEditText;
+    private String summary;
 
-    public int lastFourDigits;
+    private TextView lastFourDigitsTextView;
+    private EditText lastFourDigitsEditText;
 
-    String imageName;
+    private int lastFourDigits;
+
 
     private static final String LOG_TAG = FooterFragment.class.getSimpleName();
-
-    public ImageView checkoutImageView;
 
     public FooterFragment(){
 
@@ -95,6 +94,8 @@ public class FooterFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        summary = "";
 
         setHasOptionsMenu(true);
 
@@ -121,12 +122,6 @@ public class FooterFragment extends Fragment{
 
         lastFourDigitsTextView = (TextView) rootView.findViewById(R.id.lastFourDigitsTextView);
         lastFourDigitsEditText = (EditText) rootView.findViewById(R.id.lastFourDigitsEditText);
-
-        checkoutImageView = (ImageView) rootView.findViewById(R.id.checkoutImageView);
-
-        imageName = rootView.getResources().getResourceName(R.id.checkoutImageView);
-
-        Toast.makeText(getContext(), imageName, Toast.LENGTH_LONG).show();
 
         // Footer section:
 
@@ -183,13 +178,14 @@ public class FooterFragment extends Fragment{
         cashRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                // Clear any previous radio button selections
+                paymentGroup.clearCheck();
+
                 paymentMethod = "Cash";
 
                 // Set the dummy value 9999 for the EditText
                 lastFourDigitsEditText.setText("9999");
-
-                // Clear any previous radio button selections
-                paymentGroup.clearCheck();
 
                 // Hide the last 4-digits textbox, since the user is paying cash
                 lastFourDigitsTextView.setVisibility(View.INVISIBLE);
@@ -201,15 +197,17 @@ public class FooterFragment extends Fragment{
         debitRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                paymentMethod = "Debit";
 
                 // Clear any previous radio button selections
                 paymentGroup.clearCheck();
 
-                // Display the last four digits if they were already invisible
+                paymentMethod = "Debit";
+
+                // Display the last four digits edittext if they were already invisible
                 if(lastFourDigitsEditText.getVisibility()==View.INVISIBLE){
                     lastFourDigitsTextView.setVisibility(View.VISIBLE);
                     lastFourDigitsEditText.setVisibility(View.VISIBLE);
+                    lastFourDigitsEditText.setText("");
                 }
 
             }
@@ -218,15 +216,17 @@ public class FooterFragment extends Fragment{
         creditRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                paymentMethod = "Credit";
 
                 // Clear any previous radio button selections
                 paymentGroup.clearCheck();
+
+                paymentMethod = "Credit";
 
                 // Display the last four digits if they were already invisible
                 if(lastFourDigitsEditText.getVisibility()==View.INVISIBLE){
                     lastFourDigitsTextView.setVisibility(View.VISIBLE);
                     lastFourDigitsEditText.setVisibility(View.VISIBLE);
+                    lastFourDigitsEditText.setText("");
                 }
 
             }
@@ -369,17 +369,12 @@ public class FooterFragment extends Fragment{
         MenuItem menuItem = menu.findItem(R.id.action_share);
 
         // Get the provider and hold onto it to set/change the share intent
-        ShareActionProvider mShareActionProvider = (ShareActionProvider)
+        mShareActionProvider = (ShareActionProvider)
                 MenuItemCompat.getActionProvider(menuItem);
-
-        // Attach an intent to this ShareActionProvider. You can update this
-        // at any time, like when the user selects a new piece of data they
-        // might like to share.
 
         if (mShareActionProvider != null) {
 
             mShareActionProvider.setShareIntent(createShareForecastIntent());
-
 
         } else {
 
@@ -389,40 +384,45 @@ public class FooterFragment extends Fragment{
 
     }
 
-    private Intent createShareForecastIntent(){
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-        shareIntent.setType("text/plain");
-        shareIntent.setType("image/*");
-
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, summary);
-        shareIntent.putExtra(Intent.EXTRA_STREAM,
-                Uri.parse("android.resource://com.example.android.shoppingapp3/drawable/" +
-                        Integer.toString(R.drawable.groceries)));
-
-        startActivity(Intent.createChooser(shareIntent, "Share image using"));
-
-        return shareIntent;
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_settings:
                 // do stuff
+                Intent intent1 = new Intent(getContext(), SettingsActivity.class);
+                intent1.putExtra(getString(R.string.calling_activity_name), "ui.PayActivity");
+                startActivity(intent1);
                 return true;
 
-            case R.id.action_share:
-                // do more stuff
+            case R.id.action_home:
+                Intent intent2  = new Intent(getContext(), MainActivity.class);
+                startActivity(intent2);
                 return true;
+
         }
 
-        return false;
+        return super.onOptionsItemSelected(item);
+    }
+
+    private Intent createShareForecastIntent(){
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        shareIntent.setType("text/plain");
+        //shareIntent.setType("image/*");
+
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, summary);
+        //shareIntent.putExtra(Intent.EXTRA_STREAM,
+                //Uri.parse("android.resource://com.example.android.shoppingapp3/drawable/" +
+                        //Integer.toString(R.drawable.groceries)));
+
+        //startActivity(Intent.createChooser(shareIntent, "Share image using"));
+
+        return shareIntent;
+
     }
 
 
@@ -523,6 +523,8 @@ public class FooterFragment extends Fragment{
             shoppingListDbHelper.updateLastDatePurchased(productName, lastDatePurchased, sqLiteDatabase);
 
     }
+
+
 
 
 }
