@@ -42,10 +42,9 @@
     <string name="SALES_TAX">SALES_TAX</string>
     <string name="FINAL_PRICE">FINAL_PRICE</string>
     <string name="LIST">LIST</string>
-    <string name="title_activity_dummy">DummyActivity</string>
     <string name="title_activity_display_list">DisplayListActivity</string>
     <string name="title_activity_display_cart">DisplayCartActivity</string>
-    <string name="title_activity_store_dummy">StoreDummyActivity</string>
+    <string name="title_activity_scan">ScanActivity</string>
     <string name="scan_new_product">Scan-In New Item</string>
     <string name="view_shopping_list">View Shopping List</string>
 

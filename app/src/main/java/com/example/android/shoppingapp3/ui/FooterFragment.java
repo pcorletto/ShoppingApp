@@ -1,7 +1,13 @@
 package com.example.android.shoppingapp3.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ToneGenerator;
@@ -17,9 +23,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -38,11 +44,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by hernandez on 11/25/2016.
  */
-public class FooterFragment extends Fragment{
+public class FooterFragment extends Fragment implements LocationListener{
 
     ShoppingListDbHelper shoppingListDbHelper;
     ShoppingCartDbHelper shoppingCartDbHelper;
@@ -52,15 +59,15 @@ public class FooterFragment extends Fragment{
 
     private int mRowNumber;
 
-    ReloadCartFromDB reloadedCart = new ReloadCartFromDB();
+    private ReloadCartFromDB reloadedCart = new ReloadCartFromDB();
 
-    List<ShoppingItem> listDataHeader;
-    HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
+    private List<ShoppingItem> listDataHeader;
+    private HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
 
 
-    FloatingActionButton payFAB;
+    private FloatingActionButton payFAB;
 
-    ShareActionProvider mShareActionProvider;
+    private ShareActionProvider mShareActionProvider;
 
     private TextView quantityTextView;
     private TextView subtotalTextView;
@@ -79,11 +86,19 @@ public class FooterFragment extends Fragment{
 
     private String summary;
 
+    private String paidByString;
+
     private TextView lastFourDigitsTextView;
     private EditText lastFourDigitsEditText;
 
     private int lastFourDigits;
 
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
+    String lat;
+    String provider;
+    protected double latitude,longitude;
+    protected boolean gps_enabled,network_enabled;
 
     private static final String LOG_TAG = FooterFragment.class.getSimpleName();
 
@@ -96,6 +111,8 @@ public class FooterFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         summary = "";
+
+        paidByString = "";
 
         setHasOptionsMenu(true);
 
@@ -123,6 +140,11 @@ public class FooterFragment extends Fragment{
         lastFourDigitsTextView = (TextView) rootView.findViewById(R.id.lastFourDigitsTextView);
         lastFourDigitsEditText = (EditText) rootView.findViewById(R.id.lastFourDigitsEditText);
 
+        // This section is for the Location sensor:
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+
         // Footer section:
 
         // Calculate the total item count, subtotal, total sales tax, and total
@@ -139,6 +161,7 @@ public class FooterFragment extends Fragment{
         // items purchased, quantities, unit prices, subtotals, total, and tax paid
 
         summary = "";
+        paidByString = "";
 
         for(int i=0; i<listDataHeader.size(); i++){
 
@@ -175,68 +198,89 @@ public class FooterFragment extends Fragment{
         salesTaxTextView.setText(df.format(tax));
         totalTextView.setText(df.format(total));
 
-        cashRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        cashRadioButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public boolean onTouch(View v, MotionEvent event) {
 
                 // Clear any previous radio button selections
                 paymentGroup.clearCheck();
 
                 paymentMethod = "Cash";
 
-                // Set the dummy value 9999 for the EditText
+                paidByString = "\nPaid by: " + paymentMethod;
+
+                // Set the last four digits on the edit text to a dummy value of 9999
                 lastFourDigitsEditText.setText("9999");
 
-                // Hide the last 4-digits textbox, since the user is paying cash
+                // Hide the last 4-digits text box, since the user is paying cash
                 lastFourDigitsTextView.setVisibility(View.INVISIBLE);
                 lastFourDigitsEditText.setVisibility(View.INVISIBLE);
-
+                return false;
             }
         });
 
-        debitRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        debitRadioButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public boolean onTouch(View v, MotionEvent event) {
 
                 // Clear any previous radio button selections
                 paymentGroup.clearCheck();
 
                 paymentMethod = "Debit";
 
-                // Display the last four digits edittext if they were already invisible
-                if(lastFourDigitsEditText.getVisibility()==View.INVISIBLE){
+                paidByString = "\nPaid by: " + paymentMethod + " ending in: " + lastFourDigits;
+
+                // Display the last four digits edit text if they were already invisible
+                if (lastFourDigitsEditText.getVisibility() == View.INVISIBLE) {
                     lastFourDigitsTextView.setVisibility(View.VISIBLE);
                     lastFourDigitsEditText.setVisibility(View.VISIBLE);
                     lastFourDigitsEditText.setText("");
+
                 }
 
+                return false;
             }
+
         });
 
-        creditRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        creditRadioButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+            public boolean onTouch(View v, MotionEvent event) {
+                
                 // Clear any previous radio button selections
                 paymentGroup.clearCheck();
 
                 paymentMethod = "Credit";
 
-                // Display the last four digits if they were already invisible
-                if(lastFourDigitsEditText.getVisibility()==View.INVISIBLE){
+                paidByString = "\nPaid by: " + paymentMethod + " ending in: " + lastFourDigits;
+
+                // Display the last four digits edit text if they were already invisible
+                if (lastFourDigitsEditText.getVisibility() == View.INVISIBLE) {
                     lastFourDigitsTextView.setVisibility(View.VISIBLE);
                     lastFourDigitsEditText.setVisibility(View.VISIBLE);
                     lastFourDigitsEditText.setText("");
+
                 }
 
+                return false;
             }
+
+
         });
+
+        storeLocation = getCompleteAddressString(latitude, longitude);
+
+        summary += "\n" + "Store Location: " + storeLocation;
 
         payFAB = (FloatingActionButton) rootView.findViewById(R.id.payFAB);
 
         payFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // Fetch new store location when FAB button clicked
+                storeLocation = getCompleteAddressString(latitude, longitude);
 
                 if(paymentGroup.getCheckedRadioButtonId() == -1){
 
@@ -290,6 +334,21 @@ public class FooterFragment extends Fragment{
 
                 lastFourDigits = Integer.parseInt(lastFourDigitsString);
 
+                // If paid by cash, do not show any last four digits. If paid by credit or debit,
+                // show last four digits:
+
+                if(paymentMethod.equals("Cash")){
+
+                    paidByString = "\nPaid by: " + paymentMethod;
+
+                }
+
+                else{ // Credit or debit
+
+                paidByString = "\nPaid by: " + paymentMethod + " ending in: " + lastFourDigits;
+
+                }
+
                 // Traverse all the items in the shopping cart using a loop
 
                 // Update all those items, in the Shopping LIST database, not on the
@@ -321,7 +380,6 @@ public class FooterFragment extends Fragment{
 
                         shoppingCartDbHelper.deleteCartItem(listDataHeader.get(i).getProductName(), sqLiteDatabase);
 
-
                 }
 
                 // Play a "Thank you for Shopping" sound.
@@ -329,32 +387,11 @@ public class FooterFragment extends Fragment{
                 MediaPlayer player = MediaPlayer.create(getContext().getApplicationContext(), R.raw.thankyou);
                 player.start();
 
+                Toast.makeText(getContext(), summary + "\n" + paidByString, Toast.LENGTH_LONG).show();
 
-                if(paymentMethod=="Cash") { // No last four digits
-                    // In the next line, the store name and the location will be obtained using Google Maps, later...
-                    summary += "Paid by: " + paymentMethod + ".\n" +
-                            "Store: ABCDEFGH Store" + "\n" + "Location: AnyTown, CA";
-                }
-
-                else{ // Last four digits displayed
-                    // In the next line, the store name and the location will be obtained using Google Maps, later...
-                    summary += "Paid by: " + paymentMethod + ". Ending in " + lastFourDigitsString + "\n" +
-                            "Store: ABCDEFGH Store" + "\n" + "Location: AnyTown, CA";
-                }
-
-                Toast.makeText(getContext(), summary, Toast.LENGTH_LONG).show();
-
-
-                // Stay here and do not return to MainActivity yet, until I figure out what to do after FAB is pressed
-                // So user can share purchase summary
-
-                // ...
-
-                // Return to MainActivity
-                //Intent intent = new Intent(getContext().getApplicationContext(), MainActivity.class);
-                //startActivity(intent);
 
             }
+
         });
 
         return rootView;
@@ -411,15 +448,9 @@ public class FooterFragment extends Fragment{
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
         shareIntent.setType("text/plain");
-        //shareIntent.setType("image/*");
 
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, summary);
-        //shareIntent.putExtra(Intent.EXTRA_STREAM,
-                //Uri.parse("android.resource://com.example.android.shoppingapp3/drawable/" +
-                        //Integer.toString(R.drawable.groceries)));
-
-        //startActivity(Intent.createChooser(shareIntent, "Share image using"));
+        shareIntent.putExtra(Intent.EXTRA_TEXT, summary + paidByString);
 
         return shareIntent;
 
@@ -525,6 +556,55 @@ public class FooterFragment extends Fragment{
     }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
 
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
 
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        Log.d("Latitude","status");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+        Log.d("Latitude","enable");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+        Log.d("Latitude","disable");
+
+    }
+
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+
+                }
+                strAdd = strReturnedAddress.toString();
+                Log.w("My Current location address", "" + strReturnedAddress.toString());
+            } else {
+                Log.w("My Current location address", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w("My Current location address", "Cannot get Address!");
+        }
+        return strAdd;
+    }
 }

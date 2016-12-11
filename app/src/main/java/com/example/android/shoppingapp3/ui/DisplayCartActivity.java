@@ -132,11 +132,21 @@ public class DisplayCartActivity extends ActionBarActivity {
                 return true;
 
             }
+
+            case R.id.action_home:
+            {
+
+                Intent intent = new Intent(DisplayCartActivity.this, MainActivity.class);
+                startActivity(intent);
+
+            }
+
+
+
             case R.id.action_search:
             {
 
-                Toast.makeText(DisplayCartActivity.this, "Search button pressed!", Toast.LENGTH_LONG).show();
-                return true;
+
 
             }
 
