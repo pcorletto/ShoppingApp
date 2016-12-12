@@ -14,14 +14,14 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="365dp"
         android:layout_margin="@dimen/frame_layout_margin"
         android:background="#fff">
 
         <ExpandableListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ExpandableListView>
+            android:layout_height="365dp"></ExpandableListView>
 
     </FrameLayout>
 

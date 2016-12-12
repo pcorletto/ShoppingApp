@@ -217,7 +217,6 @@ public class FooterFragment extends Fragment implements LocationListener{
             }
         });
 
-
         debitRadioButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -226,8 +225,6 @@ public class FooterFragment extends Fragment implements LocationListener{
                 paymentGroup.clearCheck();
 
                 paymentMethod = "Debit";
-
-                paidByString = "\nPaid by: " + paymentMethod + " ending in: " + lastFourDigits;
 
                 // Display the last four digits edit text if they were already invisible
                 if (lastFourDigitsEditText.getVisibility() == View.INVISIBLE) {
@@ -250,8 +247,6 @@ public class FooterFragment extends Fragment implements LocationListener{
                 paymentGroup.clearCheck();
 
                 paymentMethod = "Credit";
-
-                paidByString = "\nPaid by: " + paymentMethod + " ending in: " + lastFourDigits;
 
                 // Display the last four digits edit text if they were already invisible
                 if (lastFourDigitsEditText.getVisibility() == View.INVISIBLE) {
@@ -340,7 +335,8 @@ public class FooterFragment extends Fragment implements LocationListener{
 
                 else{ // Credit or debit
 
-                    paidByString =  "\nPaid by: " + paymentMethod + " ending in " + lastFourDigits;
+                    paidByString =  "\nPaid by: " + paymentMethod + " ending in " +
+                            String.format("%04d", lastFourDigits);
 
                 }
 

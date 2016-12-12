@@ -103,19 +103,6 @@ public class PayListFragment extends Fragment {
         fragTransaction = getFragmentManager().beginTransaction().add(R.id.container, frag);
         fragTransaction.commit();
 
-        /*payFAB = (FloatingActionButton) view.findViewById(R.id.payFAB);
-
-        payFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                frag = new FooterFragment();
-                fragTransaction = getFragmentManager().beginTransaction().replace(R.id.container, frag);
-                fragTransaction.commit();
-
-            }
-        });*/
-
         return view;
     }
 
