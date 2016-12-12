@@ -112,4 +112,6 @@
 
     <string name="calling_activity_name">calling_activity_name</string>
 
+    <string name="share_using">Share using</string>
+
 </resources>

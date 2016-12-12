@@ -2,6 +2,7 @@ package com.example.android.shoppingapp3.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,7 +16,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.util.Log;
@@ -99,6 +99,7 @@ public class FooterFragment extends Fragment implements LocationListener{
     String provider;
     protected double latitude,longitude;
     protected boolean gps_enabled,network_enabled;
+    public SharedPreferences sharedPreferences;
 
     private static final String LOG_TAG = FooterFragment.class.getSimpleName();
 
@@ -159,9 +160,6 @@ public class FooterFragment extends Fragment implements LocationListener{
 
         // Initialize the summary string. This string will hold a summary of a list of
         // items purchased, quantities, unit prices, subtotals, total, and tax paid
-
-        summary = "";
-        paidByString = "";
 
         for(int i=0; i<listDataHeader.size(); i++){
 
@@ -247,7 +245,7 @@ public class FooterFragment extends Fragment implements LocationListener{
         creditRadioButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                
+
                 // Clear any previous radio button selections
                 paymentGroup.clearCheck();
 
@@ -278,9 +276,6 @@ public class FooterFragment extends Fragment implements LocationListener{
         payFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // Fetch new store location when FAB button clicked
-                storeLocation = getCompleteAddressString(latitude, longitude);
 
                 if(paymentGroup.getCheckedRadioButtonId() == -1){
 
@@ -339,13 +334,13 @@ public class FooterFragment extends Fragment implements LocationListener{
 
                 if(paymentMethod.equals("Cash")){
 
-                    paidByString = "\nPaid by: " + paymentMethod;
+                    paidByString =  "\nPaid by: " + paymentMethod;
 
                 }
 
                 else{ // Credit or debit
 
-                paidByString = "\nPaid by: " + paymentMethod + " ending in: " + lastFourDigits;
+                    paidByString =  "\nPaid by: " + paymentMethod + " ending in " + lastFourDigits;
 
                 }
 
@@ -389,7 +384,6 @@ public class FooterFragment extends Fragment implements LocationListener{
 
                 Toast.makeText(getContext(), summary + "\n" + paidByString, Toast.LENGTH_LONG).show();
 
-
             }
 
         });
@@ -400,24 +394,8 @@ public class FooterFragment extends Fragment implements LocationListener{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.footer_fragment, menu);
-
-        // Retrieve the share menu intent
-        MenuItem menuItem = menu.findItem(R.id.action_share);
-
-        // Get the provider and hold onto it to set/change the share intent
-        mShareActionProvider = (ShareActionProvider)
-                MenuItemCompat.getActionProvider(menuItem);
-
-        if (mShareActionProvider != null) {
-
-            mShareActionProvider.setShareIntent(createShareForecastIntent());
-
-        } else {
-
-            Log.d(LOG_TAG, "Share Action Provider is null?");
-
-        }
 
     }
 
@@ -437,25 +415,17 @@ public class FooterFragment extends Fragment implements LocationListener{
                 startActivity(intent2);
                 return true;
 
+            case R.id.action_share:
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, summary + "\n" + paidByString);
+                startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
+
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-    private Intent createShareForecastIntent(){
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-        shareIntent.setType("text/plain");
-
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, summary + paidByString);
-
-        return shareIntent;
-
-    }
-
 
 
     private void prepareListData(){
@@ -607,4 +577,5 @@ public class FooterFragment extends Fragment implements LocationListener{
         }
         return strAdd;
     }
+
 }
