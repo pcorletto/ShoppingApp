@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/mainLayout">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout1">
+
+            <TextView
+                android:layout_width="95dp"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:id="@+id/dateLabel"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_blue_dark"/>
+
+            <TextView
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:text="Summary"
+                android:id="@+id/summaryLabel"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:background="@android:color/darker_gray"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout2">
+
+            <CheckBox
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBox"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                />
+
+
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/dateTextView"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/summaryTextView"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

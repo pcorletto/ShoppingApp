@@ -2,6 +2,7 @@ package com.example.android.shoppingapp3.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Criteria;
@@ -31,6 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
+import com.example.android.shoppingapp3.model.PurchaseDbHelper;
+import com.example.android.shoppingapp3.model.PurchaseItem;
+import com.example.android.shoppingapp3.model.PurchaseList;
 import com.example.android.shoppingapp3.model.ReloadCartFromDB;
 import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
 import com.example.android.shoppingapp3.model.ShoppingItem;
@@ -65,7 +69,16 @@ public class FooterFragment extends Fragment{
 
     private FloatingActionButton payFAB;
 
-   private TextView quantityTextView;
+    // Data structures for purchases list
+
+    private PurchaseItem mPurchaseItem;
+    private int mRowNumber2;
+    private PurchaseList mPurchaseList = new PurchaseList();
+
+    PurchaseDbHelper purchaseDbHelper;
+    private int mPurchaseID;
+
+    private TextView quantityTextView;
     private TextView subtotalTextView;
     private TextView salesTaxTextView;
     private TextView totalTextView;
@@ -386,6 +399,9 @@ public class FooterFragment extends Fragment{
 
                 Toast.makeText(getContext(), summary + "\n" + paidByString, Toast.LENGTH_LONG).show();
 
+                // Save purchase summary, purchase date and store location in purchase list
+                addPurchaseItem(v);
+
             }
 
         });
@@ -423,6 +439,12 @@ public class FooterFragment extends Fragment{
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, summary + "\n" + paidByString);
                 startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
+
+            case R.id.action_list:
+                Intent intent3 = new Intent(getContext(), DisplayPurchaseActivity.class);
+                intent3.putExtra(getString(R.string.ROW_NUMBER), mRowNumber2);
+                intent3.putExtra(getString(R.string.PURCHASE_LIST), mPurchaseList.mPurchaseItem);
+                startActivity(intent3);
 
         }
 
@@ -554,4 +576,42 @@ public class FooterFragment extends Fragment{
         return strAdd;
     }
 
-}
+    public void addPurchaseItem(View view) {
+
+        // Perform DB insertion...
+
+        // Initialize purchaseDBhelper object and SQLiteDatabase object.
+
+        purchaseDbHelper = new PurchaseDbHelper(getContext());
+        sqLiteDatabase = purchaseDbHelper.getWritableDatabase();
+
+        // Before inserting the item, retrieve the last value of mPurchaseID
+        // which is stored in SharedPref file. If there isn't any previous value, assign zero.
+
+        SharedPreferences sharedPreferences = getContext()
+                .getSharedPreferences(getString(R.string.PREF_FILE), Context.MODE_PRIVATE);
+        mPurchaseID = sharedPreferences.getInt(getString(R.string.PURCHASE_ID), 0);
+
+        // Add one to purchase ID
+
+        mPurchaseID = mPurchaseID + 1;
+
+        // Insert the item details in the database
+        purchaseDbHelper.addItem(mPurchaseID, getCurrentDate(), storeLocation, summary, sqLiteDatabase);
+
+        Toast.makeText(getContext(), "Purchase Item # " + mPurchaseID + " Saved", Toast.LENGTH_LONG).show();
+
+        // Store new mPurchaseID in SharedPrefs file
+
+        sharedPreferences = getContext()
+                .getSharedPreferences(getString(R.string.PREF_FILE), Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(getString(R.string.PURCHASE_ID), mPurchaseID);
+        editor.commit();
+
+        purchaseDbHelper.close();
+
+        }
+
+    }

@@ -36,12 +36,16 @@
     <string name="no_shopping_items_prompt">There are no shopping items to display!</string>
     <string name="delete_selected_items_button">Delete Checked Items</string>
     <string name="update_selected_items_button">Update Checked Items</string>
+    <string name="no_purchase_items_prompt">There are no purchase items to display!</string>
     <string name="ROW_NUMBER">ROW_NUMBER</string>
+    <string name="PURCHASE_LIST">PURCHASE_LIST</string>
     <string name="ITEM_COUNT">ITEM_COUNT</string>
     <string name="TOTAL_PRICE">TOTAL_PRICE</string>
     <string name="SALES_TAX">SALES_TAX</string>
     <string name="FINAL_PRICE">FINAL_PRICE</string>
     <string name="LIST">LIST</string>
+    <string name="PREF_FILE">PREF_FILE</string>
+    <string name="PURCHASE_ID">PURCHASE_ID</string>
     <string name="title_activity_display_list">DisplayListActivity</string>
     <string name="title_activity_display_cart">DisplayCartActivity</string>
     <string name="title_activity_scan">ScanActivity</string>
@@ -69,7 +73,6 @@
     <!-- Value in SharedPreferences for Spanish language option [CHAR LIMIT=NONE] -->
     <string name="pref_language_spanish" translatable="false">Español</string>
 
-
     <!-- Label for the sort preference [CHAR LIMIT=30] -->
     <string name="pref_sort_label">Sort Order</string>
 
@@ -96,22 +99,17 @@
 
     <!-- Value in SharedPreferences for no sort option [CHAR LIMIT=NONE] -->
     <string name="pref_sort_no_sort" translatable="false">no sort</string>
-
-
-
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_checkout">CheckoutActivity</string>
     <string name="title_activity_pay">PayActivity</string>
-
     <string name="empty_product_name_alert">No product name! Please scan again.</string>
     <string name="empty_price_alert">No price! Please scan again.</string>
     <string name="empty_quantity_alert">No quantity! Please select it.</string>
     <string name="empty_four_digits_alert">No last four digits entered! Please enter!</string>
     <string name="not_four_digits_alert">You did not enter 4 digits! Please check!</string>
     <string name="not_digits_alert">You did not enter only digits! Please check!</string>
-
     <string name="calling_activity_name">calling_activity_name</string>
-
     <string name="share_using">Share using</string>
+    <string name="title_activity_display_purchase">DisplayPurchaseActivity</string>
 
 </resources>

@@ -53,7 +53,7 @@
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.shoppingapp3.ui.MainActivity" />
@@ -62,12 +62,19 @@
             android:name=".ui.PayActivity"
             android:label="@string/title_activity_pay"
             android:parentActivityName=".ui.DisplayCartActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.shoppingapp3.ui.DisplayCartActivity" />
         </activity>
-
+        <activity
+            android:name=".ui.DisplayPurchaseActivity"
+            android:label="@string/title_activity_display_purchase"
+            android:parentActivityName=".ui.PayActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.shoppingapp3.ui.PayActivity" />
+        </activity>
     </application>
 
 </manifest>
