@@ -2,12 +2,11 @@ package com.example.android.shoppingapp3.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -16,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,7 +47,7 @@ import java.util.Locale;
 /**
  * Created by hernandez on 11/25/2016.
  */
-public class FooterFragment extends Fragment implements LocationListener{
+public class FooterFragment extends Fragment{
 
     ShoppingListDbHelper shoppingListDbHelper;
     ShoppingCartDbHelper shoppingCartDbHelper;
@@ -67,9 +65,7 @@ public class FooterFragment extends Fragment implements LocationListener{
 
     private FloatingActionButton payFAB;
 
-    private ShareActionProvider mShareActionProvider;
-
-    private TextView quantityTextView;
+   private TextView quantityTextView;
     private TextView subtotalTextView;
     private TextView salesTaxTextView;
     private TextView totalTextView;
@@ -82,7 +78,7 @@ public class FooterFragment extends Fragment implements LocationListener{
     private RadioButton debitRadioButton;
     private RadioButton creditRadioButton;
 
-    private String storeName, storeLocation;
+    private String storeLocation;
 
     private String summary;
 
@@ -92,16 +88,6 @@ public class FooterFragment extends Fragment implements LocationListener{
     private EditText lastFourDigitsEditText;
 
     private int lastFourDigits;
-
-    protected LocationManager locationManager;
-    protected LocationListener locationListener;
-    String lat;
-    String provider;
-    protected double latitude,longitude;
-    protected boolean gps_enabled,network_enabled;
-    public SharedPreferences sharedPreferences;
-
-    private static final String LOG_TAG = FooterFragment.class.getSimpleName();
 
     public FooterFragment(){
 
@@ -114,6 +100,8 @@ public class FooterFragment extends Fragment implements LocationListener{
         summary = "";
 
         paidByString = "";
+
+        storeLocation = "";
 
         setHasOptionsMenu(true);
 
@@ -141,10 +129,29 @@ public class FooterFragment extends Fragment implements LocationListener{
         lastFourDigitsTextView = (TextView) rootView.findViewById(R.id.lastFourDigitsTextView);
         lastFourDigitsEditText = (EditText) rootView.findViewById(R.id.lastFourDigitsEditText);
 
-        // This section is for the Location sensor:
-        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
+        Criteria criteria = new Criteria();
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+
+        if (currentapiVersion >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+
+            criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setAltitudeRequired(true);
+            criteria.setBearingRequired(true);
+            criteria.setSpeedRequired(true);
+
+        }
+
+        String provider = locationManager.getBestProvider(criteria, true);
+
+        Location location = locationManager.getLastKnownLocation(provider);
+
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        storeLocation = getCompleteAddressString(latitude, longitude);
 
         // Footer section:
 
@@ -262,7 +269,6 @@ public class FooterFragment extends Fragment implements LocationListener{
 
         });
 
-        storeLocation = getCompleteAddressString(latitude, longitude);
 
         summary += "\n" + "Store Location: " + storeLocation;
 
@@ -522,32 +528,6 @@ public class FooterFragment extends Fragment implements LocationListener{
     }
 
 
-    @Override
-    public void onLocationChanged(Location location) {
-
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        Log.d("Latitude","status");
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-        Log.d("Latitude","enable");
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-        Log.d("Latitude","disable");
-
-    }
 
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
