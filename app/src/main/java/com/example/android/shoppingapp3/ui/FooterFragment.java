@@ -161,10 +161,14 @@ public class FooterFragment extends Fragment{
 
         Location location = locationManager.getLastKnownLocation(provider);
 
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
+        if (location != null) {
 
-        storeLocation = getCompleteAddressString(latitude, longitude);
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+
+            storeLocation = getCompleteAddressString(latitude, longitude);
+
+        }
 
         // Footer section:
 
@@ -397,7 +401,7 @@ public class FooterFragment extends Fragment{
                 MediaPlayer player = MediaPlayer.create(getContext().getApplicationContext(), R.raw.thankyou);
                 player.start();
 
-                Toast.makeText(getContext(), summary + "\n" + paidByString, Toast.LENGTH_LONG).show();
+                summary += "\n" + paidByString;
 
                 // Save purchase summary, purchase date and store location in purchase list
                 addPurchaseItem(v);
@@ -437,13 +441,11 @@ public class FooterFragment extends Fragment{
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, summary + "\n" + paidByString);
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, summary);
                 startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
 
             case R.id.action_list:
                 Intent intent3 = new Intent(getContext(), DisplayPurchaseActivity.class);
-                intent3.putExtra(getString(R.string.ROW_NUMBER), mRowNumber2);
-                intent3.putExtra(getString(R.string.PURCHASE_LIST), mPurchaseList.mPurchaseItem);
                 startActivity(intent3);
 
         }
@@ -598,8 +600,6 @@ public class FooterFragment extends Fragment{
 
         // Insert the item details in the database
         purchaseDbHelper.addItem(mPurchaseID, getCurrentDate(), storeLocation, summary, sqLiteDatabase);
-
-        Toast.makeText(getContext(), "Purchase Item # " + mPurchaseID + " Saved", Toast.LENGTH_LONG).show();
 
         // Store new mPurchaseID in SharedPrefs file
 

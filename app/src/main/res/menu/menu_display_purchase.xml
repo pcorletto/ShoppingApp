@@ -2,8 +2,22 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.example.android.shoppingapp3.ui.DisplayPurchaseActivity">
+
+    <item android:id="@+id/action_home"
+          android:title="Home"
+          android:icon="@drawable/ic_home"
+          android:orderInCategory="100"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/action_delete"
+          android:title="Delete"
+          android:icon="@drawable/ic_trash"
+          android:orderInCategory="200"
+          app:showAsAction="always"/>
+
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
-          android:orderInCategory="100"
+          android:orderInCategory="300"
           app:showAsAction="never"/>
+
 </menu>

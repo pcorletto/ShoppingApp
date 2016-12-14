@@ -43,28 +43,38 @@
             android:layout_height="wrap_content"
             android:id="@+id/layout2">
 
-            <CheckBox
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkBox"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="95dp"
+                android:layout_height="fill_parent"
+                android:gravity="center_horizontal">
 
+                <TextView
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/dateTextView"
+                    android:gravity="center_horizontal"/>
 
-            <TextView
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/dateTextView"
-                android:gravity="center_horizontal"/>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:id="@+id/checkBox"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    />
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="225dp"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:ems="10"
-                android:id="@+id/summaryTextView"/>
+                android:id="@+id/summaryTextView"
+                android:paddingBottom="@dimen/small_padding"
+                />
 
         </LinearLayout>
 
