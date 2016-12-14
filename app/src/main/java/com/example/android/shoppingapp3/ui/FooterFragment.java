@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -33,8 +34,6 @@ import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
 import com.example.android.shoppingapp3.model.PurchaseDbHelper;
-import com.example.android.shoppingapp3.model.PurchaseItem;
-import com.example.android.shoppingapp3.model.PurchaseList;
 import com.example.android.shoppingapp3.model.ReloadCartFromDB;
 import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
 import com.example.android.shoppingapp3.model.ShoppingItem;
@@ -51,7 +50,7 @@ import java.util.Locale;
 /**
  * Created by hernandez on 11/25/2016.
  */
-public class FooterFragment extends Fragment{
+public class FooterFragment extends Fragment implements LocationListener{
 
     ShoppingListDbHelper shoppingListDbHelper;
     ShoppingCartDbHelper shoppingCartDbHelper;
@@ -70,10 +69,6 @@ public class FooterFragment extends Fragment{
     private FloatingActionButton payFAB;
 
     // Data structures for purchases list
-
-    private PurchaseItem mPurchaseItem;
-    private int mRowNumber2;
-    private PurchaseList mPurchaseList = new PurchaseList();
 
     PurchaseDbHelper purchaseDbHelper;
     private int mPurchaseID;
@@ -101,6 +96,12 @@ public class FooterFragment extends Fragment{
     private EditText lastFourDigitsEditText;
 
     private int lastFourDigits;
+
+    public double latitude;
+    public double longitude;
+    public LocationManager locationManager;
+    public Criteria criteria;
+    public String bestProvider;
 
     public FooterFragment(){
 
@@ -142,33 +143,10 @@ public class FooterFragment extends Fragment{
         lastFourDigitsTextView = (TextView) rootView.findViewById(R.id.lastFourDigitsTextView);
         lastFourDigitsEditText = (EditText) rootView.findViewById(R.id.lastFourDigitsEditText);
 
-        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        getLocation();
 
-        Criteria criteria = new Criteria();
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
-        if (currentapiVersion >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-
-            criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
-            criteria.setAccuracy(Criteria.ACCURACY_FINE);
-            criteria.setAltitudeRequired(true);
-            criteria.setBearingRequired(true);
-            criteria.setSpeedRequired(true);
-
-        }
-
-        String provider = locationManager.getBestProvider(criteria, true);
-
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        if (location != null) {
-
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-
-            storeLocation = getCompleteAddressString(latitude, longitude);
-
-        }
+        storeLocation = getCompleteAddressString(latitude, longitude);
 
         // Footer section:
 
@@ -424,33 +402,41 @@ public class FooterFragment extends Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_settings:
-                // do stuff
-                Intent intent1 = new Intent(getContext(), SettingsActivity.class);
-                intent1.putExtra(getString(R.string.calling_activity_name), "ui.PayActivity");
-                startActivity(intent1);
-                return true;
 
-            case R.id.action_home:
-                Intent intent2  = new Intent(getContext(), MainActivity.class);
-                startActivity(intent2);
-                return true;
+        if (id == R.id.action_settings){
 
-            case R.id.action_share:
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, summary);
-                startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
+            Intent intent1 = new Intent(getContext(), SettingsActivity.class);
+            intent1.putExtra(getString(R.string.calling_activity_name), "ui.PayActivity");
+            startActivity(intent1);
 
-            case R.id.action_list:
-                Intent intent3 = new Intent(getContext(), DisplayPurchaseActivity.class);
-                startActivity(intent3);
+        }
+
+        if (id == R.id.action_home){
+
+            Intent intent2  = new Intent(getContext(), MainActivity.class);
+            startActivity(intent2);
+
+        }
+
+        if (id == R.id.action_list){
+
+            Intent intent3 = new Intent(getContext(), DisplayPurchaseActivity.class);
+            startActivity(intent3);
+
+        }
+
+        if (id == R.id.action_share){
+
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, summary);
+            startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
 
         }
 
         return super.onOptionsItemSelected(item);
+
     }
 
 
@@ -614,4 +600,72 @@ public class FooterFragment extends Fragment{
 
         }
 
+    public static boolean isLocationEnabled(Context context)
+    {
+        //...............
+        return true;
     }
+
+    protected void getLocation() {
+        if (isLocationEnabled(getContext())) {
+            locationManager = (LocationManager)  getContext().getSystemService(Context.LOCATION_SERVICE);
+            criteria = new Criteria();
+            bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
+
+            //You can still do this if you like, you might get lucky:
+            Location location = locationManager.getLastKnownLocation(bestProvider);
+            if (location != null) {
+                Log.e("TAG", "GPS is on");
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
+
+            }
+            else{
+                //This is what you need:
+                locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
+            }
+        }
+        else
+        {
+            //prompt user to enable location....
+            //.................
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(this);
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        //Hey, a non null location! Sweet!
+
+        //remove location callback:
+        locationManager.removeUpdates(this);
+
+        //open the map:
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+}
