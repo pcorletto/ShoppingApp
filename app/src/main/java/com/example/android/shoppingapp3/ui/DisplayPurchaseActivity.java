@@ -45,13 +45,13 @@ public class DisplayPurchaseActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationIcon(R.drawable.ic_list);
         getSupportActionBar().setTitle("Purchases");
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DisplayPurchaseActivity.this, PayActivity.class);
+                Intent intent = new Intent(DisplayPurchaseActivity.this, DisplayListActivity.class);
                 startActivity(intent);
             }
         });
@@ -76,9 +76,6 @@ public class DisplayPurchaseActivity extends AppCompatActivity {
             listview.setAdapter(mAdapter);
 
         }
-
-
-
 
 
     @Override
@@ -141,6 +138,30 @@ public class DisplayPurchaseActivity extends AppCompatActivity {
 
         }
 
+        if(id == R.id.action_share){
+
+            String summaryPurchases = "";
+
+            for(int i=0; i<list.size(); i++) {
+
+                if(list.get(i).isSelected()){
+
+                    summaryPurchases += list.get(i).getSummary() + "\n_____________________\n";
+
+                }
+
+            }
+
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase(s)");
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, summaryPurchases);
+            startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
+
+        }
+
         return super.onOptionsItemSelected(item);
+
     }
+
 }

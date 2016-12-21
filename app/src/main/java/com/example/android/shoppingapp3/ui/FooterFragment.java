@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -32,20 +30,28 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.shoppingapp3.BuildConfig;
 import com.example.android.shoppingapp3.R;
+import com.example.android.shoppingapp3.model.GooglePlacesReadTask;
 import com.example.android.shoppingapp3.model.PurchaseDbHelper;
 import com.example.android.shoppingapp3.model.ReloadCartFromDB;
 import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
 import com.example.android.shoppingapp3.model.ShoppingItem;
 import com.example.android.shoppingapp3.model.ShoppingList;
 import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by hernandez on 11/25/2016.
@@ -88,7 +94,7 @@ public class FooterFragment extends Fragment implements LocationListener{
 
     private String storeLocation;
 
-    private String summary;
+    private String purchaseSummary, locationSummary;
 
     private String paidByString;
 
@@ -97,11 +103,16 @@ public class FooterFragment extends Fragment implements LocationListener{
 
     private int lastFourDigits;
 
+    MapView mMapView;
+    private GoogleMap googleMap;
+
     public double latitude;
     public double longitude;
     public LocationManager locationManager;
     public Criteria criteria;
     public String bestProvider;
+
+    private int PROXIMITY_RADIUS = 800;
 
     public FooterFragment(){
 
@@ -111,11 +122,13 @@ public class FooterFragment extends Fragment implements LocationListener{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        summary = "";
+        purchaseSummary = "";
 
-        paidByString = "";
+        locationSummary = "";
 
         storeLocation = "";
+
+        paidByString = "";
 
         setHasOptionsMenu(true);
 
@@ -145,8 +158,62 @@ public class FooterFragment extends Fragment implements LocationListener{
 
         getLocation();
 
+        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
 
-        storeLocation = getCompleteAddressString(latitude, longitude);
+        mMapView.onResume();// needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        googleMap = mMapView.getMap();
+        googleMap.setMyLocationEnabled(true);
+
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+        if (location != null) {
+            onLocationChanged(location);
+        }
+        locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
+
+        String storeType = "store";
+
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlacesUrl.append("location=" + latitude + "," + longitude);
+        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
+        googlePlacesUrl.append("&name=" + storeType);
+        googlePlacesUrl.append("&sensor=true");
+
+        googlePlacesUrl.append("&key=" + BuildConfig.GOOGLE_API_KEY);
+
+        GooglePlacesReadTask googlePlacesReadTask = new GooglePlacesReadTask();
+        Object[] toPass = new Object[2];
+        toPass[0] = googleMap;
+        toPass[1] = googlePlacesUrl.toString();
+        googlePlacesReadTask.execute(toPass);
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(latitude, longitude)).zoom(15).build();
+        googleMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(cameraPosition));
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                locationSummary = "";
+                storeLocation = marker.getTitle();
+                locationSummary += "\n" + "Store Location: " + storeLocation;
+                return false;
+            }
+        });
+
+
 
         // Footer section:
 
@@ -160,7 +227,7 @@ public class FooterFragment extends Fragment implements LocationListener{
 
         DecimalFormat df = new DecimalFormat("$0.00");
 
-        // Initialize the summary string. This string will hold a summary of a list of
+        // Initialize the purchaseSummary string. This string will hold a purchaseSummary of a list of
         // items purchased, quantities, unit prices, subtotals, total, and tax paid
 
         for(int i=0; i<listDataHeader.size(); i++){
@@ -180,7 +247,7 @@ public class FooterFragment extends Fragment implements LocationListener{
                 tax = tax + addtax;
             }
 
-            summary += listDataHeader.get(i).getQuantity() + " " +
+            purchaseSummary += listDataHeader.get(i).getQuantity() + " " +
                     listDataHeader.get(i).getProductName() + " @ " +
                     df.format(listDataHeader.get(i).getItemPrice()) + " each = " +
                     df.format(listDataHeader.get(i).getSubtotal()) + "\n\n";
@@ -189,7 +256,7 @@ public class FooterFragment extends Fragment implements LocationListener{
 
         total = subtotal + tax;
 
-        summary += "Date: " + getCurrentDate() + "  " + getCurrentTime() +
+        purchaseSummary += "Date: " + getCurrentDate() + "  " + getCurrentTime() +
                 "\n" + "Subtotal: " + df.format(subtotal) + "\n" +
                 "Tax: " + df.format(tax) + "\n" + "Total: " + df.format(total) + "\n";
 
@@ -207,7 +274,7 @@ public class FooterFragment extends Fragment implements LocationListener{
 
                 paymentMethod = "Cash";
 
-                paidByString = "\nPaid by: " + paymentMethod;
+                paidByString = "Paid by: " + paymentMethod;
 
                 // Set the last four digits on the edit text to a dummy value of 9999
                 lastFourDigitsEditText.setText("9999");
@@ -264,8 +331,6 @@ public class FooterFragment extends Fragment implements LocationListener{
 
         });
 
-
-        summary += "\n" + "Store Location: " + storeLocation;
 
         payFAB = (FloatingActionButton) rootView.findViewById(R.id.payFAB);
 
@@ -330,13 +395,13 @@ public class FooterFragment extends Fragment implements LocationListener{
 
                 if(paymentMethod.equals("Cash")){
 
-                    paidByString =  "\nPaid by: " + paymentMethod;
+                    paidByString =  "Paid by: " + paymentMethod;
 
                 }
 
                 else{ // Credit or debit
 
-                    paidByString =  "\nPaid by: " + paymentMethod + " ending in " +
+                    paidByString =  "Paid by: " + paymentMethod + " ending in " +
                             String.format("%04d", lastFourDigits);
 
                 }
@@ -368,9 +433,9 @@ public class FooterFragment extends Fragment implements LocationListener{
                 for(int i=0; i<listDataHeader.size(); i++) {
 
 
-                        // Delete the cart item from the SQLite database
+                    // Delete the cart item from the SQLite database
 
-                        shoppingCartDbHelper.deleteCartItem(listDataHeader.get(i).getProductName(), sqLiteDatabase);
+                    shoppingCartDbHelper.deleteCartItem(listDataHeader.get(i).getProductName(), sqLiteDatabase);
 
                 }
 
@@ -379,10 +444,16 @@ public class FooterFragment extends Fragment implements LocationListener{
                 MediaPlayer player = MediaPlayer.create(getContext().getApplicationContext(), R.raw.thankyou);
                 player.start();
 
-                summary += "\n" + paidByString;
+                purchaseSummary += paidByString;
 
-                // Save purchase summary, purchase date and store location in purchase list
+                // Save purchase purchaseSummary, purchase date and store location in purchase list
                 addPurchaseItem(v);
+
+                Toast.makeText(getContext(), "Thank you for Shopping!!!", Toast.LENGTH_LONG).show();
+
+                // Go to Display Purchase Activity
+                Intent intent = new Intent(getContext(), DisplayPurchaseActivity.class);
+                startActivity(intent);
 
             }
 
@@ -430,7 +501,7 @@ public class FooterFragment extends Fragment implements LocationListener{
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Summary of Purchase");
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, summary);
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, purchaseSummary);
             startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
 
         }
@@ -531,37 +602,10 @@ public class FooterFragment extends Fragment implements LocationListener{
 
     public void updateLastDatePurchased(String productName, String lastDatePurchased){
 
-            shoppingListDbHelper = new ShoppingListDbHelper(getContext().getApplicationContext());
-            sqLiteDatabase = shoppingListDbHelper.getWritableDatabase();
-            shoppingListDbHelper.updateLastDatePurchased(productName, lastDatePurchased, sqLiteDatabase);
+        shoppingListDbHelper = new ShoppingListDbHelper(getContext().getApplicationContext());
+        sqLiteDatabase = shoppingListDbHelper.getWritableDatabase();
+        shoppingListDbHelper.updateLastDatePurchased(productName, lastDatePurchased, sqLiteDatabase);
 
-    }
-
-
-
-    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
-        String strAdd = "";
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
-            if (addresses != null) {
-                Address returnedAddress = addresses.get(0);
-                StringBuilder strReturnedAddress = new StringBuilder("");
-
-                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
-
-                }
-                strAdd = strReturnedAddress.toString();
-                Log.w("My Current location address", "" + strReturnedAddress.toString());
-            } else {
-                Log.w("My Current location address", "No Address returned!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.w("My Current location address", "Cannot get Address!");
-        }
-        return strAdd;
     }
 
     public void addPurchaseItem(View view) {
@@ -585,7 +629,8 @@ public class FooterFragment extends Fragment implements LocationListener{
         mPurchaseID = mPurchaseID + 1;
 
         // Insert the item details in the database
-        purchaseDbHelper.addItem(mPurchaseID, getCurrentDate(), storeLocation, summary, sqLiteDatabase);
+        purchaseDbHelper.addItem(mPurchaseID, getCurrentDate(), storeLocation, purchaseSummary
+                + "\n" + locationSummary, sqLiteDatabase);
 
         // Store new mPurchaseID in SharedPrefs file
 
@@ -598,7 +643,7 @@ public class FooterFragment extends Fragment implements LocationListener{
 
         purchaseDbHelper.close();
 
-        }
+    }
 
     public static boolean isLocationEnabled(Context context)
     {
@@ -618,7 +663,6 @@ public class FooterFragment extends Fragment implements LocationListener{
                 Log.e("TAG", "GPS is on");
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
 
             }
             else{
@@ -634,13 +678,6 @@ public class FooterFragment extends Fragment implements LocationListener{
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        locationManager.removeUpdates(this);
-
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
         //Hey, a non null location! Sweet!
 
@@ -650,7 +687,7 @@ public class FooterFragment extends Fragment implements LocationListener{
         //open the map:
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -668,4 +705,29 @@ public class FooterFragment extends Fragment implements LocationListener{
     public void onProviderDisabled(String provider) {
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
 }
+

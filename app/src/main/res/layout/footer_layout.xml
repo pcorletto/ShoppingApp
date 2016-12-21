@@ -1,12 +1,20 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+<LinearLayout
               android:orientation="vertical"
               android:background="@color/ColorPrimaryDark"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="@dimen/activity_vertical_margin">
 
-<LinearLayout android:orientation="horizontal"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="175dp" />
+
+    <LinearLayout android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_gravity="center_horizontal">
@@ -137,9 +145,10 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        >
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -147,37 +156,32 @@
             android:orientation="horizontal"
             android:id="@+id/paymentGroup">
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cash"
-            android:id="@+id/cashRadioButton"
-            android:textColor="@android:color/white"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cash"
+                android:id="@+id/cashRadioButton"
+                android:textColor="@android:color/white"
+                android:textSize="6sp"/>
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Debit"
-            android:id="@+id/debitRadioButton"
-            android:textColor="@android:color/white"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Debit"
+                android:id="@+id/debitRadioButton"
+                android:textColor="@android:color/white"
+                android:textSize="6sp"/>
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Credit"
-            android:id="@+id/creditRadioButton"
-            android:textColor="@android:color/white"
-            android:paddingRight="@dimen/small_padding"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Credit"
+                android:id="@+id/creditRadioButton"
+                android:textColor="@android:color/white"
+                android:paddingRight="@dimen/small_padding"
+                android:textSize="6sp"/>
 
         </RadioGroup>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -186,7 +190,9 @@
             android:id="@+id/lastFourDigitsTextView"
             android:textColor="@android:color/white"
             android:paddingLeft="@dimen/small_padding"
-            android:paddingRight="@dimen/small_padding"/>
+            android:paddingRight="@dimen/small_padding"
+            android:textSize="6sp"
+            />
 
         <EditText
             android:layout_width="55dp"
@@ -195,7 +201,18 @@
             android:id="@+id/lastFourDigitsEditText"
             android:background="@color/ColorAccent"
             android:textColor="@android:color/white"
-            android:paddingLeft="@dimen/small_padding"/>
+            android:paddingLeft="@dimen/small_padding"
+            android:paddingRight="@dimen/small_padding"
+            android:layout_marginRight="@dimen/small_padding"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/payFAB"
+            android:src="@drawable/ic_checkout"
+            app:elevation="@dimen/elevation_button"
+            app:fabSize="normal"
+            app:borderWidth="0dp"/>
 
     </LinearLayout>
 
@@ -204,14 +221,6 @@
 
 </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/payFAB"
-        android:src="@drawable/ic_checkout"
-        app:elevation="@dimen/elevation_button"
-        app:fabSize="normal"
-        app:borderWidth="0dp"
-        android:layout_gravity="bottom|right"/>
-
 </LinearLayout>
+
+    </ScrollView>
