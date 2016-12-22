@@ -3,6 +3,8 @@ package com.example.android.shoppingapp3.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -210,19 +212,39 @@ public class DisplayListActivity extends ActionBarActivity {
 
                         mShoppingCartDbHelper.getCartItem(sqLiteDatabase);
 
+                        if(reloadedCart.countFoundItems(listDataHeader.get(i).getProductName(), DisplayListActivity.this)==0) {
 
-                        // Insert the shopping item into the Shopping Cart SQLite database
+                            // Before inserting the checked item(s) into the Shopping Cart SQLite
+                            // database, search for it(them) in the Shopping Cart SQLite. If not found,
+                            // add it(them)
 
-                        mShoppingCartDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
-                                mPriority, mPriceValue, mCategory, mSubtotal, mImage, taxable_string, sqLiteDatabase);
+
+                            // Insert the shopping item into the Shopping Cart SQLite database
+
+                            mShoppingCartDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
+                                    mPriority, mPriceValue, mCategory, mSubtotal, mImage, taxable_string, sqLiteDatabase);
+
+                            Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
+
+                            startActivity(intent);
+                        }
+
+                        else{
+
+                          // Otherwise, alert the user that the item is already there and does not need to be added!
+
+                          ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                          toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+
+                          Toast.makeText(DisplayListActivity.this, "This item is already in your shopping cart! Do not add it again!",
+                                    Toast.LENGTH_LONG).show();
+
+                        }
 
                     }
 
                 }
 
-                Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
-
-                startActivity(intent);
 
                 return true;
 

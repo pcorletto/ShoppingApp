@@ -123,4 +123,36 @@ public class ReloadCartFromDB {
         }
         return mRowNumber;
     }
+
+    public int countFoundItems(String searchItem, Context context){
+
+        // Initialize shopping list item
+        mShoppingItem = new ShoppingItem();
+
+        // Initialize shoppingCartDbHelper and SQLiteDB
+        shoppingCartDbHelper = new ShoppingCartDbHelper(context);
+        sqLiteDatabase = shoppingCartDbHelper.getReadableDatabase();
+
+        cursor = shoppingCartDbHelper.searchCartItems(searchItem, sqLiteDatabase);
+
+        // This method is used to count the number of items in the reloaded list
+
+        // Initialize the row number
+
+        mRowNumber = 0;
+
+        if(cursor.moveToFirst()){
+
+            do{
+
+                mRowNumber++;
+
+            }
+
+            while(cursor.moveToNext());
+        }
+        return mRowNumber;
+
+
+    }
 }
