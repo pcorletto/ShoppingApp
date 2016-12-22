@@ -129,11 +129,11 @@ public class DisplayListActivity extends ActionBarActivity {
                 return true;
 
             }
-            case R.id.action_search:
+            case R.id.action_cart:
             {
 
-                Toast.makeText(DisplayListActivity.this, "Search button pressed!", Toast.LENGTH_LONG).show();
-                return true;
+                Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
+                startActivity(intent);
 
             }
 
@@ -171,81 +171,23 @@ public class DisplayListActivity extends ActionBarActivity {
 
             }
 
-            case R.id.action_cart:
+            case R.id.action_scan:
 
             {
 
-                // For SQLiteDatabase: insert the item into ShoppingCartDB, if checked.
-
-                // Initialize the shoppingCartDBHelper object
-
-                mShoppingCartDbHelper = new ShoppingCartDbHelper(getApplicationContext());
-
-                // Initialize the SQLiteDatabase object
-
-                sqLiteDatabase = mShoppingCartDbHelper.getWritableDatabase();
+                Intent intent = new Intent(DisplayListActivity.this, ScanActivity.class);
+                startActivity(intent);
 
 
-                for (int i = 0; i < listDataHeader.size(); i++) {
+                return true;
 
-                    if (listDataHeader.get(i).isSelected()) {
+            }
 
-                        mUPC = listDataHeader.get(i).getUPC();
-                        mQuantity = listDataHeader.get(i).getQuantity();
-                        mLastQuantity = listDataHeader.get(i).getLastQuantity();
-                        mName = listDataHeader.get(i).getProductName();
-                        mPriority = listDataHeader.get(i).getPriority();
-                        mPriceValue = listDataHeader.get(i).getItemPrice();
-                        mCategory = listDataHeader.get(i).getCategory();
-                        mSubtotal = listDataHeader.get(i).getSubtotal();
-                        mLastDatePurchased = listDataHeader.get(i).getLastDatePurchased();
-                        mImage = listDataHeader.get(i).getImage();
-                        mTaxable = listDataHeader.get(i).isTaxable();
+            case R.id.action_search:
 
-                        String taxable_string;
+            {
 
-                        if (mTaxable) {
-                            taxable_string = "true";
-                        } else {
-                            taxable_string = "false";
-                        }
-
-                        mShoppingCartDbHelper.getCartItem(sqLiteDatabase);
-
-                        if(reloadedCart.countFoundItems(listDataHeader.get(i).getProductName(), DisplayListActivity.this)==0) {
-
-                            // Before inserting the checked item(s) into the Shopping Cart SQLite
-                            // database, search for it(them) in the Shopping Cart SQLite. If not found,
-                            // add it(them)
-
-
-                            // Insert the shopping item into the Shopping Cart SQLite database
-
-                            mShoppingCartDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
-                                    mPriority, mPriceValue, mCategory, mSubtotal, mImage, taxable_string, sqLiteDatabase);
-
-                            Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
-
-                            startActivity(intent);
-                        }
-
-                        else{
-
-                          // Otherwise, alert the user that the item is already there and does not need to be added!
-
-                          ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                          toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
-
-                          Toast.makeText(DisplayListActivity.this, "This item is already in your shopping cart! Do not add it again!",
-                                    Toast.LENGTH_LONG).show();
-
-                        }
-
-                    }
-
-                }
-
-
+                Toast.makeText(this, "You pressed the Search button!", Toast.LENGTH_LONG).show();
                 return true;
 
             }
@@ -333,8 +275,81 @@ public class DisplayListActivity extends ActionBarActivity {
                                      @Override
                                      public void onClick(View v) {
 
-                                         Intent intent = new Intent(DisplayListActivity.this, ScanActivity.class);
-                                         startActivity(intent);
+                                         {
+
+                                             // For SQLiteDatabase: insert the item into ShoppingCartDB, if checked.
+
+                                             // Initialize the shoppingCartDBHelper object
+
+                                             mShoppingCartDbHelper = new ShoppingCartDbHelper(getApplicationContext());
+
+                                             // Initialize the SQLiteDatabase object
+
+                                             sqLiteDatabase = mShoppingCartDbHelper.getWritableDatabase();
+
+
+                                             for (int i = 0; i < listDataHeader.size(); i++) {
+
+                                                 if (listDataHeader.get(i).isSelected()) {
+
+                                                     mUPC = listDataHeader.get(i).getUPC();
+                                                     mQuantity = listDataHeader.get(i).getQuantity();
+                                                     mLastQuantity = listDataHeader.get(i).getLastQuantity();
+                                                     mName = listDataHeader.get(i).getProductName();
+                                                     mPriority = listDataHeader.get(i).getPriority();
+                                                     mPriceValue = listDataHeader.get(i).getItemPrice();
+                                                     mCategory = listDataHeader.get(i).getCategory();
+                                                     mSubtotal = listDataHeader.get(i).getSubtotal();
+                                                     mLastDatePurchased = listDataHeader.get(i).getLastDatePurchased();
+                                                     mImage = listDataHeader.get(i).getImage();
+                                                     mTaxable = listDataHeader.get(i).isTaxable();
+
+                                                     String taxable_string;
+
+                                                     if (mTaxable) {
+                                                         taxable_string = "true";
+                                                     } else {
+                                                         taxable_string = "false";
+                                                     }
+
+                                                     mShoppingCartDbHelper.getCartItem(sqLiteDatabase);
+
+                                                     if(reloadedCart.countFoundItems(listDataHeader.get(i).getProductName(), DisplayListActivity.this)==0) {
+
+                                                         // Before inserting the checked item(s) into the Shopping Cart SQLite
+                                                         // database, search for it(them) in the Shopping Cart SQLite. If not found,
+                                                         // add it(them)
+
+
+                                                         // Insert the shopping item into the Shopping Cart SQLite database
+
+                                                         mShoppingCartDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
+                                                                 mPriority, mPriceValue, mCategory, mSubtotal, mImage, taxable_string, sqLiteDatabase);
+
+                                                         Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
+
+                                                         startActivity(intent);
+                                                     }
+
+                                                     else{
+
+                                                         // Otherwise, alert the user that the item is already there and does not need to be added!
+
+                                                         ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                                                         toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+
+                                                         Toast.makeText(DisplayListActivity.this, listDataHeader.get(i).getProductName() + " is already in your shopping cart! Do not add it again!",
+                                                                 Toast.LENGTH_LONG).show();
+
+                                                     }
+
+                                                 }
+
+                                             }
+
+
+                                         }
+
 
                                      }
                                  }

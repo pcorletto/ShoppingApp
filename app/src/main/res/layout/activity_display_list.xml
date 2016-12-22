@@ -32,7 +32,7 @@
         android:gravity="bottom|end"
         android:layout_marginEnd="@dimen/button_margin"
         android:layout_marginBottom="@dimen/button_margin"
-        android:src="@drawable/ic_scan"
+        android:src="@drawable/ic_addcart"
         app:elevation="@dimen/elevation_button"
         app:fabSize="normal"
         app:borderWidth="0dp"

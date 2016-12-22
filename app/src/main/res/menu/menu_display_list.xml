@@ -8,9 +8,9 @@
           android:orderInCategory="100"
           app:showAsAction="never"/>
 
-    <item android:id="@+id/action_search"
-          android:title="Search"
-          android:icon="@drawable/ic_search"
+    <item android:id="@+id/action_cart"
+          android:title="Shopping Cart"
+          android:icon="@drawable/ic_cart"
           android:orderInCategory="200"
           app:showAsAction="always"/>
 
@@ -20,10 +20,16 @@
           android:orderInCategory="300"
           app:showAsAction="always"/>
 
-    <item android:id="@+id/action_cart"
-          android:title="Shopping Cart"
-          android:icon="@drawable/ic_cart"
+    <item android:id="@+id/action_scan"
+          android:title="Scan"
+          android:icon="@drawable/ic_scan"
           android:orderInCategory="400"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/action_search"
+          android:title="Search"
+          android:icon="@drawable/ic_search"
+          android:orderInCategory="500"
           app:showAsAction="always"/>
 
 </menu>
