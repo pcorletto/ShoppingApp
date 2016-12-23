@@ -127,7 +127,7 @@ public class DisplayPurchaseActivity extends AppCompatActivity {
 
                     purchaseDbHelper.deletePurchaseItem(item_for_DB_deletion, sqLiteDatabase);
 
-                    Intent intent = new Intent(DisplayPurchaseActivity.this, PayActivity.class);
+                    Intent intent = new Intent(DisplayPurchaseActivity.this, MainActivity.class);
                     startActivity(intent);
 
                 }

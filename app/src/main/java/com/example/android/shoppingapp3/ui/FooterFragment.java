@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -52,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by hernandez on 11/25/2016.
@@ -208,7 +211,15 @@ public class FooterFragment extends Fragment implements LocationListener{
 
                 locationSummary = "";
                 storeLocation = marker.getTitle();
-                locationSummary += "\n" + "Store Location: " + storeLocation;
+                String storeName = "";
+                int i=0;
+                while(storeLocation.charAt(i) != ':'){
+                    storeName += storeLocation.charAt(i);
+                    i++;
+                }
+                locationSummary += "\n" + "Store Name: " + storeName;
+                locationSummary += "\n\n" + "Store Address: " + getCompleteAddressString(marker.getPosition().latitude,
+                        marker.getPosition().longitude);
                 return false;
             }
         });
@@ -597,7 +608,31 @@ public class FooterFragment extends Fragment implements LocationListener{
 
         return currentTime;
 
+    }
 
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+
+                }
+                strAdd = strReturnedAddress.toString();
+                Log.w("My Current location address", "" + strReturnedAddress.toString());
+            } else {
+                Log.w("My Current location address", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w("My Current location address", "Cannot get Address!");
+        }
+        return strAdd;
     }
 
     public void updateLastDatePurchased(String productName, String lastDatePurchased){
