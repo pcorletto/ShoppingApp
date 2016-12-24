@@ -72,7 +72,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.shoppingapp3.ui.DisplayCartActivity" />
-
         </activity>
         <activity
             android:name=".ui.DisplayPurchaseActivity"
@@ -90,6 +89,14 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="" />
 
+        <activity
+            android:name=".ui.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:parentActivityName=".ui.DisplayListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.shoppingapp3.ui.DisplayListActivity" />
+        </activity>
     </application>
 
 </manifest>

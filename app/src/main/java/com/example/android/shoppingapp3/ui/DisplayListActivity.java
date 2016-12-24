@@ -187,7 +187,10 @@ public class DisplayListActivity extends ActionBarActivity {
 
             {
 
-                Toast.makeText(this, "You pressed the Search button!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "You pressed the Search button!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
+
                 return true;
 
             }

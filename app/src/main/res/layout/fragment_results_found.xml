@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="com.example.android.shoppingapp3.ui.SearchActivity$PlaceholderFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="365dp"
+        android:layout_margin="@dimen/frame_layout_margin"
+        android:background="#fff">
+
+        <ExpandableListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="365dp"></ExpandableListView>
+
+    </FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/myFAB"
+        android:gravity="bottom|end"
+        android:layout_marginEnd="@dimen/button_margin"
+        android:layout_marginBottom="@dimen/button_margin"
+        android:src="@drawable/ic_addcart"
+        app:elevation="@dimen/elevation_button"
+        app:fabSize="normal"
+        app:borderWidth="0dp"
+        android:layout_gravity="bottom|right"/>
+
+</LinearLayout>

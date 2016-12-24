@@ -10,5 +10,8 @@
     <dimen name="elevation_button">6dp</dimen>
     <dimen name="small_padding">5dp</dimen>
     <dimen name="card1_height">300dp</dimen>
+    <dimen name="toolbar_standard_height">56dp</dimen>
+    <dimen name="toolbar_extended_height">112dp</dimen>
+
 
 </resources>
