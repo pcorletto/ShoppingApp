@@ -146,6 +146,12 @@ public class DisplayCartActivity extends ActionBarActivity {
             case R.id.action_search:
             {
 
+                Intent intent = new Intent(this, SearchActivity.class);
+                String calling_activity_name = this.getLocalClassName();
+                intent.putExtra(getString(R.string.calling_activity_name), calling_activity_name);
+                startActivity(intent);
+
+                return true;
 
 
             }

@@ -59,6 +59,8 @@ public class ResultsFoundFragment extends Fragment {
     int mQuantity, mLastQuantity;
     double mPriceValue, mSubtotal, mPriority;
 
+    String calling_activity_name;
+
     public ResultsFoundFragment(){
 
     }
@@ -73,6 +75,8 @@ public class ResultsFoundFragment extends Fragment {
         expListView = (ExpandableListView) view.findViewById(android.R.id.list);
 
         listDataChild = new HashMap<ShoppingItem, List<ShoppingItem>>();
+
+        calling_activity_name = com.example.android.shoppingapp3.ui.SearchActivity.calling_activity_name;
 
         // Preparing list data
 
@@ -109,23 +113,64 @@ public class ResultsFoundFragment extends Fragment {
 
         if(sortOrder.equals("no sort")){
 
+            if(calling_activity_name.equals("ui.DisplayListActivity")){
+
             mShoppingList = reloadedList.reloadListFromDB("get", searchItem, getContext());
+
+            }
+
+
+            else{
+
+                mShoppingList = reloadedCart.reloadCartFromDB("get", searchItem, getContext());
+            }
 
         }
 
         else if(sortOrder.equals("alphabetical")){
 
+            if(calling_activity_name.equals("ui.DisplayListActivity")){
+
             mShoppingList = reloadedList.reloadListFromDB("sortByName", searchItem, getContext());
+
+            }
+
+
+            else{
+
+                mShoppingList = reloadedCart.reloadCartFromDB("sortByName", searchItem, getContext());
+
+            }
+
         }
 
         else if(sortOrder.equals("priority")){
 
+            if(calling_activity_name.equals("ui.DisplayListActivity")){
+
             mShoppingList = reloadedList.reloadListFromDB("sortByPriority", searchItem, getContext());
+
+            }
+
+            else{
+
+                mShoppingList = reloadedCart.reloadCartFromDB("sortByPriority", searchItem, getContext());
+            }
+
         }
 
 
+        if(calling_activity_name.equals("ui.DisplayListActivity")){
 
         mRowNumber = reloadedList.getListSize();
+
+        }
+
+
+        else{
+
+            mRowNumber = reloadedCart.getListSize();
+        }
 
 
         for(int i = 0; i<mRowNumber; i++){
