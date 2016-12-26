@@ -4,18 +4,20 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/backgroundtwo"
                 tools:context="com.example.android.shoppingapp3.ui.SearchActivity$PlaceholderFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="365dp"
+        android:layout_height="325dp"
         android:layout_margin="@dimen/frame_layout_margin"
         android:background="#fff">
 
         <ExpandableListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="365dp"></ExpandableListView>
+            android:background="@drawable/backgroundtwo"
+            android:layout_height="325dp"></ExpandableListView>
 
     </FrameLayout>
 

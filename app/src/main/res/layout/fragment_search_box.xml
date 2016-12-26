@@ -4,17 +4,24 @@
                 android:layout_height="match_parent"
                 tools:context="com.example.android.shoppingapp3.ui.SearchActivity$PlaceholderFragment">
 
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar">
+    </include>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:layout_below="@id/tool_bar"
+        android:gravity="center_vertical|center_horizontal">
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/searchBox"
-            android:hint="Type item name"
+            android:hint="Search..."
             android:layout_weight=".9"/>
 
         <ImageButton
@@ -22,7 +29,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/searchButton"
             android:src="@drawable/ic_search"
-            android:layout_weight=".1"/>
+            android:layout_weight=".1"
+            android:background="@color/ColorAccent"/>
 
 
         </LinearLayout>

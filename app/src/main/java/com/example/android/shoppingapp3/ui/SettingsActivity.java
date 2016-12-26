@@ -95,9 +95,17 @@ public class SettingsActivity extends PreferenceActivity
 
         }
 
-        else{
-            Intent intent4 = new Intent(this, PayActivity.class);
+        else if(calling_activity_name.equals("ui.SearchActivity")){//Return to SearchActivity
+
+            Intent intent4 = new Intent(this, SearchActivity.class);
+            intent4.putExtra(getString(R.string.calling_activity_name), calling_activity_name);
             startActivity(intent4);
+
+        }
+
+        else{
+            Intent intent5 = new Intent(this, PayActivity.class);
+            startActivity(intent5);
         }
 
     }

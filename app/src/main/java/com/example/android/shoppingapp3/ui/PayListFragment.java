@@ -47,8 +47,6 @@ public class PayListFragment extends Fragment {
 
     private Toolbar toolbar;
 
-    //FloatingActionButton payFAB;
-
     Fragment frag;
     FragmentTransaction fragTransaction;
 
