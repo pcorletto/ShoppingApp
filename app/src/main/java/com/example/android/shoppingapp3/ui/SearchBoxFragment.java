@@ -22,6 +22,8 @@ public class SearchBoxFragment extends Fragment {
     EditText searchBox;
     ImageButton searchButton;
 
+    public static String searchWord;
+
     public SearchBoxFragment(){
 
     }
@@ -35,9 +37,20 @@ public class SearchBoxFragment extends Fragment {
         searchBox = (EditText) rootView.findViewById(R.id.searchBox);
         searchButton = (ImageButton) rootView.findViewById(R.id.searchButton);
 
-        frag = new ResultsFoundFragment();
+        frag = new ListCartFragment();
         fragTransaction = getFragmentManager().beginTransaction().add(R.id.container, frag);
         fragTransaction.commit();
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                searchWord = searchBox.getText().toString();
+                frag = new SearchResultsFragment();
+                fragTransaction = getFragmentManager().beginTransaction().replace(R.id.container, frag);
+                fragTransaction.commit();
+            }
+        });
 
         return rootView;
     }

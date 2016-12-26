@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Created by hernandez on 12/24/2016.
  */
-public class ResultsFoundFragment extends Fragment {
+public class ListCartFragment extends Fragment {
 
     // Data structures
 
@@ -61,7 +61,7 @@ public class ResultsFoundFragment extends Fragment {
 
     String calling_activity_name;
 
-    public ResultsFoundFragment(){
+    public ListCartFragment(){
 
     }
 
@@ -69,7 +69,7 @@ public class ResultsFoundFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_results_found, container, false);
+        View view = inflater.inflate(R.layout.fragment_search_results, container, false);
 
         // Get the expandable list view
         expListView = (ExpandableListView) view.findViewById(android.R.id.list);
@@ -115,7 +115,7 @@ public class ResultsFoundFragment extends Fragment {
 
             if(calling_activity_name.equals("ui.DisplayListActivity")){
 
-            mShoppingList = reloadedList.reloadListFromDB("get", searchItem, getContext());
+                mShoppingList = reloadedList.reloadListFromDB("get", searchItem, getContext());
 
             }
 
@@ -131,7 +131,7 @@ public class ResultsFoundFragment extends Fragment {
 
             if(calling_activity_name.equals("ui.DisplayListActivity")){
 
-            mShoppingList = reloadedList.reloadListFromDB("sortByName", searchItem, getContext());
+                mShoppingList = reloadedList.reloadListFromDB("sortByName", searchItem, getContext());
 
             }
 
@@ -148,7 +148,7 @@ public class ResultsFoundFragment extends Fragment {
 
             if(calling_activity_name.equals("ui.DisplayListActivity")){
 
-            mShoppingList = reloadedList.reloadListFromDB("sortByPriority", searchItem, getContext());
+                mShoppingList = reloadedList.reloadListFromDB("sortByPriority", searchItem, getContext());
 
             }
 
@@ -162,7 +162,7 @@ public class ResultsFoundFragment extends Fragment {
 
         if(calling_activity_name.equals("ui.DisplayListActivity")){
 
-        mRowNumber = reloadedList.getListSize();
+            mRowNumber = reloadedList.getListSize();
 
         }
 
