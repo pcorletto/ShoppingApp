@@ -533,7 +533,6 @@ public class ScanActivity extends AppCompatActivity {
                     else{*/
 
 
-
         context = this;
 
         // Perform DB insertion...
@@ -543,7 +542,7 @@ public class ScanActivity extends AppCompatActivity {
         mShoppingListDbHelper = new ShoppingListDbHelper(context);
         sqLiteDatabase = mShoppingListDbHelper.getWritableDatabase();
 
-        if(reloadedList.countFoundItems(mName, ScanActivity.this)==0) {
+        if (reloadedList.countFoundItems(mName, ScanActivity.this) == 0) {
 
             // Before adding the newly scanned item into the DB, check if it is already in the
             // DB or not. If already there, do not add it again! If not there, add it.
@@ -557,9 +556,8 @@ public class ScanActivity extends AppCompatActivity {
             mShoppingListDbHelper.close();
 
             finish(); // Go back to Main Activity
-        }
 
-        else{
+        } else {
 
             // Do not add it again.
 
@@ -568,14 +566,14 @@ public class ScanActivity extends AppCompatActivity {
             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
 
-            Toast.makeText(this, mName + " is already in your shopping cart! Do not add it again!",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, mName + " is already in your shopping list! Do not scan it again!"
+                    , Toast.LENGTH_LONG).show();
+
+            finish();
 
         }
 
-
-        }
-
+    }
 
 
     public void onRadioButtonClicked(View view) {

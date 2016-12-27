@@ -1,7 +1,10 @@
 package com.example.android.shoppingapp3.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -17,16 +20,39 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.android.shoppingapp3.R;
+import com.example.android.shoppingapp3.model.ReloadCartFromDB;
+import com.example.android.shoppingapp3.model.ReloadListFromDB;
+import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
+import com.example.android.shoppingapp3.model.ShoppingItem;
+import com.example.android.shoppingapp3.model.ShoppingList;
+import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by hernandez on 12/24/2016.
  */
 public class SearchBoxFragment extends Fragment {
 
+    // Data structures
+
+    private ShoppingList mShoppingList = new ShoppingList();
+
+    private int mRowNumber;
+
+    ReloadListFromDB reloadedList = new ReloadListFromDB();
+
+    ReloadCartFromDB reloadedCart = new ReloadCartFromDB();
+
     Fragment frag;
     FragmentTransaction fragTransaction;
     EditText searchBox;
     ImageButton searchButton;
+
+    List<ShoppingItem> listDataHeader;
+    HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
 
     private Toolbar toolbar;
 
@@ -34,7 +60,11 @@ public class SearchBoxFragment extends Fragment {
 
     public static String searchWord;
 
-    public SearchBoxFragment(){
+    ShoppingListDbHelper mShoppingListDbHelper;
+    ShoppingCartDbHelper mShoppingCartDbHelper;
+    SQLiteDatabase sqLiteDatabase;
+
+    public SearchBoxFragment() {
 
     }
 
@@ -43,6 +73,8 @@ public class SearchBoxFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_search_box, container, false);
+
+        calling_activity_name = SearchActivity.calling_activity_name;
 
         // Get the toolbar
         toolbar = (Toolbar) rootView.findViewById(R.id.tool_bar);
@@ -59,14 +91,11 @@ public class SearchBoxFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                calling_activity_name = SearchActivity.calling_activity_name;
 
-                if(calling_activity_name.equals("ui.DisplayListActivity")) {
+                if (calling_activity_name.equals("ui.DisplayListActivity")) {
                     Intent intent = new Intent(getContext(), DisplayListActivity.class);
                     startActivity(intent);
-                }
-
-                else{
+                } else {
 
                     Intent intent = new Intent(getContext(), DisplayCartActivity.class);
                     startActivity(intent);
@@ -74,6 +103,8 @@ public class SearchBoxFragment extends Fragment {
                 }
             }
         });
+
+        prepareListData();
 
         searchBox = (EditText) rootView.findViewById(R.id.searchBox);
         searchButton = (ImageButton) rootView.findViewById(R.id.searchButton);
@@ -107,32 +138,182 @@ public class SearchBoxFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings){
+        switch (id) {
 
-            calling_activity_name = SearchActivity.calling_activity_name;
-            String preceding_activity_name = "ui.SearchActivity";
-            Intent intent1 = new Intent(getContext(), SettingsActivity.class);
-            intent1.putExtra(getString(R.string.calling_activity_name), calling_activity_name);
-            intent1.putExtra(getString(R.string.preceding_activity_name), preceding_activity_name);
-            startActivity(intent1);
+            //noinspection SimplifiableIfStatement
+
+            case R.id.action_settings: {
+
+                calling_activity_name = SearchActivity.calling_activity_name;
+                String preceding_activity_name = "ui.SearchActivity";
+                Intent intent1 = new Intent(getContext(), SettingsActivity.class);
+                intent1.putExtra(getString(R.string.calling_activity_name), calling_activity_name);
+                intent1.putExtra(getString(R.string.preceding_activity_name), preceding_activity_name);
+                startActivity(intent1);
+
+                return true;
+
+            }
+
+            case R.id.action_home: {
+
+                Intent intent2 = new Intent(getContext(), MainActivity.class);
+                startActivity(intent2);
+
+                return true;
+
+            }
+
+            case R.id.action_list: {
+
+                Intent intent3 = new Intent(getContext(), DisplayListActivity.class);
+                startActivity(intent3);
+
+                return true;
+
+            }
+
+            case R.id.action_delete: {
+
+                listDataHeader = ListCartFragment.listDataHeader;
+
+                listDataChild = ListCartFragment.listDataChild;
+
+                if (calling_activity_name.equals("ui.DisplayListActivity")) {
+
+                    // Initialize the shoppingListDBHelper object
+
+                    mShoppingListDbHelper = new ShoppingListDbHelper(getContext());
+
+                    // Initialize the SQLiteDatabase object
+
+                    sqLiteDatabase = mShoppingListDbHelper.getReadableDatabase();
+
+
+                    for (int i = 0; i < listDataHeader.size(); i++) {
+
+                        if (listDataHeader.get(i).isSelected()) {
+
+                            // For SQLiteDatabase: Delete this item here, if checked.
+
+                            String item_for_DB_deletion = listDataHeader.get(i).getProductName() + "";
+
+                            // Delete the shopping item from the SQLite database
+
+                            mShoppingListDbHelper.deleteShoppingItem(item_for_DB_deletion, sqLiteDatabase);
+
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            startActivity(intent);
+
+                        }
+
+                    }
+
+                } else if (calling_activity_name.equals("ui.DisplayCartActivity")) {
+
+                    // Initialize the shoppingCartDBHelper object
+
+                    mShoppingCartDbHelper = new ShoppingCartDbHelper(getContext());
+
+                    // Initialize the SQLiteDatabase object
+
+                    sqLiteDatabase = mShoppingCartDbHelper.getReadableDatabase();
+
+
+                    for (int i = 0; i < listDataHeader.size(); i++) {
+
+                        if (listDataHeader.get(i).isSelected()) {
+
+                            // For SQLiteDatabase: Delete this item here, if checked.
+
+                            String item_for_DB_deletion = listDataHeader.get(i).getProductName() + "";
+
+                            // Delete the shopping item from the SQLite database
+
+                            mShoppingCartDbHelper.deleteCartItem(item_for_DB_deletion, sqLiteDatabase);
+
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            startActivity(intent);
+
+                        }
+
+                    }
+
+                }
+
+                return true;
+
+            }
+
+            default:
+
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+
+    private void prepareListData(){
+
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        String sortOrder = sharedPrefs.getString(
+                getString(R.string.pref_sort_key),
+                getString(R.string.pref_sort_default));
+
+
+        listDataHeader = new ArrayList<ShoppingItem>();
+
+        listDataChild = new HashMap<ShoppingItem, List<ShoppingItem>>();
+
+        // Get the list of shopping items from the database
+
+        // Reload the list from the SQLite Database. Since we are not searching for anything
+        // we will make searchItem just be blank.
+
+        String searchItem = "";
+
+        if(sortOrder.equals("no sort")){
+
+            mShoppingList = reloadedList.reloadListFromDB("get", searchItem, getContext());
 
         }
 
-        if (id == R.id.action_home){
+        else if(sortOrder.equals("alphabetical")){
 
-            Intent intent2  = new Intent(getContext(), MainActivity.class);
-            startActivity(intent2);
+            mShoppingList = reloadedList.reloadListFromDB("sortByName", searchItem, getContext());
+        }
+
+        else if(sortOrder.equals("priority")){
+
+            mShoppingList = reloadedList.reloadListFromDB("sortByPriority", searchItem, getContext());
+        }
+
+
+
+        mRowNumber = reloadedList.getListSize();
+
+
+        for(int i = 0; i<mRowNumber; i++){
+
+            listDataHeader.add(mShoppingList.getShoppingItem(i));
 
         }
 
-        if (id == R.id.action_list){
+        // Loop through the array of shopping items
 
-            Intent intent3 = new Intent(getContext(), DisplayListActivity.class);
-            startActivity(intent3);
+        // Adding child data:
+
+        for(int i=0; i<mRowNumber; i++) {
+
+            List<ShoppingItem> childrenItems = new ArrayList<ShoppingItem>();
+
+            childrenItems.add(mShoppingList.getShoppingItem(i));
+
+            listDataChild.put(listDataHeader.get(i), childrenItems);
 
         }
-
-        return super.onOptionsItemSelected(item);
 
     }
 
