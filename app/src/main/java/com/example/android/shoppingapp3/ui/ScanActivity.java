@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.android.shoppingapp3.BuildConfig;
 import com.example.android.shoppingapp3.R;
+import com.example.android.shoppingapp3.model.ReloadListFromDB;
 import com.example.android.shoppingapp3.model.ShoppingItem;
 import com.example.android.shoppingapp3.model.ShoppingList;
 import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
@@ -56,6 +57,7 @@ public class ScanActivity extends AppCompatActivity {
     private ShoppingItem mShoppingItem;
     private int mRowNumber;
     private ShoppingList mShoppingList = new ShoppingList();
+    ReloadListFromDB reloadedList = new ReloadListFromDB();
 
     private String mUPC, mLastDatePurchased, mName, mPrice, mCategory, mImage, mTaxable;
     int mQuantity, mLastQuantity;
@@ -231,8 +233,7 @@ public class ScanActivity extends AppCompatActivity {
                 }
 
 
-
-                else {
+                    else {
 
                     addItem();
 
@@ -285,17 +286,19 @@ public class ScanActivity extends AppCompatActivity {
                 }
 
                 else{
+
                     taxable = false;
                 }
 
-                mShoppingItem = new ShoppingItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased,
-                        mName, mPriority, price, mCategory, mSubtotal, mImage, taxable);
+                    mShoppingItem = new ShoppingItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased,
+                            mName, mPriority, price, mCategory, mSubtotal, mImage, taxable);
 
-                mShoppingItem.setSubtotal(mSubtotal);
+                    mShoppingItem.setSubtotal(mSubtotal);
 
-                mShoppingList.addShoppingItem(mShoppingItem, mRowNumber);
+                    mShoppingList.addShoppingItem(mShoppingItem, mRowNumber);
 
-                mRowNumber++;
+                    mRowNumber++;
+
 
             }
 
@@ -427,9 +430,6 @@ public class ScanActivity extends AppCompatActivity {
 
                                 }
 
-
-
-
                             });
 
                         } else {
@@ -524,6 +524,16 @@ public class ScanActivity extends AppCompatActivity {
 
     public void addItem() {
 
+        /*mShoppingListDbHelper.getShoppingItem(sqLiteDatabaseW);
+
+                if(reloadedList.countFoundItems(mName, ScanActivity.this)==0) {
+
+                    // Before adding the newly scanned item into the DB, check if it is already in the
+                    // DB or not. If already there, do not add it again! If not there, add it.
+                    else{*/
+
+
+
         context = this;
 
         // Perform DB insertion...
@@ -533,17 +543,40 @@ public class ScanActivity extends AppCompatActivity {
         mShoppingListDbHelper = new ShoppingListDbHelper(context);
         sqLiteDatabase = mShoppingListDbHelper.getWritableDatabase();
 
-        // Insert the item details in the database
-        mShoppingListDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
-                mPriority, mPriceValue, mCategory, mSubtotal, mImage, mTaxable, sqLiteDatabase);
+        if(reloadedList.countFoundItems(mName, ScanActivity.this)==0) {
 
-        Toast.makeText(ScanActivity.this, "Shopping Item Saved", Toast.LENGTH_LONG).show();
+            // Before adding the newly scanned item into the DB, check if it is already in the
+            // DB or not. If already there, do not add it again! If not there, add it.
 
-        mShoppingListDbHelper.close();
+            // Insert the item details in the database
+            mShoppingListDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
+                    mPriority, mPriceValue, mCategory, mSubtotal, mImage, mTaxable, sqLiteDatabase);
 
-        finish(); // Go back to Main Activity
+            Toast.makeText(ScanActivity.this, "Shopping Item Saved", Toast.LENGTH_LONG).show();
 
-    }
+            mShoppingListDbHelper.close();
+
+            finish(); // Go back to Main Activity
+        }
+
+        else{
+
+            // Do not add it again.
+
+            // Otherwise, alert the user that the item is already there and does not need to be added!
+
+            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+            toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+
+            Toast.makeText(this, mName + " is already in your shopping cart! Do not add it again!",
+                    Toast.LENGTH_LONG).show();
+
+        }
+
+
+        }
+
+
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
