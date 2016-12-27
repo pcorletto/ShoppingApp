@@ -112,5 +112,6 @@
     <string name="share_using">Share using</string>
     <string name="title_activity_display_purchase">DisplayPurchaseActivity</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="preceding_activity_name">preceding_activity_name</string>
 
 </resources>

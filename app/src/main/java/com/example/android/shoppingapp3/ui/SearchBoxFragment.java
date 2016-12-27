@@ -109,8 +109,11 @@ public class SearchBoxFragment extends Fragment {
 
         if (id == R.id.action_settings){
 
+            calling_activity_name = SearchActivity.calling_activity_name;
+            String preceding_activity_name = "ui.SearchActivity";
             Intent intent1 = new Intent(getContext(), SettingsActivity.class);
-            intent1.putExtra(getString(R.string.calling_activity_name), "ui.SearchActivity");
+            intent1.putExtra(getString(R.string.calling_activity_name), calling_activity_name);
+            intent1.putExtra(getString(R.string.preceding_activity_name), preceding_activity_name);
             startActivity(intent1);
 
         }

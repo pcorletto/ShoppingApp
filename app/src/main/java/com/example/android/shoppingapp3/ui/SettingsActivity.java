@@ -80,22 +80,9 @@ public class SettingsActivity extends PreferenceActivity
         // Get the name of the activity from which SettingsActivity was called.
 
         String calling_activity_name = intent1.getStringExtra(getString(R.string.calling_activity_name));
+        String preceding_activity_name = intent1.getStringExtra(getString(R.string.preceding_activity_name));
 
-        if(calling_activity_name.equals("ui.DisplayListActivity")){//Return to DisplayListActivity
-
-            Intent intent2 = new Intent(this, DisplayListActivity.class);
-            startActivity(intent2);
-
-        }
-
-        else if(calling_activity_name.equals("ui.DisplayCartActivity")){//Return to DisplayCartActivity
-
-            Intent intent3 = new Intent(this, DisplayCartActivity.class);
-            startActivity(intent3);
-
-        }
-
-        else if(calling_activity_name.equals("ui.SearchActivity")){//Return to SearchActivity
+        if(preceding_activity_name.equals("ui.SearchActivity")){//Return to SearchActivity
 
             Intent intent4 = new Intent(this, SearchActivity.class);
             intent4.putExtra(getString(R.string.calling_activity_name), calling_activity_name);
@@ -103,10 +90,25 @@ public class SettingsActivity extends PreferenceActivity
 
         }
 
-        else{
-            Intent intent5 = new Intent(this, PayActivity.class);
-            startActivity(intent5);
-        }
+        else// If preceding activity name is not the Search Activity
 
+        {
+
+            if (calling_activity_name.equals("ui.DisplayListActivity")) {//Return to DisplayListActivity
+
+                Intent intent2 = new Intent(this, DisplayListActivity.class);
+                startActivity(intent2);
+
+            } else if (calling_activity_name.equals("ui.DisplayCartActivity")) {//Return to DisplayCartActivity
+
+                Intent intent3 = new Intent(this, DisplayCartActivity.class);
+                startActivity(intent3);
+
+            } else if (calling_activity_name.equals("ui.PayActivity")){//Return to PayActivity
+
+                Intent intent5 = new Intent(this, PayActivity.class);
+                startActivity(intent5);
+            }
+        }
     }
 }

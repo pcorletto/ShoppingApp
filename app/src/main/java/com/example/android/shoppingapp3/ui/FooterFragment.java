@@ -489,6 +489,7 @@ public class FooterFragment extends Fragment implements LocationListener{
 
             Intent intent1 = new Intent(getContext(), SettingsActivity.class);
             intent1.putExtra(getString(R.string.calling_activity_name), "ui.PayActivity");
+            intent1.putExtra(getString(R.string.preceding_activity_name), "ui.PayActivity");
             startActivity(intent1);
 
         }

@@ -127,7 +127,7 @@ public class DisplayCartActivity extends ActionBarActivity {
                 // and we can return to this activity and list can be refreshed if the sort
                 // order is changed.
                 intent.putExtra(getString(R.string.calling_activity_name), this.getLocalClassName());
-
+                intent.putExtra(getString(R.string.preceding_activity_name), this.getLocalClassName());
                 startActivity(intent);
                 return true;
 
