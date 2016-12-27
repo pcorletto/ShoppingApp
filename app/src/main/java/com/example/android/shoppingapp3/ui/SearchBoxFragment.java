@@ -76,6 +76,9 @@ public class SearchBoxFragment extends Fragment {
 
         calling_activity_name = SearchActivity.calling_activity_name;
 
+        // Initialize searchWord
+        searchWord = "";
+
         // Get the toolbar
         toolbar = (Toolbar) rootView.findViewById(R.id.tool_bar);
 
@@ -175,6 +178,81 @@ public class SearchBoxFragment extends Fragment {
 
             case R.id.action_delete: {
 
+                // If we have just searched for some item, searchWord will have a value
+                // In that case, call listDataHeader and listDataChild from SearchResultsFragment
+
+                if (!(searchWord.equals(""))){ // This means we are deleting one or more of the search results
+
+                    listDataHeader = SearchResultsFragment.listDataHeader;
+
+                    listDataChild = SearchResultsFragment.listDataChild;
+
+                    if (calling_activity_name.equals("ui.DisplayListActivity")) {
+
+                        // Initialize the shoppingListDBHelper object
+
+                        mShoppingListDbHelper = new ShoppingListDbHelper(getContext());
+
+                        // Initialize the SQLiteDatabase object
+
+                        sqLiteDatabase = mShoppingListDbHelper.getReadableDatabase();
+
+
+                        for (int i = 0; i < listDataHeader.size(); i++) {
+
+                            if (listDataHeader.get(i).isSelected()) {
+
+                                // For SQLiteDatabase: Delete this item here, if checked.
+
+                                String item_for_DB_deletion = listDataHeader.get(i).getProductName() + "";
+
+                                // Delete the shopping item from the SQLite database
+
+                                mShoppingListDbHelper.deleteShoppingItem(item_for_DB_deletion, sqLiteDatabase);
+
+                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                startActivity(intent);
+
+                            }
+
+                        }
+
+                    } else if (calling_activity_name.equals("ui.DisplayCartActivity")) {
+
+                        // Initialize the shoppingCartDBHelper object
+
+                        mShoppingCartDbHelper = new ShoppingCartDbHelper(getContext());
+
+                        // Initialize the SQLiteDatabase object
+
+                        sqLiteDatabase = mShoppingCartDbHelper.getReadableDatabase();
+
+
+                        for (int i = 0; i < listDataHeader.size(); i++) {
+
+                            if (listDataHeader.get(i).isSelected()) {
+
+                                // For SQLiteDatabase: Delete this item here, if checked.
+
+                                String item_for_DB_deletion = listDataHeader.get(i).getProductName() + "";
+
+                                // Delete the shopping item from the SQLite database
+
+                                mShoppingCartDbHelper.deleteCartItem(item_for_DB_deletion, sqLiteDatabase);
+
+                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                startActivity(intent);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                else if(searchWord.equals("")){ // This means we are deleting, not from a search result.
+
                 listDataHeader = ListCartFragment.listDataHeader;
 
                 listDataChild = ListCartFragment.listDataChild;
@@ -238,6 +316,8 @@ public class SearchBoxFragment extends Fragment {
                         }
 
                     }
+
+                }
 
                 }
 

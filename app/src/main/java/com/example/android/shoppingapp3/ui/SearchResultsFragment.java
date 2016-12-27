@@ -50,8 +50,8 @@ public class SearchResultsFragment extends Fragment {
 
     ExpandableListAdapter listAdapter;
     public static ExpandableListView expListView;
-    List<ShoppingItem> listDataHeader;
-    HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
+    static List<ShoppingItem> listDataHeader;
+    static HashMap<ShoppingItem, List<ShoppingItem>> listDataChild;
 
     private Toolbar toolbar;
 
