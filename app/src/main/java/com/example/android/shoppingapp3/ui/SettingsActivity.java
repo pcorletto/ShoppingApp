@@ -104,6 +104,11 @@ public class SettingsActivity extends PreferenceActivity
                 Intent intent3 = new Intent(this, DisplayCartActivity.class);
                 startActivity(intent3);
 
+            } else if (calling_activity_name.equals("ui.MainActivity")) {//Return to MainActivity
+
+                Intent intent4 = new Intent(this, MainActivity.class);
+                startActivity(intent4);
+
             } else if (calling_activity_name.equals("ui.PayActivity")){//Return to PayActivity
 
                 Intent intent5 = new Intent(this, PayActivity.class);

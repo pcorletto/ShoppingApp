@@ -31,15 +31,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.shopping_app_title));
 
 
-        //toolbar.setSubtitle("Subtitle");
-
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(this);
         String language = sharedPrefs.getString(
                 getString(R.string.pref_language_key),
                 getString(R.string.pref_language_english));
-
-        //Toast.makeText(this, "Language selected: " + language, Toast.LENGTH_LONG).show();
 
         scanImageButton = (ImageButton) findViewById(R.id.scanImageButton);
 
@@ -133,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            intent.putExtra(getString(R.string.calling_activity_name), "ui.MainActivity");
+            intent.putExtra(getString(R.string.preceding_activity_name), "ui.MainActivity");
             startActivity(intent);
             return true;
         }
