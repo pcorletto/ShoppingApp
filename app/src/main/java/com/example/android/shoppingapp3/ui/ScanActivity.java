@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
@@ -51,7 +52,8 @@ public class ScanActivity extends AppCompatActivity {
     private Button scanBtn,storeBtn,displayBtn, minusBtn, plusBtn;
     private RatingBar ratingBar;
     private RadioGroup radioGroup;
-    private TextView productNameTextView, priceTextView, quantityTextView;
+    private TextView productNameTextView, quantityTextView;
+    private EditText priceEditText;
     public static final String TAG = ScanActivity.class.getSimpleName();
 
     private ShoppingItem mShoppingItem;
@@ -61,7 +63,7 @@ public class ScanActivity extends AppCompatActivity {
 
     private String mUPC, mLastDatePurchased, mName, mPrice, mCategory, mImage, mTaxable;
     int mQuantity, mLastQuantity;
-    double mPriceValue, mSubtotal, mPriority;
+    double mPriceValue, mSubtotal, mPriority, manualInputPrice;
     boolean taxable;
 
     Context context;
@@ -82,7 +84,7 @@ public class ScanActivity extends AppCompatActivity {
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         quantityTextView = (TextView) findViewById(R.id.quantityTextView);
         productNameTextView = (TextView) findViewById(R.id.productNameTextView);
-        priceTextView = (TextView) findViewById(R.id.priceTextView);
+        priceEditText = (EditText) findViewById(R.id.priceEditText);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
         // Get the toolbar
@@ -174,6 +176,8 @@ public class ScanActivity extends AppCompatActivity {
 
                 String quantity = quantityTextView.getText().toString();
 
+                manualInputPrice = Double.parseDouble(priceEditText.getText().toString());
+
                 // Check if quantity is empty. If no entry, then alert
                 if (TextUtils.isEmpty(quantity)) {
                     quantityTextView.setError(getString(R.string.empty_quantity_alert));
@@ -184,8 +188,6 @@ public class ScanActivity extends AppCompatActivity {
                 }
 
                 mQuantity = Integer.parseInt(quantityTextView.getText().toString());
-
-
 
                 mSubtotal = mQuantity * mPriceValue;
 
@@ -212,11 +214,11 @@ public class ScanActivity extends AppCompatActivity {
                     return;
                 }
 
-                String price = priceTextView.getText().toString();
+                String price = priceEditText.getText().toString();
 
                 // Check if price is empty. If no entry, then alert
                 if (TextUtils.isEmpty(price)) {
-                    priceTextView.setError(getString(R.string.empty_price_alert));
+                    priceEditText.setError(getString(R.string.empty_price_alert));
                     Toast.makeText(ScanActivity.this, getString(R.string.empty_price_alert), Toast.LENGTH_LONG).show();
                     ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                     toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
@@ -390,8 +392,16 @@ public class ScanActivity extends AppCompatActivity {
                                         for(int i=0; i<items.length(); i++){
                                             JSONObject item = items.getJSONObject(i);
                                             mName = item.getString("name");
+
+                                            // Take out any single quotes from the product name string
+                                            mName = mName.replace("\'", "");
+
                                             mPrice = item.getString("salePrice");
                                             mCategory = item.getString("categoryPath");
+
+                                            // Take out any single quotes from the category string
+                                            mCategory = mCategory.replace("\'", "");
+
                                             mImage = item.getString("largeImage");
 
                                         }
@@ -408,7 +418,9 @@ public class ScanActivity extends AppCompatActivity {
                                     productNameTextView.setText(mName);
 
                                     if(mPrice==null){
-                                        Toast.makeText(ScanActivity.this, "Price unavailable",Toast.LENGTH_LONG).show();;
+                                        Toast.makeText(ScanActivity.this,
+                                                "Price unavailable. Please enter it manually",
+                                                Toast.LENGTH_LONG).show();
                                     }
 
                                     else {
@@ -416,7 +428,7 @@ public class ScanActivity extends AppCompatActivity {
                                         mShoppingItem.setItemPrice(Double.parseDouble(mPrice));
                                         mQuantity = 1;
                                         quantityTextView.setText(mQuantity + "");
-                                        priceTextView.setText(mPrice);
+                                        priceEditText.setText(mPrice);
                                         mPriceValue = Double.parseDouble(mPrice);
                                         mSubtotal = mPriceValue * mShoppingItem.getQuantity();
                                         mShoppingItem.setSubtotal(mSubtotal);
@@ -524,15 +536,6 @@ public class ScanActivity extends AppCompatActivity {
 
     public void addItem() {
 
-        /*mShoppingListDbHelper.getShoppingItem(sqLiteDatabaseW);
-
-                if(reloadedList.countFoundItems(mName, ScanActivity.this)==0) {
-
-                    // Before adding the newly scanned item into the DB, check if it is already in the
-                    // DB or not. If already there, do not add it again! If not there, add it.
-                    else{*/
-
-
         context = this;
 
         // Perform DB insertion...
@@ -546,6 +549,15 @@ public class ScanActivity extends AppCompatActivity {
 
             // Before adding the newly scanned item into the DB, check if it is already in the
             // DB or not. If already there, do not add it again! If not there, add it.
+
+            if(mPriceValue==0){
+
+                mPriceValue = manualInputPrice;
+                mSubtotal = mPriceValue * mQuantity;
+                mCategory = "";
+                mImage = ""; // Clear any previous images
+
+            }
 
             // Insert the item details in the database
             mShoppingListDbHelper.addItem(mUPC, mQuantity, mLastQuantity, mLastDatePurchased, mName,
