@@ -9,6 +9,7 @@ import android.media.ToneGenerator;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -71,6 +72,10 @@ public class ScanActivity extends AppCompatActivity {
     SQLiteDatabase sqLiteDatabase;
     Cursor cursor;
 
+    Handler messageHandler = new Handler();  // Use this so that, if a UPC bar code is not found,
+    // it can be handled. Remember that UPC is obtained in UI thread. If we did not have a handler
+    // we will be getting an error that this is being run concurrently on the UI thread.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +114,6 @@ public class ScanActivity extends AppCompatActivity {
         // Variables for the HTTP Request
 
         Log.d(TAG, "Main UI code is running!");
-
 
         scanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,6 +342,12 @@ public class ScanActivity extends AppCompatActivity {
         String itemLookUpUrl = "http://api.walmartlabs.com/v1/items?apiKey=" +
                 apiKey + "&upc=" + upc;
 
+        // ... JUST TESTING ...
+
+        mUPC = upc;
+
+        // .... JUST TESTING ...
+
 
         if(isNetworkAvailable()) {
 
@@ -377,7 +387,6 @@ public class ScanActivity extends AppCompatActivity {
                         Log.v(TAG, jsonData);
 
                         if (response.isSuccessful()) {
-
 
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -444,7 +453,9 @@ public class ScanActivity extends AppCompatActivity {
 
                         } else {
 
-                            alertUserAboutError();
+                            Log.d(TAG, upc);
+                            displayToast();
+                            //alertUserAboutError();
                         }
                     } catch (IOException e) {
                         Log.e(TAG, "Exception caught:", e);
@@ -460,6 +471,7 @@ public class ScanActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.network_unavailable_message),
                     Toast.LENGTH_LONG).show();
         }
+
     }
 
     private boolean isNetworkAvailable() {
@@ -523,6 +535,12 @@ public class ScanActivity extends AppCompatActivity {
 
             getScannedItemInfo(mUPC);
 
+            //if (upcNotFound){
+
+               // Toast.makeText(getApplicationContext(), mUPC, Toast.LENGTH_LONG).show();
+
+            //}
+
         }
 
         else{
@@ -579,8 +597,8 @@ public class ScanActivity extends AppCompatActivity {
             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
 
-            Toast.makeText(this, mName + " is already in your shopping list! Do not scan it again!"
-                    , Toast.LENGTH_LONG).show();
+            Toast.makeText(this, mName + " is already in your shopping list! Do not scan it again!",
+                    Toast.LENGTH_LONG).show();
 
             finish();
 
@@ -605,6 +623,18 @@ public class ScanActivity extends AppCompatActivity {
                     mTaxable = "false";
                 break;
         }
+    }
+
+    public void displayToast(){  // Use this so that, if a UPC bar code is not found,
+        // it can be handled. Remember that UPC is obtained in UI thread. If we did not have a handler
+        // we will be getting an error that this is being run concurrently on the UI thread.
+
+        Runnable doDisplayError = new Runnable() {
+            public void run() {
+                Toast.makeText(getApplicationContext(), mUPC + " not found!", Toast.LENGTH_LONG).show();
+            }
+        };
+        messageHandler.post(doDisplayError);
     }
 
 }
