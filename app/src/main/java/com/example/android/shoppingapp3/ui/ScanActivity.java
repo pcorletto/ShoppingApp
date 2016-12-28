@@ -301,7 +301,6 @@ public class ScanActivity extends AppCompatActivity {
 
                     mRowNumber++;
 
-
             }
 
             while(cursor.moveToNext());
@@ -330,7 +329,7 @@ public class ScanActivity extends AppCompatActivity {
 
     }
 
-    private void getScannedItemInfo(String upc) {
+    private void getScannedItemInfo(final String upc) {
 
         // API Key for Walmart
 
@@ -374,7 +373,6 @@ public class ScanActivity extends AppCompatActivity {
                     });
                     try {
                         final String jsonData = response.body().string();
-
 
                         Log.v(TAG, jsonData);
 
@@ -445,6 +443,7 @@ public class ScanActivity extends AppCompatActivity {
                             });
 
                         } else {
+
                             alertUserAboutError();
                         }
                     } catch (IOException e) {
@@ -550,12 +549,14 @@ public class ScanActivity extends AppCompatActivity {
             // Before adding the newly scanned item into the DB, check if it is already in the
             // DB or not. If already there, do not add it again! If not there, add it.
 
+
             if(mPriceValue==0){
 
                 mPriceValue = manualInputPrice;
                 mSubtotal = mPriceValue * mQuantity;
                 mCategory = "";
                 mImage = ""; // Clear any previous images
+
 
             }
 

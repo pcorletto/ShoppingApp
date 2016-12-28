@@ -5,8 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/backgroundtwo"
-              tools:context="com.example.android.shoppingapp3.ui.ScanActivity"
-    >
+              tools:context="com.example.android.shoppingapp3.ui.ScanActivity">
 
     <include
         android:id="@+id/tool_bar"
