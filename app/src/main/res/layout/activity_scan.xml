@@ -12,6 +12,10 @@
         layout="@layout/tool_bar">
     </include>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 <RelativeLayout android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -177,12 +181,21 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout5"
+        android:id="@+id/webviewlayout">
+
+
+        </FrameLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/layout6"
-        android:layout_below="@id/layout5"
+        android:layout_below="@id/webviewlayout"
         android:gravity="center_horizontal">
 
         <Button
@@ -204,6 +217,8 @@
     </LinearLayout>
 
 </RelativeLayout>
+
+    </ScrollView>
 
 </LinearLayout>
 

@@ -62,7 +62,8 @@ public class ScanActivity extends AppCompatActivity {
     private ShoppingList mShoppingList = new ShoppingList();
     ReloadListFromDB reloadedList = new ReloadListFromDB();
 
-    private String mUPC, mLastDatePurchased, mName, mPrice, mCategory, mImage, mTaxable;
+    public static String mUPC;
+    private String mLastDatePurchased, mName, mPrice, mCategory, mImage, mTaxable;
     int mQuantity, mLastQuantity;
     double mPriceValue, mSubtotal, mPriority, manualInputPrice;
     boolean taxable;
@@ -342,12 +343,7 @@ public class ScanActivity extends AppCompatActivity {
         String itemLookUpUrl = "http://api.walmartlabs.com/v1/items?apiKey=" +
                 apiKey + "&upc=" + upc;
 
-        // ... JUST TESTING ...
-
         mUPC = upc;
-
-        // .... JUST TESTING ...
-
 
         if(isNetworkAvailable()) {
 
@@ -535,11 +531,6 @@ public class ScanActivity extends AppCompatActivity {
 
             getScannedItemInfo(mUPC);
 
-            //if (upcNotFound){
-
-               // Toast.makeText(getApplicationContext(), mUPC, Toast.LENGTH_LONG).show();
-
-            //}
 
         }
 
@@ -635,6 +626,10 @@ public class ScanActivity extends AppCompatActivity {
             }
         };
         messageHandler.post(doDisplayError);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.webviewlayout, new UPCNotFoundFragment()).commit();
+
     }
 
 }
