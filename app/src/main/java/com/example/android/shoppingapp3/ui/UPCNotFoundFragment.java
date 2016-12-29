@@ -16,7 +16,7 @@ import com.example.android.shoppingapp3.R;
  */
 public class UPCNotFoundFragment extends Fragment {
 
-    private WebView mWebView;
+    private WebView mWebView, mWebView2;
 
     private String mUPC, mURL;
 
@@ -35,6 +35,8 @@ public class UPCNotFoundFragment extends Fragment {
         mURL += mUPC;
         mURL += "&action=lookupUpc&go=Go%21";
         mWebView = (WebView) view.findViewById(R.id.webView);
+        mWebView2 = (WebView) view.findViewById(R.id.webView2);
+
         mWebView.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onReceivedTitle(WebView view, String title) {
@@ -50,16 +52,35 @@ public class UPCNotFoundFragment extends Fragment {
                     i++;
                 }
 
-                for(int j = i+1; j<title.length(); j++){
+                for(int j = i+2; j<title.length(); j++){
 
                     productName += title.charAt(j);
                 }
 
                 ScanActivity.productNameTextView.setText(productName);
                 ScanActivity.mName = productName;
+                ScanActivity.mLastDatePurchased="NEVER";
             }
         });
         mWebView.loadUrl(mURL);
+
+        mURL = "";
+
+        // Try to get the price info from Amazon.com
+
+        mURL = "https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords=";
+        mURL += mUPC;
+
+        mWebView2.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+
+
+            }
+        });
+        mWebView2.loadUrl(mURL);
+
 
         return view;
     }

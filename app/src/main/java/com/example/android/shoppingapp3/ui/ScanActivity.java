@@ -64,7 +64,8 @@ public class ScanActivity extends AppCompatActivity {
     ReloadListFromDB reloadedList = new ReloadListFromDB();
 
     public static String mUPC;
-    private String mLastDatePurchased, mPrice, mCategory, mImage, mTaxable;
+    public static String mLastDatePurchased, mCategory;
+    private String mPrice, mImage, mTaxable;
     public static String mName;
     int mQuantity, mLastQuantity;
     double mPriceValue, mSubtotal, mPriority, manualInputPrice;
@@ -451,8 +452,7 @@ public class ScanActivity extends AppCompatActivity {
 
                         } else {
 
-                            Log.d(TAG, upc);
-                            displayToast();
+                            getInfoOnUPCExternally();
                             //alertUserAboutError();
                         }
                     } catch (IOException e) {
@@ -565,7 +565,7 @@ public class ScanActivity extends AppCompatActivity {
 
                 mPriceValue = manualInputPrice;
                 mSubtotal = mPriceValue * mQuantity;
-                mCategory = "";
+                mCategory = "General Product";
                 mImage = ""; // Clear any previous images
 
 
@@ -618,7 +618,7 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
-    public void displayToast(){  // Use this so that, if a UPC bar code is not found,
+    public void getInfoOnUPCExternally(){  // Use this so that, if a UPC bar code is not found,
         // it can be handled. Remember that UPC is obtained in UI thread. If we did not have a handler
         // we will be getting an error that this is being run concurrently on the UI thread.
 
