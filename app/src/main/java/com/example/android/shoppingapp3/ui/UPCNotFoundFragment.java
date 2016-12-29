@@ -20,6 +20,8 @@ public class UPCNotFoundFragment extends Fragment {
 
     private String mUPC, mURL;
 
+    public String mProductName;
+
     public UPCNotFoundFragment(){
 
     }
@@ -44,7 +46,7 @@ public class UPCNotFoundFragment extends Fragment {
 
                 // Extract the product name from the string
                 int i = 0;
-                String productName = "";
+                mProductName = "";
                 String unWantedString = "";
                 while(title.charAt(i) != ':'){
 
@@ -54,14 +56,17 @@ public class UPCNotFoundFragment extends Fragment {
 
                 for(int j = i+2; j<title.length(); j++){
 
-                    productName += title.charAt(j);
+                    mProductName += title.charAt(j);
                 }
 
-                ScanActivity.productNameTextView.setText(productName);
-                ScanActivity.mName = productName;
+                ScanActivity.productNameTextView.setText(mProductName);
+
+                ScanActivity.mName = mProductName;
                 ScanActivity.mLastDatePurchased="NEVER";
+
             }
         });
+
         mWebView.loadUrl(mURL);
 
         mURL = "";
@@ -79,6 +84,7 @@ public class UPCNotFoundFragment extends Fragment {
 
             }
         });
+
         mWebView2.loadUrl(mURL);
 
 

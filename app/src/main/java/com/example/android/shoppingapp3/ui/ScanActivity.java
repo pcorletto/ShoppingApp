@@ -420,13 +420,11 @@ public class ScanActivity extends AppCompatActivity {
 
                                     }
 
-                                    mShoppingItem.setProductName(mName);
-                                    productNameTextView.setText(mName);
-
                                     if(mPrice==null){
                                         Toast.makeText(ScanActivity.this,
                                                 "Price unavailable. Please enter it manually",
                                                 Toast.LENGTH_LONG).show();
+                                        getInfoOnUPCExternally();
                                     }
 
                                     else {
@@ -443,8 +441,12 @@ public class ScanActivity extends AppCompatActivity {
                                         // radio group to set priority, from 1 to 3
                                         mLastDatePurchased="NEVER"; // Set it to this for now, later let
                                         // this be updated using the system's date, when the user shops.
+                                        getInfoOnUPCExternally();
 
                                     }
+
+                                    mShoppingItem.setProductName(mName);
+                                    productNameTextView.setText(mName);
 
                                 }
 
@@ -622,12 +624,12 @@ public class ScanActivity extends AppCompatActivity {
         // it can be handled. Remember that UPC is obtained in UI thread. If we did not have a handler
         // we will be getting an error that this is being run concurrently on the UI thread.
 
-        Runnable doDisplayError = new Runnable() {
+        Runnable getUPCInfo = new Runnable() {
             public void run() {
-                Toast.makeText(getApplicationContext(), mUPC + " not found!", Toast.LENGTH_LONG).show();
+
             }
         };
-        messageHandler.post(doDisplayError);
+        messageHandler.post(getUPCInfo);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.webviewlayout, new UPCNotFoundFragment()).commit();

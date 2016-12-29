@@ -37,6 +37,8 @@ public class DisplayListActivity extends ActionBarActivity {
 
     private int mRowNumber;
 
+    private String item_for_DB_edit;
+
     ReloadListFromDB reloadedList = new ReloadListFromDB();
 
     ReloadCartFromDB reloadedCart = new ReloadCartFromDB();
@@ -128,11 +130,61 @@ public class DisplayListActivity extends ActionBarActivity {
                 return true;
 
             }
+
+            case R.id.action_edit:
+            {
+
+                // Initialize the shoppingListDBHelper object
+
+                mShoppingListDbHelper = new ShoppingListDbHelper(getApplicationContext());
+
+                // Initialize the SQLiteDatabase object
+
+                sqLiteDatabase = mShoppingListDbHelper.getReadableDatabase();
+
+                int count = 0;
+
+                for(int i=0; i<listDataHeader.size(); i++) {
+
+                    if(listDataHeader.get(i).isSelected()){
+
+                        // For SQLiteDatabase: Edit this item here, if checked.
+
+                        item_for_DB_edit = listDataHeader.get(i).getProductName() + "";
+
+                        count ++;
+
+                    }
+
+                }
+
+                if(count>1){
+
+                    Toast.makeText(this, "Only edit one item at a time!", Toast.LENGTH_LONG).show();
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                    Intent intent = new Intent(DisplayListActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+
+                else if (count == 1) {
+
+                    // Edit the shopping item from the SQLite database
+                    Intent intent = new Intent(DisplayListActivity.this, EditActivity.class);
+                    intent.putExtra(getString(R.string.product_name), item_for_DB_edit);
+                    startActivity(intent);
+                }
+
+                return true;
+
+            }
+
             case R.id.action_cart:
             {
 
                 Intent intent = new Intent(DisplayListActivity.this, DisplayCartActivity.class);
                 startActivity(intent);
+                return true;
 
             }
 

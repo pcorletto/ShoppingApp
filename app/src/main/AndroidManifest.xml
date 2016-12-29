@@ -97,6 +97,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.shoppingapp3.ui.DisplayListActivity" />
         </activity>
+        <activity
+            android:name=".ui.EditActivity"
+            android:label="@string/title_activity_edit"
+            android:parentActivityName=".ui.DisplayListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.shoppingapp3.ui.DisplayListActivity" />
+        </activity>
     </application>
 
 </manifest>
