@@ -6,8 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.example.android.shoppingapp3.R;
 
@@ -35,7 +35,30 @@ public class UPCNotFoundFragment extends Fragment {
         mURL += mUPC;
         mURL += "&action=lookupUpc&go=Go%21";
         mWebView = (WebView) view.findViewById(R.id.webView);
-        mWebView.setWebViewClient(new WebViewClient());
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+
+                // Extract the product name from the string
+                int i = 0;
+                String productName = "";
+                String unWantedString = "";
+                while(title.charAt(i) != ':'){
+
+                    unWantedString += title.charAt(i);
+                    i++;
+                }
+
+                for(int j = i+1; j<title.length(); j++){
+
+                    productName += title.charAt(j);
+                }
+
+                ScanActivity.productNameTextView.setText(productName);
+                ScanActivity.mName = productName;
+            }
+        });
         mWebView.loadUrl(mURL);
 
         return view;

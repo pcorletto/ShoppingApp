@@ -53,7 +53,8 @@ public class ScanActivity extends AppCompatActivity {
     private Button scanBtn,storeBtn,displayBtn, minusBtn, plusBtn;
     private RatingBar ratingBar;
     private RadioGroup radioGroup;
-    private TextView productNameTextView, quantityTextView;
+    public static TextView productNameTextView;
+    private TextView quantityTextView;
     private EditText priceEditText;
     public static final String TAG = ScanActivity.class.getSimpleName();
 
@@ -63,7 +64,8 @@ public class ScanActivity extends AppCompatActivity {
     ReloadListFromDB reloadedList = new ReloadListFromDB();
 
     public static String mUPC;
-    private String mLastDatePurchased, mName, mPrice, mCategory, mImage, mTaxable;
+    private String mLastDatePurchased, mPrice, mCategory, mImage, mTaxable;
+    public static String mName;
     int mQuantity, mLastQuantity;
     double mPriceValue, mSubtotal, mPriority, manualInputPrice;
     boolean taxable;
