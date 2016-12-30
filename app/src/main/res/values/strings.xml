@@ -115,5 +115,6 @@
     <string name="preceding_activity_name">preceding_activity_name</string>
     <string name="product_name">product_name</string>
     <string name="title_activity_edit">EditActivity</string>
+    <string name="on_back_pressed_alert">Press again to close app</string>
 
 </resources>

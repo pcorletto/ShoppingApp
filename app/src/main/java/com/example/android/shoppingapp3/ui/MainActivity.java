@@ -3,6 +3,7 @@ package com.example.android.shoppingapp3.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
 
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ImageButton scanImageButton, listImageButton, cartImageButton;
+    private boolean backPressToExit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,5 +139,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (backPressToExit) {
+            super.onBackPressed();
+        }
+        this.backPressToExit = true;
+        Toast.makeText(this, getString(R.string.on_back_pressed_alert), Toast.LENGTH_SHORT).show();
+
+
+        new Handler().postDelayed(new Runnable() {
+
+
+            @Override
+
+
+            public void run() {
+
+
+                backPressToExit = false;
+            }
+        }, 2000);
     }
 }

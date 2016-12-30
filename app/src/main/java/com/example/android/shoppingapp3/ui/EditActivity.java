@@ -1,27 +1,112 @@
 package com.example.android.shoppingapp3.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RatingBar;
 
 import com.example.android.shoppingapp3.R;
+import com.example.android.shoppingapp3.model.ReloadListFromDB;
+import com.example.android.shoppingapp3.model.ShoppingItem;
+import com.example.android.shoppingapp3.model.ShoppingList;
+import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
 
 public class EditActivity extends ActionBarActivity {
 
-    public String productName;
+    private Toolbar toolbar;
+
+    private Button save_changes_button, display_button, minusButton, plusButton;
+    private RatingBar ratingBar;
+    private RadioGroup radioGroup;
+    private EditText productNameEditText, categoryEditText, priceEditText, quantityEditText;
+    private EditText lastQuantityPurchasedEditText, lastDatePurchasedEditText;
+
+    public static final String TAG = EditActivity.class.getSimpleName();
+
+    private ShoppingItem mShoppingItem;
+    private int mRowNumber;
+    private ShoppingList mShoppingList = new ShoppingList();
+    ReloadListFromDB reloadedList = new ReloadListFromDB();
+
+    private String mUPC, mName, mCategory, mLastDatePurchased;
+
+    int mQuantity, mLastQuantityPurchased;
+    double mPrice, mPriority;
+    boolean taxable;
+
+    Context context;
+    ShoppingListDbHelper mShoppingListDbHelper;
+    SQLiteDatabase sqLiteDatabase;
+    Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
-        Intent intent = getIntent();
-        productName = intent.getStringExtra(getString(R.string.product_name));
+        productNameEditText = (EditText) findViewById(R.id.productNameEditText);
+        categoryEditText = (EditText) findViewById(R.id.categoryEditText);
+        priceEditText = (EditText) findViewById(R.id.priceEditText);
+        quantityEditText = (EditText) findViewById(R.id.quantityEditText);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        lastQuantityPurchasedEditText = (EditText) findViewById(R.id.lastQuantityPurchasedEditText);
+        lastDatePurchasedEditText = (EditText) findViewById(R.id.lastDatePurchasedEditText);
+        save_changes_button = (Button) findViewById(R.id.save_changes_button);
+        display_button = (Button) findViewById(R.id.display_button);
 
-        Toast.makeText(this, productName, Toast.LENGTH_LONG).show();
+        Intent intent = getIntent();
+        mName = intent.getStringExtra(getString(R.string.product_name));
+
+        productNameEditText.setText(mName);
+
+        prepareListData(mName);
+
+        mCategory = mShoppingList.getShoppingItem(0).getCategory();
+        categoryEditText.setText(mCategory);
+
+        mPrice = mShoppingList.getShoppingItem(0).getItemPrice();
+        priceEditText.setText(mPrice+"");
+
+        mQuantity = mShoppingList.getShoppingItem(0).getQuantity();
+        quantityEditText.setText(mQuantity+"");
+
+
+        // Get the toolbar
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+
+        setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        getSupportActionBar().setTitle(TAG);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(EditActivity.this, DisplayListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+    }
+
+    private void prepareListData(String searchItem){
+
+
+        // Get the shopping item to be edited from the database
+        mShoppingList = reloadedList.reloadListFromDB("search", searchItem, EditActivity.this);
 
     }
 
@@ -40,11 +125,25 @@ public class EditActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+
+            case R.id.action_settings: {
+                return true;
+            }
+
+            case R.id.action_home: {
+
+                Intent intent = new Intent(EditActivity.this, MainActivity.class);
+                startActivity(intent);
+
+            }
+
+            default:
+
+                return super.onOptionsItemSelected(item);
+
         }
 
-        return super.onOptionsItemSelected(item);
     }
+
 }
