@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
 
@@ -25,9 +26,10 @@ public class EditActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
 
-    private Button save_changes_button, display_button, minusButton, plusButton;
+    private Button save_changes_button, display_button;
     private RatingBar ratingBar;
     private RadioGroup radioGroup;
+    private RadioButton yesRadioButton, noRadioButton;
     private EditText productNameEditText, categoryEditText, priceEditText, quantityEditText;
     private EditText lastQuantityPurchasedEditText, lastDatePurchasedEditText;
 
@@ -60,6 +62,8 @@ public class EditActivity extends ActionBarActivity {
         quantityEditText = (EditText) findViewById(R.id.quantityEditText);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        yesRadioButton = (RadioButton) findViewById(R.id.yesRadioButton);
+        noRadioButton = (RadioButton) findViewById(R.id.noRadioButton);
         lastQuantityPurchasedEditText = (EditText) findViewById(R.id.lastQuantityPurchasedEditText);
         lastDatePurchasedEditText = (EditText) findViewById(R.id.lastDatePurchasedEditText);
         save_changes_button = (Button) findViewById(R.id.save_changes_button);
@@ -81,6 +85,27 @@ public class EditActivity extends ActionBarActivity {
         mQuantity = mShoppingList.getShoppingItem(0).getQuantity();
         quantityEditText.setText(mQuantity+"");
 
+        mPriority = mShoppingList.getShoppingItem(0).getPriority();
+        float priority = (float) mPriority;
+        ratingBar.setRating(priority);
+
+        if(mShoppingList.getShoppingItem(0).isTaxable()){
+
+            yesRadioButton.setChecked(true);
+
+        }
+
+        else{
+
+            noRadioButton.setChecked(true);
+
+        }
+
+        mLastQuantityPurchased = mShoppingList.getShoppingItem(0).getLastQuantity();
+        lastQuantityPurchasedEditText.setText(mLastQuantityPurchased+"");
+
+        mLastDatePurchased = mShoppingList.getShoppingItem(0).getLastDatePurchased();
+        lastDatePurchasedEditText.setText(mLastDatePurchased);
 
         // Get the toolbar
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -144,6 +169,24 @@ public class EditActivity extends ActionBarActivity {
 
         }
 
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch (view.getId()) {
+            case R.id.yesRadioButton:
+                if (checked)
+                    taxable = true;
+                break;
+
+            case R.id.noRadioButton:
+                if (checked)
+                    taxable = false;
+                break;
+        }
     }
 
 }

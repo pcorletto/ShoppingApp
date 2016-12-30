@@ -110,18 +110,6 @@
                 android:gravity="center_horizontal"
                 android:inputType="number"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/minus_button_label"
-                android:id="@+id/minusButton"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/plus_button_label"
-                android:id="@+id/plusButton"/>
-
         </LinearLayout>
 
         <LinearLayout
