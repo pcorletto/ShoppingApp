@@ -428,6 +428,9 @@ public class FooterFragment extends Fragment implements LocationListener{
                     updateLastDatePurchased(listDataHeader.get(i).getProductName(),
                             getCurrentDate());
 
+                    updateLastQuantityPurchased(listDataHeader.get(i).getProductName(),
+                            listDataHeader.get(i).getQuantity());
+
                 }
 
                 // Delete all the items from the Shopping CART database.
@@ -641,6 +644,14 @@ public class FooterFragment extends Fragment implements LocationListener{
         shoppingListDbHelper = new ShoppingListDbHelper(getContext().getApplicationContext());
         sqLiteDatabase = shoppingListDbHelper.getWritableDatabase();
         shoppingListDbHelper.updateLastDatePurchased(productName, lastDatePurchased, sqLiteDatabase);
+
+    }
+
+    public void updateLastQuantityPurchased(String productName, int lastQuantity){
+
+        shoppingListDbHelper = new ShoppingListDbHelper(getContext().getApplicationContext());
+        sqLiteDatabase = shoppingListDbHelper.getWritableDatabase();
+        shoppingListDbHelper.updateLastQuantityPurchased(productName, lastQuantity, sqLiteDatabase);
 
     }
 

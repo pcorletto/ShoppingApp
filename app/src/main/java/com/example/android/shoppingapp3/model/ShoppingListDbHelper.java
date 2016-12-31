@@ -190,6 +190,46 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
 
     }
 
+    public void updateLastQuantityPurchased(String product_name, int lastQuantityPurchased, SQLiteDatabase sqLiteDatabase){
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShoppingListDB.NewListItem.LAST_QUANTITY, lastQuantityPurchased);
+
+        // Provide a condition or selection
+
+        String selection = ShoppingListDB.NewListItem.PRODUCT_NAME + " LIKE ?";
+
+        String[] selection_args = {product_name};
+
+        sqLiteDatabase.update(ShoppingListDB.NewListItem.TABLE_NAME, contentValues,
+                selection, selection_args);
+
+    }
+
+    public void updateShoppingItem(String product_name, String mName, String mCategory, double mPrice, int mQuantity,
+                                   double mPriority, boolean taxable, int mLastQuantityPurchased,
+                                   String mLastDatePurchased, SQLiteDatabase sqLiteDatabase){
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ShoppingListDB.NewListItem.PRODUCT_NAME, mName);
+        contentValues.put(ShoppingListDB.NewListItem.CATEGORY, mCategory);
+        contentValues.put(ShoppingListDB.NewListItem.ITEM_PRICE, mPrice);
+        contentValues.put(ShoppingListDB.NewListItem.QUANTITY, mQuantity);
+        contentValues.put(ShoppingListDB.NewListItem.PRIORITY, mPriority);
+        contentValues.put(ShoppingListDB.NewListItem.TAXABLE, taxable);
+        contentValues.put(ShoppingListDB.NewListItem.LAST_QUANTITY, mLastQuantityPurchased);
+        contentValues.put(ShoppingListDB.NewListItem.LAST_DATE_PURCHASED, mLastDatePurchased);
+
+        // Provide a condition or selection
+
+        String selection = ShoppingListDB.NewListItem.PRODUCT_NAME + " LIKE ?";
+
+        String[] selection_args = {product_name};
+
+        sqLiteDatabase.update(ShoppingListDB.NewListItem.TABLE_NAME, contentValues,
+                selection, selection_args);
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

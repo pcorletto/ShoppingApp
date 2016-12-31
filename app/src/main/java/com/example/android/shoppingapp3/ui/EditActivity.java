@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
 import com.example.android.shoppingapp3.model.ReloadListFromDB;
@@ -124,6 +125,38 @@ public class EditActivity extends ActionBarActivity {
             }
         });
 
+        save_changes_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mName = productNameEditText.getText().toString();
+                mCategory = categoryEditText.getText().toString();
+                mPrice = Double.parseDouble(priceEditText.getText().toString());
+                mQuantity = Integer.parseInt(quantityEditText.getText().toString());
+                mPriority = ratingBar.getRating();
+                mLastQuantityPurchased = Integer.parseInt(lastQuantityPurchasedEditText.getText().toString());
+                mLastDatePurchased = lastDatePurchasedEditText.getText().toString();
+
+                updateShoppingItem(mShoppingList.getShoppingItem(0).getProductName(),
+                        mName, mCategory, mPrice, mQuantity, mPriority, taxable,
+                        mLastQuantityPurchased, mLastDatePurchased);
+
+                Toast.makeText(getApplicationContext(), "Shopping Item Updated!!!", Toast.LENGTH_LONG).show();
+
+                finish();
+
+            }
+        });
+
+        display_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(EditActivity.this, DisplayListActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
     }
 
@@ -187,6 +220,17 @@ public class EditActivity extends ActionBarActivity {
                     taxable = false;
                 break;
         }
+    }
+
+    public void updateShoppingItem(String product_name, String mName, String mCategory, double mPrice, int mQuantity,
+                                   double mPriority, boolean taxable, int mLastQuantityPurchased,
+                                   String mLastDatePurchased){
+
+        mShoppingListDbHelper = new ShoppingListDbHelper(this);
+        sqLiteDatabase = mShoppingListDbHelper.getWritableDatabase();
+        mShoppingListDbHelper.updateShoppingItem(product_name, mName, mCategory, mPrice, mQuantity, mPriority, taxable,
+                mLastQuantityPurchased, mLastDatePurchased, sqLiteDatabase);
+
     }
 
 }
