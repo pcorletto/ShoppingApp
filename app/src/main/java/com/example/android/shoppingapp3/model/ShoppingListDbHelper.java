@@ -207,7 +207,7 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
     }
 
     public void updateShoppingItem(String product_name, String mName, String mCategory, double mPrice, int mQuantity,
-                                   double mPriority, boolean taxable, int mLastQuantityPurchased,
+                                   double mSubtotal, double mPriority, String taxable, int mLastQuantityPurchased,
                                    String mLastDatePurchased, SQLiteDatabase sqLiteDatabase){
 
         ContentValues contentValues = new ContentValues();
@@ -215,6 +215,7 @@ public class ShoppingListDbHelper extends SQLiteOpenHelper {
         contentValues.put(ShoppingListDB.NewListItem.CATEGORY, mCategory);
         contentValues.put(ShoppingListDB.NewListItem.ITEM_PRICE, mPrice);
         contentValues.put(ShoppingListDB.NewListItem.QUANTITY, mQuantity);
+        contentValues.put(ShoppingListDB.NewListItem.SUBTOTAL, mSubtotal);
         contentValues.put(ShoppingListDB.NewListItem.PRIORITY, mPriority);
         contentValues.put(ShoppingListDB.NewListItem.TAXABLE, taxable);
         contentValues.put(ShoppingListDB.NewListItem.LAST_QUANTITY, mLastQuantityPurchased);

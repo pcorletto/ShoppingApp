@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
 import com.example.android.shoppingapp3.model.ReloadListFromDB;
-import com.example.android.shoppingapp3.model.ShoppingItem;
 import com.example.android.shoppingapp3.model.ShoppingList;
 import com.example.android.shoppingapp3.model.ShoppingListDbHelper;
 
@@ -36,12 +35,10 @@ public class EditActivity extends ActionBarActivity {
 
     public static final String TAG = EditActivity.class.getSimpleName();
 
-    private ShoppingItem mShoppingItem;
-    private int mRowNumber;
     private ShoppingList mShoppingList = new ShoppingList();
     ReloadListFromDB reloadedList = new ReloadListFromDB();
 
-    private String mUPC, mName, mCategory, mLastDatePurchased;
+    private String mName, mCategory, mLastDatePurchased, mTaxable;
 
     int mQuantity, mLastQuantityPurchased;
     double mPrice, mPriority;
@@ -133,13 +130,24 @@ public class EditActivity extends ActionBarActivity {
                 mCategory = categoryEditText.getText().toString();
                 mPrice = Double.parseDouble(priceEditText.getText().toString());
                 mQuantity = Integer.parseInt(quantityEditText.getText().toString());
+                double subtotal = mPrice * mQuantity;
                 mPriority = ratingBar.getRating();
+
+                if(mTaxable.equals("true")){
+                    taxable = true;
+                }
+
+                else{
+
+                    taxable = false;
+                }
+
                 mLastQuantityPurchased = Integer.parseInt(lastQuantityPurchasedEditText.getText().toString());
                 mLastDatePurchased = lastDatePurchasedEditText.getText().toString();
 
                 updateShoppingItem(mShoppingList.getShoppingItem(0).getProductName(),
-                        mName, mCategory, mPrice, mQuantity, mPriority, taxable,
-                        mLastQuantityPurchased, mLastDatePurchased);
+                        mName, mCategory, mPrice, mQuantity, subtotal, mPriority,
+                        mTaxable, mLastQuantityPurchased, mLastDatePurchased);
 
                 Toast.makeText(getApplicationContext(), "Shopping Item Updated!!!", Toast.LENGTH_LONG).show();
 
@@ -212,24 +220,24 @@ public class EditActivity extends ActionBarActivity {
         switch (view.getId()) {
             case R.id.yesRadioButton:
                 if (checked)
-                    taxable = true;
+                    mTaxable = "true";
                 break;
 
             case R.id.noRadioButton:
                 if (checked)
-                    taxable = false;
+                    mTaxable = "false";
                 break;
         }
     }
 
     public void updateShoppingItem(String product_name, String mName, String mCategory, double mPrice, int mQuantity,
-                                   double mPriority, boolean taxable, int mLastQuantityPurchased,
+                                   double subtotal, double mPriority, String taxable, int mLastQuantityPurchased,
                                    String mLastDatePurchased){
 
         mShoppingListDbHelper = new ShoppingListDbHelper(this);
         sqLiteDatabase = mShoppingListDbHelper.getWritableDatabase();
-        mShoppingListDbHelper.updateShoppingItem(product_name, mName, mCategory, mPrice, mQuantity, mPriority, taxable,
-                mLastQuantityPurchased, mLastDatePurchased, sqLiteDatabase);
+        mShoppingListDbHelper.updateShoppingItem(product_name, mName, mCategory, mPrice, mQuantity, subtotal,
+                mPriority, taxable, mLastQuantityPurchased, mLastDatePurchased, sqLiteDatabase);
 
     }
 
