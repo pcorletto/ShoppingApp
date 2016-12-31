@@ -84,18 +84,21 @@ public class EditActivity extends ActionBarActivity {
         quantityEditText.setText(mQuantity+"");
 
         mPriority = mShoppingList.getShoppingItem(0).getPriority();
+
         float priority = (float) mPriority;
         ratingBar.setRating(priority);
 
         if(mShoppingList.getShoppingItem(0).isTaxable()){
 
             yesRadioButton.setChecked(true);
+            mTaxable = "true";
 
         }
 
         else{
 
             noRadioButton.setChecked(true);
+            mTaxable = "false";
 
         }
 
@@ -151,7 +154,8 @@ public class EditActivity extends ActionBarActivity {
 
                 Toast.makeText(getApplicationContext(), "Shopping Item Updated!!!", Toast.LENGTH_LONG).show();
 
-                finish();
+                Intent intent = new Intent(EditActivity.this, MainActivity.class);
+                startActivity(intent);
 
             }
         });

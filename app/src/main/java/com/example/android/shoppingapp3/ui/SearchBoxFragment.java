@@ -3,6 +3,8 @@ package com.example.android.shoppingapp3.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -18,9 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.android.shoppingapp3.R;
-import com.example.android.shoppingapp3.model.ReloadCartFromDB;
 import com.example.android.shoppingapp3.model.ReloadListFromDB;
 import com.example.android.shoppingapp3.model.ShoppingCartDbHelper;
 import com.example.android.shoppingapp3.model.ShoppingItem;
@@ -44,7 +46,7 @@ public class SearchBoxFragment extends Fragment {
 
     ReloadListFromDB reloadedList = new ReloadListFromDB();
 
-    ReloadCartFromDB reloadedCart = new ReloadCartFromDB();
+    private String item_for_DB_edit;
 
     Fragment frag;
     FragmentTransaction fragTransaction;
@@ -320,6 +322,65 @@ public class SearchBoxFragment extends Fragment {
                 }
 
                 }
+
+                return true;
+
+            }
+
+            case R.id.action_edit:
+            {
+
+                if(searchWord.equals("")) { // This means we are not editing any of the search results
+
+                    listDataHeader = ListCartFragment.listDataHeader;
+
+                }
+
+                else if(!searchWord.equals("")) {  // This means we are editing one of the search results
+
+                    listDataHeader = SearchResultsFragment.listDataHeader;
+
+                }
+
+                    // Initialize the shoppingListDBHelper object
+
+                    mShoppingListDbHelper = new ShoppingListDbHelper(getContext());
+
+                    // Initialize the SQLiteDatabase object
+
+                    sqLiteDatabase = mShoppingListDbHelper.getReadableDatabase();
+
+                    int count = 0;
+
+                    for (int i = 0; i < listDataHeader.size(); i++) {
+
+                        if (listDataHeader.get(i).isSelected()) {
+
+                            // For SQLiteDatabase: Edit this item here, if checked.
+
+                            item_for_DB_edit = listDataHeader.get(i).getProductName() + "";
+
+                            count++;
+
+                        }
+
+                    }
+
+                    if (count > 1) {
+
+                        Toast.makeText(getContext(), "Only edit one item at a time!", Toast.LENGTH_LONG).show();
+                        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                        toneG.startTone(ToneGenerator.TONE_SUP_CONGESTION, 200);
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        startActivity(intent);
+                    } else if (count == 1) {
+
+                        // Edit the shopping item from the SQLite database
+                        Intent intent = new Intent(getContext(), EditActivity.class);
+                        intent.putExtra(getString(R.string.product_name), item_for_DB_edit);
+                        startActivity(intent);
+                    }
+
 
                 return true;
 
